@@ -1,21 +1,20 @@
 {
   "name": "proyek_magang",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "dev": "npx tailwindcss -i ./src/css/input.css -o ./public/css/output.css --watch",
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "npx tailwindcss -i ./src/css/style.css -o ./public/css/style.css --watch"
+  },
   "dependencies": {
-    "@tailwindcss/cli": "^4.1.10",
     "ejs": "^3.1.10",
-    "express": "^5.1.0",
-    "mysql2": "^3.14.1",
-    "tailwindcss": "^4.1.10"
+    "express": "^4.19.2",
+    "mysql2": "^3.14.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4"
   }
 }
