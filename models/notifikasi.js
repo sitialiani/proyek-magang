@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../src/config/sequelize');
 
-const Dosen = sequelize.define('Dosen', {
+const Notifikasi = sequelize.define('Notifikasi', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -9,28 +9,27 @@ const Dosen = sequelize.define('Dosen', {
     },
     user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
-    nama: {
+    judul: {
         type: DataTypes.STRING(100),
         allowNull: false
     },
-    nidn: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-        unique: true
-    },
-    email: {
-        type: DataTypes.STRING(100),
+    pesan: {
+        type: DataTypes.TEXT,
         allowNull: false
     },
-    telepon: {
-        type: DataTypes.STRING(15)
+    dibaca: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    tanggal_kirim: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'dosen',
+    tableName: 'notifikasi',
     timestamps: false
 });
 
-module.exports = Dosen;
+module.exports = Notifikasi;

@@ -1,36 +1,35 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../src/config/sequelize');
 
-const Laporan = sequelize.define('Laporan', {
+const Pengumuman = sequelize.define('Pengumuman', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    mahasiswa_id: {
+    admin_user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true // One-to-One
+        allowNull: true // Bisa null jika tidak merujuk ke user admin
     },
     judul: {
-        type: DataTypes.STRING(200),
+        type: DataTypes.STRING(150),
         allowNull: false
     },
-    file_path: {
+    isi: {
         type: DataTypes.TEXT,
         allowNull: false
     },
-    status: {
-        type: DataTypes.ENUM('belum dikumpulkan', 'menunggu', 'revisi', 'diterima'),
-        allowNull: false
-    },
-    tanggal_upload: {
+    tanggal: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
+    },
+    ditujukan_kepada: {
+        type: DataTypes.ENUM('semua', 'mahasiswa', 'dosen'),
+        allowNull: false
     }
 }, {
-    tableName: 'laporan',
+    tableName: 'pengumuman',
     timestamps: false
 });
 
-module.exports = Laporan;
+module.exports = Pengumuman;

@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../src/config/sequelize');
 
-const Laporan = sequelize.define('Laporan', {
+const Rekapitulasi = sequelize.define('Rekapitulasi', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -12,25 +12,20 @@ const Laporan = sequelize.define('Laporan', {
         allowNull: false,
         unique: true // One-to-One
     },
-    judul: {
-        type: DataTypes.STRING(200),
+    nilai_akhir: {
+        type: DataTypes.FLOAT
+    },
+    status_laporan: {
+        type: DataTypes.ENUM('selesai', 'revisi', 'belum'),
         allowNull: false
     },
-    file_path: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    status: {
-        type: DataTypes.ENUM('belum dikumpulkan', 'menunggu', 'revisi', 'diterima'),
-        allowNull: false
-    },
-    tanggal_upload: {
+    tanggal_rekap: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'laporan',
+    tableName: 'rekapitulasi',
     timestamps: false
 });
 
-module.exports = Laporan;
+module.exports = Rekapitulasi;

@@ -1,44 +1,44 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Mahasiswa extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // Mahasiswa memiliki banyak Laporan
-      this.hasMany(models.Laporan, { foreignKey: 'mahasiswa_id' });
-      
-      // Mahasiswa dimiliki oleh satu User
-      this.belongsTo(models.User, { foreignKey: 'user_id' });
+const { DataTypes } = require('sequelize');
+const sequelize = require('../src/config/sequelize');
 
-      // Mahasiswa dibimbing oleh satu Dosen
-      this.belongsTo(models.Dosen, { foreignKey: 'dosen_id' });
-    }
-  }
-  Mahasiswa.init({
-    nama: DataTypes.STRING,
-    nim: DataTypes.STRING,
-    jurusan: DataTypes.STRING,
-    angkatan: DataTypes.INTEGER,
-    user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'Users', // Nama tabel yang direferensikan (plural)
-      key: 'id'
+const Mahasiswa = sequelize.define('Mahasiswa', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
     },
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE' // atau SET NULL, tergantung kebutuhan
-}
-  }, {
-    sequelize,
-    modelName: 'Mahasiswa',
-  });
-  return Mahasiswa;
-};
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true
+    },
+    dosen_pembimbing_id: { // Kolom yang baru ditambahkan
+        type: DataTypes.INTEGER,
+        allowNull: true // Bisa null jika belum ada dosen pembimbing
+    },
+    nama: {
+        type: DataTypes.STRING(100),
+        allowNull: false
+    },
+    npm: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        unique: true
+    },
+    jurusan: { // Diubah dari 'prodi' di dummy ke 'jurusan' di DB
+        type: DataTypes.STRING(100),
+        allowNull: false
+    },
+    angkatan: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    no_hp: {
+        type: DataTypes.STRING(15)
+    }
+}, {
+    tableName: 'mahasiswa',
+    timestamps: false
+});
 
+module.exports = Mahasiswa;
