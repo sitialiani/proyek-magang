@@ -150,4 +150,15 @@ router.get('/manajemen-backup', (req, res) => {
     });
 });
 
-module.exports = router;
+router.get("/pengumuman_admin", (req, res) => {
+  console.log("Route pengumuman_admin dipanggil!"); // Tambahkan log ini
+  res.render("penilaian");
+});
+
+router.get("/dashboard_admin", (req, res) => {
+  console.log("Route dashboard_admin dipanggil!"); // Tambahkan log ini
+  res.render("dashboard_admin");
+});
+
+module.exports = router; // <<< WAJIB agar bisa di-require
+

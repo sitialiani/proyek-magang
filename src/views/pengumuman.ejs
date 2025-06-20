@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>PENGUMUMAN</title>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Layout Container -->
+  <div class="flex h-screen">
+    <!-- Sidebar with updated color scheme -->
+    <aside class="bg-[#8EAAB8] w-64 p-6 text-white flex flex-col items-center">
+      <!-- Profil -->
+      <div class="flex flex-col items-center mb-8">
+        <div class="w-16 h-16 bg-[#6D8B9A] rounded-full flex items-center justify-center mb-4 shadow-lg">
+          <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <p class="font-bold text-lg">Dashboard</p>
+      </div>
+      
+      <!-- Menu Navigasi -->
+      <nav class="w-full">
+        <ul class="space-y-4">
+          <li><a href="/lowongan" class="block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Daftar Lowongan</a></li>
+          <li><a href="/pengajuan" class="block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Formulir Pengajuan</a></li>
+          <li><a href="/verifikasi" class="block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Status Verifikasi</a></li>
+          <li><a href="/logbook" class="block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Logbook</a></li>
+          <li><a href="/laporan" class="block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Laporan Akhir</a></li>
+          <li><a href="/penilaian" class="block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Penilaian</a></li>
+          <li><a href="/pengumuman" class="block py-2 px-4 rounded-md bg-[#7A99A7] w-full text-left">Pengumuman</a></li>
+        </ul>
+      </nav>
+
+      <!-- Tombol Logout with gray color -->
+      <button class="mt-auto bg-[#D9D9D9] text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 w-full font-medium">Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="content" class="flex-1 p-6 relative">
+      <!-- Header Profil & Tombol Riwayat -->
+      <div class="flex flex-col items-end space-y-3 mb-4">
+        <!-- Profil -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-[#6D8B9A] rounded-full flex items-center justify-center shadow-md">
+            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.486 0 4.799.755 6.879 2.043M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <p class="text-[#5C7988] font-bold text-lg">Profil</p>
+        </div>
+        <!-- lihat detail -->
+      </div>
+
+      <!-- Content Section -->
+      <div id="pengumuman-content">
+        <h1 class="text-2xl font-bold mb-4 text-[#5C7988]">PENGUMUMAN!</h1>
+        <form class="space-y-4">
+          <div class="bg-white rounded-xl shadow-md p-6 transition hover:shadow-lg">
+            <p class="italic text-sm text-gray-600 mb-4">
+              Publikasi:
+            </p>
+            <div class="flex justify-end">
+              <button class="bg-[#8EAAB8] hover:bg-[#7A99A7] text-white px-4 py-2 rounded-full text-sm font-medium shadow-sm">
+                Lihat Detail
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript untuk highlight menu aktif -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Dapatkan path URL saat ini
+      const currentPath = window.location.pathname;
+      
+      // Temukan semua link menu
+      const menuLinks = document.querySelectorAll('nav ul li a');
+      
+      // Loop melalui setiap link menu
+      menuLinks.forEach(link => {
+        // Hapus semua highlight terlebih dahulu
+        link.classList.remove('bg-[#7A99A7]');
+        link.classList.add('hover:bg-[#7A99A7]');
+        
+        // Jika href link cocok dengan path saat ini
+        if (link.getAttribute('href') === currentPath) {
+          // Tambahkan class untuk highlight
+          link.classList.add('bg-[#7A99A7]');
+          link.classList.remove('hover:bg-[#7A99A7]');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

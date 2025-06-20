@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>PENGUMUMAN</title>
+  <style>
+    .menu-item {
+      transition: all 0.3s ease;
+    }
+    .menu-item:hover {
+      background-color: #7A99A7 !important;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Layout Container -->
+  <div class="flex h-screen">
+    <!-- Sidebar with color #8EAAB8 -->
+    <aside class="bg-[#8EAAB8] w-64 p-6 text-white flex flex-col items-center">
+      <!-- Profil -->
+      <div class="flex flex-col items-center mb-8">
+        <div class="w-16 h-16 bg-[#6D8B9A] rounded-full flex items-center justify-center mb-4 shadow-lg">
+          <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <p class="font-bold text-lg">Dashboard</p>
+      </div>
+      
+      <!-- Menu Navigasi -->
+      <nav class="w-full">
+        <ul class="space-y-4">
+          <li><a href="/lowongan" class="menu-item block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Daftar Lowongan</a></li>
+          <li><a href="/pengajuan" class="menu-item block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Formulir Pengajuan</a></li>
+          <li><a href="/verifikasi" class="menu-item block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Status Verifikasi</a></li>
+          <li><a href="/logbook" class="menu-item block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Logbook</a></li>
+          <li><a href="/laporan" class="menu-item block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Laporan Akhir</a></li>
+          <li><a href="/penilaian" class="menu-item block py-2 px-4 rounded-md bg-[#7A99A7] hover:bg-[#7A99A7] w-full text-left">Penilaian</a></li>
+          <li><a href="/pengumuman" class="menu-item block py-2 px-4 rounded-md hover:bg-[#7A99A7] w-full text-left">Pengumuman</a></li>
+        </ul>
+      </nav>
+
+      <!-- Tombol Logout with color #D9D9D9 -->
+      <button class="mt-auto bg-[#D9D9D9] text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 w-full font-medium">Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="content" class="flex-1 p-6 relative">
+      <!-- Header Profil & Tombol Riwayat -->
+      <div class="flex flex-col items-end space-y-3 mb-4">
+        <!-- Profil -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-[#6D8B9A] rounded-full flex items-center justify-center shadow-md">
+            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.486 0 4.799.755 6.879 2.043M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <p class="text-[#5C7988] font-bold text-lg">Profil</p>
+        </div>
+      </div>
+
+      <!-- Content Section -->
+      <div id="penilaian-content">
+        <h1 class="text-2xl font-bold mb-4 text-[#5C7988]">Penilaian Magang</h1>
+        <form class="space-y-4">
+          <div class="bg-[#f1f4fa] p-4 rounded shadow">
+            <div class="bg-white p-4 rounded shadow">
+              <p><strong>Nama</strong> : <span id="nama">-</span></p>
+              <p><strong>NIM</strong> : <span id="nim">-</span></p>
+              <p><strong>Perusahaan</strong> : <span id="perusahaan">-</span></p>
+            </div>
+
+            <div class="mt-6">
+              <h2 class="text-xl font-semibold mb-4 text-[#5C7988]">Aspek Penilaian</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow text-center hover:bg-[#f1f4fa] transition-colors">
+                  <h3 class="font-bold text-[#5C7988]">Kinerja Tugas</h3>
+                  <p class="text-2xl text-yellow-600 font-bold" id="nilai1">-</p>
+                  <p class="text-sm text-gray-600" id="deskripsi1">-</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center hover:bg-[#f1f4fa] transition-colors">
+                  <h3 class="font-bold text-[#5C7988]">Kedisiplinan</h3>
+                  <p class="text-2xl text-yellow-600 font-bold" id="nilai2">-</p>
+                  <p class="text-sm text-gray-600" id="deskripsi2">-</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center hover:bg-[#f1f4fa] transition-colors">
+                  <h3 class="font-bold text-[#5C7988]">Kolaborasi & Komunikasi</h3>
+                  <p class="text-2xl text-yellow-600 font-bold" id="nilai3">-</p>
+                  <p class="text-sm text-gray-600" id="deskripsi3">-</p>
+                </div>
+              </div>
+              <div class="mt-4 bg-white p-3 rounded shadow flex justify-between items-center hover:bg-[#f1f4fa] transition-colors">
+                <span class="text-[#5C7988]"><strong>Nilai Akhir</strong> : <span id="nilaiAkhir">-</span></span>
+                <button class="bg-[#8EAAB8] text-white px-4 py-2 rounded hover:bg-[#7A99A7] transition-colors">Ekspor Pdf</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript untuk highlight menu aktif -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Dapatkan path URL saat ini
+      const currentPath = window.location.pathname;
+      
+      // Temukan semua link menu
+      const menuLinks = document.querySelectorAll('nav ul li a');
+      
+      // Loop melalui setiap link menu
+      menuLinks.forEach(link => {
+        // Hapus semua highlight terlebih dahulu
+        link.classList.remove('bg-[#7A99A7]');
+        link.classList.add('hover:bg-[#7A99A7]');
+        
+        // Jika href link cocok dengan path saat ini
+        if (link.getAttribute('href') === currentPath) {
+          // Tambahkan class untuk highlight
+          link.classList.add('bg-[#7A99A7]');
+          link.classList.remove('hover:bg-[#7A99A7]');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

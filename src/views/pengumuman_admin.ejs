@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Pengumuman Admin</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .sidebar-gradient {
+      background: linear-gradient(180deg, #8EAAB8 0%, #6D8B9A 100%);
+    }
+    
+    .menu-item {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.15) !important;
+      transform: translateX(4px);
+    }
+    
+    .menu-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background-color: #F59E0B;
+      transform: scaleY(0);
+      transition: transform 0.3s;
+    }
+    
+    .menu-item:hover::before {
+      transform: scaleY(1);
+    }
+    
+    .announcement-card {
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+    
+    .announcement-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      border-left-color: #8EAAB8;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #8EAAB8 0%, #6D8B9A 100%);
+      transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(113, 128, 150, 0.3);
+    }
+    
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 sidebar-gradient text-white flex-shrink-0 hidden md:block">
+      <div class="p-5 border-b border-[#7A99A7]">
+        <h1 class="text-xl font-bold flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Pengumuman-Admin
+        </h1>
+      </div>
+      <nav class="p-4">
+        <div class="mb-8">
+          <p class="text-xs font-semibold text-white/70 uppercase tracking-wider mb-3 pl-3">Diakhtoari</p>
+          <ul class="space-y-1">
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Management Pengguan</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Process Magang</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Pengalam Magang</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Pingyan Magang</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Diane Penelimling</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Remifikan & Loyongan</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Loyongan Magang</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Mira Penushaan</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Ferdalack Pecusahaan</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Komara & Komunikasi</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Tempaan Dokumen</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Laporan & Satsatuk</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Pengarunan System</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Kamigurata Nachmai</a></li>
+            <li><a href="#" class="menu-item block py-2 px-4 rounded-lg text-white/90 hover:text-white">Manutemen Backup</a></li>
+          </ul>
+        </div>
+        <button class="w-full py-2.5 px-4 bg-[#D9D9D9] text-gray-800 rounded-lg hover:bg-gray-200 font-medium flex items-center justify-center transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Logout
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-gray-50 to-gray-100">
+      <div class="max-w-5xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+          <div>
+            <h2 class="text-2xl font-bold text-[#2D3748]">Pengelolaan Pengumuman</h2>
+            <p class="text-gray-500">Kelola semua pengumuman magang di sini</p>
+          </div>
+          <button id="tambahBtn" class="btn-primary text-white px-5 py-2.5 rounded-lg font-medium mt-4 md:mt-0 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tambah Pengumuman
+          </button>
+        </div>
+
+        <!-- Pengumuman List -->
+        <div id="announcementList" class="space-y-5">
+          <!-- Announcements will be dynamically added here -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Tambah/Edit Pengumuman -->
+  <div id="announcementModal" class="fixed inset-0 z-50 modal-overlay flex items-center justify-center hidden">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4">
+      <div class="flex justify-between items-center p-5 border-b">
+        <h3 id="modalTitle" class="text-xl font-semibold text-[#2D3748]">Tambah Pengumuman Baru</h3>
+        <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <form id="announcementForm" class="p-5">
+        <input type="hidden" id="announcementId">
+        <div class="mb-5">
+          <label for="judul" class="block text-sm font-medium text-gray-700 mb-2">Judul Pengumuman</label>
+          <input type="text" id="judul" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8EAAB8] focus:border-[#8EAAB8] transition-all" required>
+        </div>
+        
+        <div class="mb-5">
+          <label for="isi" class="block text-sm font-medium text-gray-700 mb-2">Isi Pengumuman</label>
+          <textarea id="isi" rows="4" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8EAAB8] focus:border-[#8EAAB8] transition-all" required></textarea>
+        </div>
+
+        <div class="mb-5">
+          <label for="link" class="block text-sm font-medium text-gray-700 mb-2">Link Terkait (opsional)</label>
+          <input type="url" id="link" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8EAAB8] focus:border-[#8EAAB8] transition-all" placeholder="https://example.com">
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+          <div>
+            <label for="publikasi" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Publikasi</label>
+            <input type="date" id="publikasi" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8EAAB8] focus:border-[#8EAAB8] transition-all" required>
+          </div>
+          <div>
+            <label for="kadaluarsa" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Kadaluarsa</label>
+            <input type="date" id="kadaluarsa" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8EAAB8] focus:border-[#8EAAB8] transition-all">
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Audiens</label>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <label class="flex items-center space-x-2 p-3 border border-gray-300 rounded-lg hover:border-[#8EAAB8] cursor-pointer">
+              <input type="radio" name="audiens" value="Students" class="text-[#8EAAB8] focus:ring-[#8EAAB8]" required>
+              <span>Students</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 border border-gray-300 rounded-lg hover:border-[#8EAAB8] cursor-pointer">
+              <input type="radio" name="audiens" value="Mentors" class="text-[#8EAAB8] focus:ring-[#8EAAB8]">
+              <span>Mentors</span>
+            </label>
+            <label class="flex items-center space-x-2 p-3 border border-gray-300 rounded-lg hover:border-[#8EAAB8] cursor-pointer">
+              <input type="radio" name="audiens" value="All" class="text-[#8EAAB8] focus:ring-[#8EAAB8]">
+              <span>All</span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+          <button type="button" id="cancelBtn" class="px-5 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all">
+            Batal
+          </button>
+          <button type="submit" id="saveBtn" class="btn-primary px-5 py-2.5 rounded-lg text-white font-medium">
+            Simpan Pengumuman
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Sample data
+    let announcements = [
+
+    ];
+
+    // DOM elements
+    const announcementList = document.getElementById('announcementList');
+    const tambahBtn = document.getElementById('tambahBtn');
+    const announcementModal = document.getElementById('announcementModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const announcementForm = document.getElementById('announcementForm');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const announcementIdInput = document.getElementById('announcementId');
+
+    // Format date for display
+    const formatDate = (dateString) => {
+      if (!dateString) return '-';
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('id-ID', options);
+    };
+
+    // Render announcements
+    const renderAnnouncements = () => {
+      announcementList.innerHTML = '';
+      
+      announcements.forEach(announcement => {
+        const announcementElement = document.createElement('div');
+        announcementElement.className = 'announcement-card bg-white p-6 rounded-xl shadow-sm';
+        announcementElement.dataset.id = announcement.id;
+        
+        announcementElement.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center mb-2">
+                <span class="inline-block w-3 h-3 rounded-full ${announcement.status === 'active' ? 'bg-green-500' : 'bg-gray-300'} mr-2"></span>
+                <h3 class="text-lg font-semibold text-[#2D3748]">${announcement.judul}</h3>
+              </div>
+              <p class="text-gray-600 mb-2 pl-5">${announcement.isi}</p>
+              ${announcement.link ? `<a href="${announcement.link}" target="_blank" class="text-[#8EAAB8] hover:text-[#6D8B9A] text-sm pl-5 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Link Terkait
+              </a>` : ''}
+            </div>
+            <span class="bg-${announcement.status === 'active' ? 'blue' : 'gray'}-100 text-${announcement.status === 'active' ? 'blue' : 'gray'}-800 text-xs px-2.5 py-0.5 rounded-full">
+              ${announcement.status === 'active' ? 'Aktif' : 'Tidak Aktif'}
+            </span>
+          </div>
+          
+          <div class="pl-5">
+            <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-500 mb-4 mt-3">
+              <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span class="font-medium">Publikasi:</span> ${formatDate(announcement.publikasi)}
+              </span>
+              <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="font-medium">Kadaluarsa:</span> ${formatDate(announcement.kadaluarsa)}
+              </span>
+              <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span class="font-medium">Audiens:</span> ${announcement.audiens}
+              </span>
+            </div>
+            
+            <div class="flex space-x-3">
+              <button class="edit-btn text-[#8EAAB8] hover:text-[#6D8B9A] flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Edit
+              </button>
+              <span class="text-gray-300">|</span>
+              <button class="delete-btn text-red-400 hover:text-red-600 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Hapus
+              </button>
+            </div>
+          </div>
+        `;
+        
+        announcementList.appendChild(announcementElement);
+      });
+
+      // Add event listeners to edit and delete buttons
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const announcementElement = e.target.closest('.announcement-card');
+          const announcementId = parseInt(announcementElement.dataset.id);
+          editAnnouncement(announcementId);
+        });
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const announcementElement = e.target.closest('.announcement-card');
+          const announcementId = parseInt(announcementElement.dataset.id);
+          deleteAnnouncement(announcementId);
+        });
+      });
+    };
+
+    // Open modal for adding new announcement
+    tambahBtn.addEventListener('click', () => {
+      modalTitle.textContent = 'Tambah Pengumuman Baru';
+      announcementIdInput.value = '';
+      announcementForm.reset();
+      announcementModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Edit announcement
+    const editAnnouncement = (id) => {
+      const announcement = announcements.find(a => a.id === id);
+      if (announcement) {
+        modalTitle.textContent = 'Edit Pengumuman';
+        announcementIdInput.value = announcement.id;
+        document.getElementById('judul').value = announcement.judul;
+        document.getElementById('isi').value = announcement.isi;
+        document.getElementById('link').value = announcement.link;
+        document.getElementById('publikasi').value = announcement.publikasi;
+        document.getElementById('kadaluarsa').value = announcement.kadaluarsa;
+        document.querySelector(`input[name="audiens"][value="${announcement.audiens}"]`).checked = true;
+        
+        announcementModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
+    // Delete announcement
+    const deleteAnnouncement = (id) => {
+      if (confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')) {
+        announcements = announcements.filter(a => a.id !== id);
+        renderAnnouncements();
+      }
+    };
+
+    // Save announcement
+    announcementForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const id = announcementIdInput.value ? parseInt(announcementIdInput.value) : Date.now();
+      const judul = document.getElementById('judul').value;
+      const isi = document.getElementById('isi').value;
+      const link = document.getElementById('link').value;
+      const publikasi = document.getElementById('publikasi').value;
+      const kadaluarsa = document.getElementById('kadaluarsa').value;
+      const audiens = document.querySelector('input[name="audiens"]:checked').value;
+      
+      const newAnnouncement = {
+        id,
+        judul,
+        isi,
+        link,
+        publikasi,
+        kadaluarsa,
+        audiens,
+        status: kadaluarsa && new Date(kadaluarsa) >= new Date() ? 'active' : 'inactive'
+      };
+      
+      if (announcementIdInput.value) {
+        // Update existing announcement
+        const index = announcements.findIndex(a => a.id === id);
+        if (index !== -1) {
+          announcements[index] = newAnnouncement;
+        }
+      } else {
+        // Add new announcement
+        announcements.unshift(newAnnouncement);
+      }
+      
+      renderAnnouncements();
+      announcementModal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    });
+
+    // Close modal
+    [closeModal, cancelBtn].forEach(btn => {
+      btn.addEventListener('click', () => {
+        announcementModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      });
+    });
+
+    // Close modal when clicking outside
+    announcementModal.addEventListener('click', (e) => {
+      if (e.target === announcementModal) {
+        announcementModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // Initialize
+    renderAnnouncements();
+  </script>
+</body>
+</html>
