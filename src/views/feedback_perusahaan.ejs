@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Perusahaan</title>
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-content-bg">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-72 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg">
+      <div class="text-center py-4 border-b border-white/20">
+        <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30" />
+        <h3 class="font-bold text-lg">Admin Jurusan</h3>
+        <p class="text-sm">Sistem Informasi</p>
+      </div>
+      <nav class="mt-6 flex-grow overflow-y-auto pr-2">
+        <ul class="space-y-1 pb-4">
+          <li><a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
+          <li>
+            <button class="w-full flex justify-between items-center px-4 py-3 hover:bg-sidebar-hover rounded-md" data-menu="kemitraan">
+              <span class="flex items-center gap-3"><i data-lucide="handshake"></i> Kemitraan & Lowongan</span>
+              <i data-lucide="chevron-down" class="w-5 h-5 rotate-180"></i>
+            </button>
+            <div id="kemitraan" class="pl-8 pt-1 space-y-1">
+              <a href="/admin/lowongan-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Lowongan Magang</a>
+              <a href="/admin/mitra-perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Mitra Perusahaan</a>
+              <a href="/admin/feedback-perusahaan" class="block px-4 py-2.5 rounded-md bg-sidebar-active text-sm">Feedback Perusahaan</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-72 p-8 w-full bg-gray-100">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">Feedback Perusahaan</h1>
+      <div class="space-y-4">
+        <% feedback.forEach(item => { %>
+          <div class="bg-white p-5 rounded-lg shadow border border-gray-200">
+            <div class="flex justify-between items-center mb-2">
+              <h2 class="text-lg font-bold text-gray-800"><%= item.namaMahasiswa %> (<%= item.nim %>)</h2>
+              <span class="text-sm text-gray-500"><%= item.tanggal %></span>
+            </div>
+            <p class="text-sm text-gray-600"><strong>Perusahaan:</strong> <%= item.perusahaan %></p>
+            <p class="mt-2 text-gray-700"><%= item.isi %></p>
+          </div>
+        <% }) %>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.271.0/dist/umd/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
+

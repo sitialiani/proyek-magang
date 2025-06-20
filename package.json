@@ -8,13 +8,17 @@
     "dev": "npx tailwindcss -i ./src/css/style.css -o ./public/css/style.css --watch"
   },
   "dependencies": {
+    "@sequelize/core": "^7.0.0-alpha.46",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "mysql2": "^3.14.1"
+    "multer": "^2.0.1",
+    "mysql2": "^3.14.1",
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
+    "sequelize-cli": "^6.6.3",
     "tailwindcss": "^3.4.4"
   }
 }
