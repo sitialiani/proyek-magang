@@ -22,6 +22,7 @@ app.use('/mahasiswa', mahasiswaRoutes);
 const adminRoutes = require('./src/routes/adminRoutes');
 // Gunakan rute ini dengan prefix /admin
 app.use('/admin', adminRoutes);
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 //routes dospem
