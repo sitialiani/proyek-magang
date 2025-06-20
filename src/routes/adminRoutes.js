@@ -150,4 +150,87 @@ router.get('/manajemen-backup', (req, res) => {
     });
 });
 
+/**
+ * @route   GET /admin/edit-hapus-lowongan
+ * @desc    Menampilkan halaman edit/hapus lowongan magang
+ * @access  Private (Hanya untuk Admin)
+ */
+router.get('/lowongan-magang', (req, res) => {
+    res.render('lowongan_magang'); // Buat file EJS untuk gabungan fungsionalitas di sini
+});
+
+router.get('/lowongan-magang', (req, res) => {
+  res.render('lowongan_magang');
+});
+
+router.get('/mitra-perusahaan', (req, res) => {
+    // Contoh data dummy
+    const mitraList = [
+        { id: 1, nama: 'PT. Teknologi Nusantara', alamat: 'Jl. Merdeka No. 12', kontak: 'hrd@teknologi.co.id' },
+        { id: 2, nama: 'CV. Cipta Karya', alamat: 'Jl. Melati No. 5', kontak: 'cp.ciptakarya@gmail.com' }
+    ];
+    res.render('mitra_perusahaan', { mitra: mitraList });
+});
+
+// Dummy data
+let pengajuanMagang = [
+  { id: 1, nim: '2311522001', nama: 'Budi Santoso', perusahaan: 'PT. Maju Jaya', status: 'Belum Diverifikasi' },
+  { id: 2, nim: '2311522002', nama: 'Siti Aliani', perusahaan: 'CV. Cipta Karya', status: 'Belum Diverifikasi' }
+];
+
+// Tampilkan halaman pengajuan
+router.get('/pengajuan-magang', (req, res) => {
+  res.render('pengajuan_magang', {
+    pengajuan: pengajuanMagang
+  });
+});
+
+// Proses verifikasi pengajuan
+router.post('/pengajuan/verifikasi/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  pengajuanMagang = pengajuanMagang.map(item =>
+    item.id === id ? { ...item, status: 'Terverifikasi' } : item
+  );
+  res.redirect('/admin/pengajuan-magang');
+});
+
+// Dummy data feedback dari perusahaan
+let feedbackData = [
+  {
+    id: 1,
+    namaMahasiswa: 'Budi Santoso',
+    nim: '2311522001',
+    perusahaan: 'PT. Maju Jaya',
+    isi: 'Mahasiswa ini sangat aktif dan disiplin.',
+    tanggal: '2025-06-20'
+  },
+  {
+    id: 2,
+    namaMahasiswa: 'Siti Aliani',
+    nim: '2311522002',
+    perusahaan: 'CV. Cipta Karya',
+    isi: 'Perlu peningkatan dalam komunikasi tim.',
+    tanggal: '2025-06-18'
+  }
+];
+
+// Tampilkan halaman feedback perusahaan
+router.get('/feedback-perusahaan', (req, res) => {
+  res.render('feedback_perusahaan', {
+    feedback: feedbackData
+  });
+});
+
+// Dummy data template dokumen
+const templateDokumen = [
+  { id: 1, nama: 'Surat Pengantar Magang', file: '/files/surat_pengantar.docx' },
+  { id: 2, nama: 'Surat Pengantar Magang', file: '/files/surat_pengantar.pdf' },
+];
+
+// Halaman template dokumen
+router.get('/template-dokumen', (req, res) => {
+  res.render('template_dokumen', { templates: templateDokumen });
+});
+
 module.exports = router;
+
