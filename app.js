@@ -26,7 +26,7 @@ app.use((req, res, next) => {
     // Ini mensimulasikan user yang sudah login sebagai dosen dengan ID 1.
     // Di aplikasi nyata, Anda akan memiliki sistem login/sesi yang sebenarnya.
     // Penting: Pastikan user_id 1 di tabel `users` adalah user dengan role 'dosen' di database Anda.
-    req.user = { id: 1, role: 'dosen' }; // Dosen dummy dengan user_id 1
+    req.user = { id: 8, role: 'dosen' }; // Dosen dummy dengan user_id 1
     next();
 });
 
