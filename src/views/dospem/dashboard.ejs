@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    </head>
+<body class="flex bg-[#E7EEF0]">
+    <%- include('../layout/sidebardospem', { activeMenu: 'dashboard', namaDosen: namaDosen }) %>
+
+    <main class="flex-1 p-8 ml-64">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">Selamat datang, <%= namaDosen %></h1>
+            <div class="flex items-center space-x-4">
+            </div>
+        </header>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 4 7.5 4S4.168 5.477 3 6.253v13C4.168 18.523 5.754 20 7.5 20S10.832 18.523 12 19.247m0-13C13.168 5.477 14.754 4 16.5 4s2.332 1.477 3.5 2.253v13C19.832 18.523 21.418 20 23.5 20s-2.168-1.477-3.5-2.247"/>
+            </svg>
+                <div>
+                    <p class="text-gray-500 text-sm">Mahasiswa Bimbingan</p>
+                    <p class="text-3xl font-bold text-gray-800"><%= totalMahasiswaBimbingan %></p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+                <div class="text-yellow-500 text-4xl">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Logbook Menunggu Evaluasi</p>
+                    <p class="text-3xl font-bold text-gray-800"><%= logbookMenungguEvaluasi %></p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+                <div class="text-green-500 text-4xl">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Laporan Menunggu Penilaian</p>
+                    <p class="text-3xl font-bold text-gray-800"><%= laporanMenungguPenilaian %></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Aktivitas Terbaru
+                </h3>
+                <ul class="space-y-3">
+                    <% if (aktivitasTerbaru.length > 0) { %>
+                        <% aktivitasTerbaru.forEach(activity => { %>
+                            <li class="text-gray-700">
+                                &bull; <span class="text-gray-700"><%= activity.message %></span>
+                            </li>
+                        <% }) %>
+                    <% } else { %>
+                        <li class="text-gray-500">Tidak ada aktivitas terbaru.</li>
+                    <% } %>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">Kalender</h3>
+                <div class="calendar w-[350px] bg-white shadow-lg rounded-md mt-2 overflow-hidden mx-auto">
+                    <div class="calendar-header flex justify-between items-center p-2">
+                        <button id="prev-month" class="bg-transparent border-none text-2xl cursor-pointer text-gray-700 px-2 py-1 rounded-sm hover:bg-gray-200 transition-colors duration-200">‹</button>
+                        <div id="month-year" class="text-lg font-bold"></div>
+                        <button id="next-month" class="bg-transparent border-none text-2xl cursor-pointer text-gray-700 px-2 py-1 rounded-sm hover:bg-gray-200 transition-colors duration-200">›</button>
+                    </div>
+                    <div class="calendar-body">
+                        <div class="calendar-weekdays grid grid-cols-7 bg-gray-200 font-bold">
+                            <div class="text-center p-2">Sun</div>
+                            <div class="text-center p-2">Mon</div>
+                            <div class="text-center p-2">Tue</div>
+                            <div class="text-center p-2">Wed</div>
+                            <div class="text-center p-2">Thu</div>
+                            <div class="text-center p-2">Fri</div>
+                            <div class="text-center p-2">Sat</div>
+                        </div>
+                        <div class="calendar-dates grid grid-cols-7 text-gray-800">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="event-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm">
+            <h4 class="text-lg font-bold mb-4" id="modal-date"></h4>
+            <ul id="event-list" class="space-y-2">
+                </ul>
+            <button id="close-modal" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Tutup</button>
+        </div>
+    </div>
+
+
+    <script>
+        const CALENDAR_EVENTS = <%- JSON.stringify(calendarEvents) %>;
+        console.log("Event dari backend:", CALENDAR_EVENTS);
+    </script>
+
+    <script src="/js/custom-calendar.js"></script>
+</body>
+</html>
