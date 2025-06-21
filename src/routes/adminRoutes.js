@@ -144,7 +144,22 @@ router.get('/manajemen-backup', (req, res) => {
     res.render('manajemen_backup', { data: backupData });
 });
 
+<<<<<<< HEAD
+router.get("/Pengumuman_admin", (req, res) => {
+  console.log("Route Pengumuman_admin dipanggil!"); // Tambahkan log ini
+  res.render("Pengumuman_admin");
+});
+
+router.get("/dashboard_admin", (req, res) => {
+  console.log("Route dashboard_admin dipanggil!"); // Tambahkan log ini
+  res.render("dashboard_admin");
+});
+
+module.exports = router; // <<< WAJIB agar bisa di-require
+
+
 // =================================================================
 // --- EKSPOR ROUTER (WAJIB DI AKHIR FILE) ---
 // =================================================================
 module.exports = router;
+>>>>>>> cc0cdb57045addbe316ab0aae806fbc6f0694f6e
