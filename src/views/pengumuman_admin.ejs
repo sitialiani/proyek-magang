@@ -12,79 +12,27 @@
 
 <div class="flex min-h-screen">
   <!-- Sidebar -->
-  <aside class="w-72 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg z-10">
-    <div class="text-center py-4 border-b border-white/20">
-      <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" alt="Foto Profil Admin"
-           class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
-      <h3 class="font-bold text-lg">Admin Jurusan</h3>
-      <p class="text-sm">Sistem Informasi</p>
-    </div>
-
-    <nav class="mt-6 flex-grow overflow-y-auto pr-2">
-      <ul class="space-y-1 pb-4">
-        <li>
-          <a href="Dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md bg-sidebar-active font-semibold shadow-inner transition-colors duration-200">
-            <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="Manajemen Pengguna" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200">
-            <i data-lucide="users" class="w-5 h-5"></i> Manajemen Pengguna
-          </a>
-        </li>
-        <!-- Submenu Proses Magang -->
-        <li>
-          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="proses-magang">
-            <span class="flex items-center gap-3"><i data-lucide="case-sensitive" class="w-5 h-5"></i> Proses Magang</span>
-            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-          </button>
-          <div id="proses-magang" class="hidden pl-8 pt-1 space-y-1">
-            <a href="Pengajuan Magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengajuan Magang</a>
-            <a href="Progress Magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Progress Magang</a>
-            <a href="Dosen Pembimbing" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Dosen Pembimbing</a>
-          </div>
-        </li>
-        <!-- Submenu Kemitraan -->
-        <li>
-          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="kemitraan">
-            <span class="flex items-center gap-3"><i data-lucide="handshake"></i> Kemitraan & Lowongan</span>
-            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-          </button>
-          <div id="kemitraan" class="hidden pl-8 pt-1 space-y-1">
-            <a href="Lowongan Magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Lowongan Magang</a>
-            <a href="Mitra Perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Mitra Perusahaan</a>
-            <a href="Feedback Perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Feedback Perusahaan</a>
-          </div>
-        </li>
-        <!-- Submenu Konten -->
-        <li>
-          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="konten">
-            <span class="flex items-center gap-3"><i data-lucide="message-square" class="w-5 h-5"></i> Konten & Komunikasi</span>
-            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-          </button>
-          <div id="konten" class="hidden pl-8 pt-1 space-y-1">
-            <a href="Pengumuman" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengumuman</a>
-            <a href="Template Dokumen" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Template Dokumen</a>
-          </div>
-        </li>
-        <li>
-          <a href="Laporan Statistik" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200">
-            <i data-lucide="pie-chart" class="w-5 h-5"></i> Laporan Statistik
-          </a>
-        </li>
-        <!-- Submenu Pengaturan -->
-        <li>
-          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="pengaturan">
-            <span class="flex items-center gap-3"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Sistem</span>
-            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-          </button>
-          <div id="pengaturan" class="hidden pl-8 pt-1 space-y-1">
-            <a href="Konfigurasi Notifikasi" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Konfigurasi Notifikasi</a>
-            <a href="Manajemen Backup" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Manajemen Backup</a>
-          </div>
-        </li>
-      </ul>
-    </nav>
+    <aside class="w-72 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg">
+      <div class="text-center py-4 border-b border-white/20">
+        <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30" />
+        <h3 class="font-bold text-lg">Admin Jurusan</h3>
+        <p class="text-sm">Sistem Informasi</p>
+      </div>
+      <nav class="mt-6 flex-grow overflow-y-auto pr-2">
+        <ul class="space-y-1 pb-4">
+          <li><a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
+          <li>
+            <button class="w-full flex justify-between items-center px-4 py-3 hover:bg-sidebar-hover rounded-md" data-menu="konten">
+              <span class="flex items-center gap-3"><i data-lucide="message-square"></i> Konten & Komunikasi</span>
+              <i data-lucide="chevron-down" class="w-5 h-5 rotate-180"></i>
+            </button>
+            <div id="konten" class="pl-8 pt-1 space-y-1">
+              <a href="/admin/pengumuman" class="block px-4 py-2.5 rounded-md bg-sidebar-active text-sm">Pengumuman</a>
+              <a href="/admin/template-dokumen" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Template Dokumen</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
 
     <div class="mt-auto pt-4 border-t border-white/20">
       <a href="Logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
