@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengumuman - Portal Mahasiswa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .sidebar-active {
+      background-color: #7A99A7;
+      font-weight: 600;
+    }
+    .modal {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#8EAAB8] text-white flex flex-col p-4 fixed h-full shadow-lg">
+      <!-- Profile section -->
+      <div class="text-center py-4 border-b border-white/20">
+        <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Foto" alt="Foto Profil" 
+             class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
+        <h3 class="font-bold text-lg">Siti Aliani</h3>
+        <p class="text-sm">2311522006</p>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="mt-6 flex-grow">
+        <ul class="space-y-2">
+           <li><a href="Dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Dashboard</a></li>
+                    <li><a href="Daftar Lowongan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Daftar Lowongan</a></li>
+                    <li><a href="Formulir Pengajuan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Formulir Pengajuan</a></li>
+                    <li><a href="Status & Verifikasi" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Status & Verifikasi</a></li>
+                    <li><a href="Logbook" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Logbook</a></li>
+                    <li><a href="Laporan Akhir" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Laporan Akhir</a></li>
+                    <li><a href="Penilaian" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Penilaian</a></li>
+                    <li><a href="Pengumuman" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Pengumuman</a></li>
+        </ul>
+      </nav>
+
+      <!-- Logout -->
+      <div class="mt-auto">
+        <a href="Logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 flex-1 p-8 min-h-screen">
+      <!-- Header -->
+      <header class="flex justify-end items-center mb-8">
+        <div class="flex items-center gap-4">
+          <div class="text-right">
+            <p class="font-semibold text-gray-800">Siti Aliani</p>
+            <p class="text-sm text-gray-500">Mahasiswa Aktif</p>
+          </div>
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Pengumuman Content -->
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6 text-[#5C7988]">PENGUMUMAN TEMPAT MAGANG</h1>
+        
+        <!-- Daftar Pengumuman -->
+        <div class="space-y-4" id="pengumuman-list">
+          <!-- Pengumuman Tempat Magang 1 -->
+          <div class="bg-white rounded-xl shadow-md p-6 transition hover:shadow-lg border-l-4 border-[#8EAAB8]">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="font-semibold text-lg text-[#5C7988]">Magang di PT. Digital Solusi Indonesia</h3>
+              <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">22 Juni 2025</span>
+            </div>
+            <p class="text-gray-600 mb-4 line-clamp-2">
+              PT. Digital Solusi Indonesia membuka program magang untuk 10 mahasiswa jurusan Teknik Informatika/Sistem Informasi.
+            </p>
+            <div class="flex justify-end">
+              <button onclick="showDetail(1)" class="bg-[#8EAAB8] hover:bg-[#7A99A7] text-white px-4 py-2 rounded-full text-sm font-medium shadow-sm transition">
+                Lihat Detail
+              </button>
+            </div>
+          </div>
+
+          <!-- Pengumuman Tempat Magang 2 -->
+          <div class="bg-white rounded-xl shadow-md p-6 transition hover:shadow-lg border-l-4 border-[#8EAAB8]">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="font-semibold text-lg text-[#5C7988]">Program Magang Bank Nasional</h3>
+              <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">20 Juni 2025</span>
+            </div>
+            <p class="text-gray-600 mb-4 line-clamp-2">
+              Bank Nasional membuka kesempatan magang di divisi IT untuk 5 mahasiswa dengan ketentuan khusus.
+            </p>
+            <div class="flex justify-end">
+              <button onclick="showDetail(2)" class="bg-[#8EAAB8] hover:bg-[#7A99A7] text-white px-4 py-2 rounded-full text-sm font-medium shadow-sm transition">
+                Lihat Detail
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Detail Pengumuman -->
+  <div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden modal">
+    <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+          <h3 id="modal-title" class="text-xl font-bold text-[#5C7988]">Judul Pengumuman</h3>
+          <button onclick="hideModal()" class="text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span id="modal-date">22 Juni 2025</span>
+          <span class="mx-2">•</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span id="modal-time">10:00 WIB</span>
+        </div>
+        
+        <div id="modal-content" class="prose prose-sm max-w-none text-gray-700 mb-6">
+          <!-- Konten pengumuman akan diisi oleh JavaScript -->
+        </div>
+        
+        <div class="border-t pt-4">
+          <h4 class="font-semibold text-[#5C7988] mb-2">Lampiran:</h4>
+          <div class="flex items-center text-sm text-[#5C7988] hover:text-[#7A99A7]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            <a href="#" id="modal-attachment" class="underline" download>Unduh Dokumen</a>
+          </div>
+        </div>
+        
+        <div class="flex justify-end mt-6">
+          <button onclick="hideModal()" class="bg-[#5C7988] hover:bg-[#4a6270] text-white px-6 py-2 rounded-lg transition">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data pengumuman
+    const pengumumanData = {
+      1: {
+        title: "Magang di PT. Digital Solusi Indonesia",
+        date: "22 Juni 2025",
+        time: "10:00 WIB",
+        content: `
+          <p class="mb-4">PT. Digital Solusi Indonesia membuka program magang untuk mahasiswa dengan detail sebagai berikut:</p>
+          
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h5 class="font-semibold mb-2">Detail Program:</h5>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong>Posisi:</strong> Magang Pengembang Aplikasi</li>
+              <li><strong>Periode:</strong> 1 Juli - 30 September 2025</li>
+              <li><strong>Kuota:</strong> 10 mahasiswa</li>
+              <li><strong>Lokasi:</strong> Gedung Digital Tower, Jakarta</li>
+              <li><strong>Bidang:</strong> Web Development, Mobile App, dan Data Science</li>
+            </ul>
+          </div>
+          
+          <h5 class="font-semibold mb-2">Persyaratan:</h5>
+          <ul class="list-disc pl-5 space-y-1 mb-4">
+            <li>Mahasiswa aktif D3/D4/S1 bidang IT</li>
+            <li>Memahami dasar pemrograman (Python/Java/JavaScript)</li>
+            <li>Bersedia bekerja full-time selama 3 bulan</li>
+            <li>Membawa surat pengantar dari kampus</li>
+            <li>Portofolio proyek (jika ada)</li>
+          </ul>
+          
+          <h5 class="font-semibold mb-2">Benefit:</h5>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Uang saku Rp 2.500.000/bulan</li>
+            <li>Sertifikat magang</li>
+            <li>Mentor berpengalaman</li>
+            <li>Peluang kerja setelah lulus</li>
+          </ul>
+          
+          <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mt-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-blue-700">
+                  Pendaftaran dibuka sampai 28 Juni 2025. Segera daftarkan diri Anda melalui menu Formulir Pengajuan.
+                </p>
+              </div>
+            </div>
+          </div>
+        `,
+        attachment: "Syarat_Magang_PT_Digital_Solusi.pdf",
+        attachmentUrl: "#"
+      },
+      2: {
+        title: "Program Magang Bank Nasional",
+        date: "20 Juni 2025",
+        time: "09:00 WIB",
+        content: `
+          <p class="mb-4">Bank Nasional membuka program magang untuk mahasiswa di divisi IT dengan rincian sebagai berikut:</p>
+          
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h5 class="font-semibold mb-2">Informasi Magang:</h5>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong>Divisi:</strong> IT Development & Digital Banking</li>
+              <li><strong>Periode:</strong> 5 Juli - 31 Oktober 2025</li>
+              <li><strong>Kuota:</strong> 5 mahasiswa</li>
+              <li><strong>Lokasi:</strong> Kantor Pusat Bank Nasional, Jakarta</li>
+              <li><strong>Jadwal:</strong> Senin-Jumat, 08.30-17.00</li>
+            </ul>
+          </div>
+          
+          <h5 class="font-semibold mb-2">Kriteria Peserta:</h5>
+          <ul class="list-disc pl-5 space-y-1 mb-4">
+            <li>Mahasiswa semester 6 ke atas</li>
+            <li>IPK minimal 3.00</li>
+            <li>Memahami dasar pemrograman dan sistem informasi</li>
+            <li>Bersedia mengikuti aturan perusahaan</li>
+            <li>Lulus seleksi administrasi dan wawancara</li>
+          </ul>
+          
+          <h5 class="font-semibold mb-2">Materi Magang:</h5>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Pengembangan aplikasi perbankan</li>
+            <li>Keamanan sistem informasi</li>
+            <li>Manajemen proyek IT</li>
+            <li>Implementasi sistem digital banking</li>
+          </ul>
+          
+          <div class="bg-green-50 border-l-4 border-green-400 p-4 mt-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-green-700">
+                  Magang ini memberikan pengalaman kerja nyata di industri perbankan dan sertifikat resmi.
+                </p>
+              </div>
+            </div>
+          </div>
+        `,
+        attachment: "Panduan_Magang_Bank_Nasional.pdf",
+        attachmentUrl: "#"
+      }
+    };
+
+    // Fungsi untuk menampilkan detail pengumuman
+    function showDetail(id) {
+      const pengumuman = pengumumanData[id];
+      document.getElementById('modal-title').textContent = pengumuman.title;
+      document.getElementById('modal-date').textContent = pengumuman.date;
+      document.getElementById('modal-time').textContent = pengumuman.time;
+      document.getElementById('modal-content').innerHTML = pengumuman.content;
+      
+      const attachmentLink = document.getElementById('modal-attachment');
+      attachmentLink.textContent = pengumuman.attachment;
+      attachmentLink.href = pengumuman.attachmentUrl;
+      attachmentLink.setAttribute('download', pengumuman.attachment);
+      
+      const modal = document.getElementById('detail-modal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Fungsi untuk menyembunyikan modal
+    function hideModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Highlight menu aktif
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuLinks = document.querySelectorAll('nav ul li a');
+      menuLinks.forEach(link => {
+        if (link.classList.contains('sidebar-active')) {
+          link.classList.add('bg-[#7A99A7]');
+          link.classList.remove('hover:bg-[#7A99A7]');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
