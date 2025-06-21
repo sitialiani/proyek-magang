@@ -34,14 +34,6 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-const { sequelize } = require('./models');
 
-app.get('/test-db', async (req, res) => {
-  try {
-    await sequelize.authenticate();
-    res.send('Koneksi ke database lokal berhasil!');
-  } catch (error) {
-    res.send('Gagal terhubung ke database: ' + error.message);
-  }
-});
+
 
