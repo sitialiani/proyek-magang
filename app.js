@@ -29,11 +29,6 @@ app.use('/admin', adminRoutes);
 const dospemRoutes = require('./src/routes/dospemRoutes');
 app.use('/dospem', dospemRoutes);
 
-// Route baru untuk logbook
-app.get("/logbook", (req, res) => {
-  res.render("logbook"); // Render file logbook.ejs
-});
-
 
 
 const PORT = 3000;

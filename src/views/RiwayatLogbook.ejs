@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Riwayat Logbook</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -13,92 +13,150 @@
 </head>
 <body class="bg-[#f0f5f7] min-h-screen flex flex-col">
 
-  <!-- Header Bar -->
+  <!-- Header -->
   <header class="bg-[#8aa6b7] py-4 shadow-md">
     <div class="container mx-auto px-4">
       <h1 class="text-xl font-bold text-white">Sistem Logbook Magang</h1>
     </div>
   </header>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <main class="flex-1 container mx-auto py-8 px-4">
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-      <!-- Card Header -->
       <div class="bg-[#8aa6b7] px-6 py-4">
         <h2 class="text-xl font-bold text-white">Riwayat Logbook</h2>
       </div>
 
-      <!-- Table Container -->
-      <div class="p-6">
-        <!-- Tabel -->
-        <div class="overflow-x-auto">
-          <table class="w-full border-collapse">
-            <thead>
-              <tr class="bg-[#eaf1f3] text-gray-700">
-                <th class="px-4 py-3 text-left w-12">No.</th>
-                <th class="px-4 py-3 text-left">Tanggal</th>
-                <th class="px-4 py-3 text-left">Aktivitas</th>
-                <th class="px-4 py-3 text-left">Deskripsi</th>
-                <th class="px-4 py-3 text-left w-32">Status</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <!-- Contoh Data -->
-              <tr class="hover:bg-gray-50 transition">
-                <td class="px-4 py-3">1</td>
-                <td class="px-4 py-3">12/07/2023</td>
-                <td class="px-4 py-3">Pembuatan Modul</td>
-                <td class="px-4 py-3">Membuat modul autentikasi pengguna</td>
-                <td class="px-4 py-3">
-                  <span class="status-approved px-3 py-1 rounded-full text-xs font-semibold">
-                    Disetujui
-                  </span>
-                </td>
-              </tr>
-              <tr class="hover:bg-gray-50 transition">
-                <td class="px-4 py-3">2</td>
-                <td class="px-4 py-3">13/07/2023</td>
-                <td class="px-4 py-3">Bug Fixing</td>
-                <td class="px-4 py-3">Memperbaiki error pada form input</td>
-                <td class="px-4 py-3">
-                  <span class="status-pending px-3 py-1 rounded-full text-xs font-semibold">
-                    Pending
-                  </span>
-                </td>
-              </tr>
-              <tr class="hover:bg-gray-50 transition">
-                <td class="px-4 py-3">3</td>
-                <td class="px-4 py-3">14/07/2023</td>
-                <td class="px-4 py-3">Testing</td>
-                <td class="px-4 py-3">Melakukan pengujian sistem</td>
-                <td class="px-4 py-3">
-                  <span class="status-rejected px-3 py-1 rounded-full text-xs font-semibold">
-                    Ditolak
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- Table -->
+      <div class="p-6 overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-[#eaf1f3] text-gray-700">
+              <th class="px-4 py-3 text-left w-12">No.</th>
+              <th class="px-4 py-3 text-left">Tanggal</th>
+              <th class="px-4 py-3 text-left">Aktivitas</th>
+              <th class="px-4 py-3 text-left">Deskripsi</th>
+              <th class="px-4 py-3 text-left w-32">Status</th>
+              <th class="px-4 py-3 text-left w-32">Aksi</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 text-sm">
+            <!-- Baris 1: Disetujui -->
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3">1</td>
+              <td class="px-4 py-3">12/07/2023</td>
+              <td class="px-4 py-3">Pembuatan Modul</td>
+              <td class="px-4 py-3">Membuat modul autentikasi pengguna</td>
+              <td class="px-4 py-3">
+                <span class="status-approved px-3 py-1 rounded-full text-xs font-semibold">Disetujui</span>
+              </td>
+              <td class="px-4 py-3 italic text-gray-400">Terkunci</td>
+            </tr>
 
-        <!-- Tombol Aksi -->
+            <!-- Baris 2: Pending -->
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3">2</td>
+              <td class="px-4 py-3">13/07/2023</td>
+              <td class="px-4 py-3">Bug Fixing</td>
+              <td class="px-4 py-3">Memperbaiki error pada form input</td>
+              <td class="px-4 py-3">
+                <span class="status-pending px-3 py-1 rounded-full text-xs font-semibold">Pending</span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex gap-2">
+                  <button onclick="openEditModal('2', '13/07/2023', 'Bug Fixing', 'Memperbaiki error pada form input')" class="text-blue-600 hover:underline">✏️ Edit</button>
+                  <button onclick="confirmDelete('2')" class="text-red-600 hover:underline">🗑️ Hapus</button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Baris 3: Ditolak -->
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3">3</td>
+              <td class="px-4 py-3">14/07/2023</td>
+              <td class="px-4 py-3">Testing</td>
+              <td class="px-4 py-3">Melakukan pengujian sistem</td>
+              <td class="px-4 py-3">
+                <span class="status-rejected px-3 py-1 rounded-full text-xs font-semibold">Ditolak</span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex gap-2">
+                  <button onclick="openEditModal('3', '14/07/2023', 'Testing', 'Melakukan pengujian sistem')" class="text-blue-600 hover:underline">✏️ Edit</button>
+                  <button onclick="confirmDelete('3')" class="text-red-600 hover:underline">🗑️ Hapus</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Tombol bawah -->
         <div class="mt-6 flex flex-wrap gap-3">
-          <a href="/logbook" class="bg-[#7a98a7] hover:bg-[#6a8b9a] text-white px-4 py-2 rounded-md transition flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-            Kembali ke Dashboard
+          <a href="/logbook" class="bg-[#7a98a7] hover:bg-[#6a8b9a] text-white px-4 py-2 rounded-md flex items-center gap-2">
+            ⬅️ Kembali ke Dashboard
           </a>
-          <button class="bg-[#7a98a7] hover:bg-[#6a8b9a] text-white px-4 py-2 rounded-md transition flex items-center gap-2">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 20H5v-2h14v2zm-3-9h-4V4h-2v7H8l4 4 4-4z"/>
-            </svg>
-            Ekspor PDF
+          <button class="bg-[#7a98a7] hover:bg-[#6a8b9a] text-white px-4 py-2 rounded-md flex items-center gap-2">
+            📄 Ekspor PDF
           </button>
         </div>
       </div>
     </div>
   </main>
 
+  <!-- Modal Edit -->
+  <div id="editModal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+      <h3 class="text-lg font-bold mb-4">Edit Logbook</h3>
+      <form id="editForm" method="POST" action="/logbook/edit">
+        <input type="hidden" name="id" id="edit-id">
+        <div class="mb-3">
+          <label class="block text-sm font-medium">Tanggal</label>
+          <input type="date" id="edit-tanggal" name="tanggal" class="w-full border p-2 rounded" required />
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium">Aktivitas</label>
+          <input type="text" id="edit-aktivitas" name="aktivitas" class="w-full border p-2 rounded" required />
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium">Deskripsi</label>
+          <textarea id="edit-deskripsi" name="deskripsi" class="w-full border p-2 rounded" rows="3" required></textarea>
+        </div>
+        <div class="flex justify-end gap-2 mt-4">
+          <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Konfirmasi Hapus -->
+  <script>
+    function confirmDelete(id) {
+      if (confirm("Yakin ingin menghapus logbook ini?")) {
+        fetch(`/logbook/delete/${id}`, { method: "DELETE" })
+          .then(res => {
+            if (res.ok) location.reload();
+            else alert("Gagal menghapus.");
+          });
+      }
+    }
+
+    function openEditModal(id, tanggal, aktivitas, deskripsi) {
+      document.getElementById('edit-id').value = id;
+      document.getElementById('edit-tanggal').value = formatDate(tanggal);
+      document.getElementById('edit-aktivitas').value = aktivitas;
+      document.getElementById('edit-deskripsi').value = deskripsi;
+      document.getElementById('editModal').classList.remove('hidden');
+      document.getElementById('editModal').classList.add('flex');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
+
+    function formatDate(dmy) {
+      const [day, month, year] = dmy.split('/');
+      return `${year}-${month}-${day}`;
+    }
+  </script>
 </body>
 </html>
