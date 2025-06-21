@@ -43,7 +43,6 @@
 
   <!-- Main Content -->
   <main class="ml-72 pl-10 pr-10 py-10 flex-1 min-h-screen bg-[#F8FBFC]">
-    <!-- Header -->
     <header class="flex justify-between items-center mb-5">
       <h1 class="text-2xl font-bold text-[#5C7988]">Tambah Pengumuman Magang</h1>
       <div class="flex items-center gap-4">
@@ -57,103 +56,165 @@
       </div>
     </header>
 
-    <!-- Form -->
+    <!-- Formulir -->
     <div class="bg-white rounded-xl shadow-lg p-8 w-full">
       <form id="form-pengumuman" class="space-y-6">
         <div>
           <label for="judul" class="block font-medium text-[#5C7988] mb-2">Judul Pengumuman</label>
-          <input type="text" id="judul" placeholder="Masukkan judul pengumuman"
-                 class="w-full p-3 border border-[#8EAAB8] rounded-lg focus:ring-[#8EAAB8] focus:border-[#8EAAB8]">
+          <input type="text" id="judul" placeholder="Masukkan judul pengumuman" class="w-full p-3 border border-[#8EAAB8] rounded-lg">
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label for="tanggal" class="block font-medium text-[#5C7988] mb-2">Tanggal</label>
-            <input type="date" id="tanggal"
-                   class="w-full p-3 border border-[#8EAAB8] rounded-lg focus:ring-[#8EAAB8] focus:border-[#8EAAB8]">
+            <input type="date" id="tanggal" class="w-full p-3 border border-[#8EAAB8] rounded-lg">
           </div>
           <div>
             <label for="waktu" class="block font-medium text-[#5C7988] mb-2">Waktu</label>
-            <input type="time" id="waktu"
-                   class="w-full p-3 border border-[#8EAAB8] rounded-lg focus:ring-[#8EAAB8] focus:border-[#8EAAB8]">
+            <input type="time" id="waktu" class="w-full p-3 border border-[#8EAAB8] rounded-lg">
           </div>
         </div>
         <div>
           <label for="isi" class="block font-medium text-[#5C7988] mb-2">Isi Pengumuman</label>
-          <textarea id="isi" rows="6" placeholder="Tulis isi pengumuman di sini..."
-                    class="w-full p-3 border border-[#8EAAB8] rounded-lg focus:ring-[#8EAAB8] focus:border-[#8EAAB8]"></textarea>
+          <textarea id="isi" rows="6" class="w-full p-3 border border-[#8EAAB8] rounded-lg"></textarea>
         </div>
         <div>
           <label for="lampiran" class="block font-medium text-[#5C7988] mb-2">Lampiran (Opsional)</label>
           <div class="flex items-center">
             <input type="file" id="lampiran" class="hidden">
-            <label for="lampiran"
-                   class="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg border border-gray-300 mr-3 transition">
-              Pilih File
-            </label>
+            <label for="lampiran" class="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg border border-gray-300 mr-3">Pilih File</label>
             <span id="nama-file" class="text-sm text-gray-500">Belum ada file dipilih</span>
           </div>
-          <p class="text-xs text-gray-500 mt-1">Format: PDF, DOCX, atau JPG (Maks. 5MB)</p>
         </div>
         <div>
           <label class="block font-medium text-[#5C7988] mb-2">Kategori</label>
           <div class="flex flex-wrap gap-4">
             <label class="inline-flex items-center">
-              <input type="radio" name="kategori" value="magang" checked class="text-[#8EAAB8] focus:ring-[#8EAAB8]">
-              <span class="ml-2">Tempat Magang</span>
+              <input type="radio" name="kategori" value="magang" checked class="text-[#8EAAB8]"> <span class="ml-2">Tempat Magang</span>
             </label>
             <label class="inline-flex items-center">
-              <input type="radio" name="kategori" value="umum" class="text-[#8EAAB8] focus:ring-[#8EAAB8]">
-              <span class="ml-2">Pengumuman Umum</span>
+              <input type="radio" name="kategori" value="umum" class="text-[#8EAAB8]"> <span class="ml-2">Pengumuman Umum</span>
             </label>
             <label class="inline-flex items-center">
-              <input type="radio" name="kategori" value="penting" class="text-[#8EAAB8] focus:ring-[#8EAAB8]">
-              <span class="ml-2">Pengumuman Penting</span>
+              <input type="radio" name="kategori" value="penting" class="text-[#8EAAB8]"> <span class="ml-2">Pengumuman Penting</span>
             </label>
           </div>
         </div>
-        <div class="flex justify-end gap-4 pt-4">
-          <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-lg transition">Batal</button>
-          <button type="submit" class="bg-[#5C7988] hover:bg-[#4a6270] text-white px-6 py-2 rounded-lg transition">Simpan Pengumuman</button>
+        <div class="flex justify-end pt-4">
+          <button type="submit" class="bg-[#5C7988] hover:bg-[#4a6270] text-white px-6 py-2 rounded-lg">Simpan Pengumuman</button>
         </div>
       </form>
     </div>
+
+    <!-- Daftar Pengumuman -->
+    <div id="daftar-pengumuman" class="mt-10 space-y-4"></div>
   </main>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     lucide.createIcons();
+    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
 
     document.getElementById('lampiran').addEventListener('change', function (e) {
       const fileName = e.target.files[0] ? e.target.files[0].name : 'Belum ada file dipilih';
       document.getElementById('nama-file').textContent = fileName;
     });
 
-    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+    const daftarPengumuman = document.getElementById('daftar-pengumuman');
+    let dataPengumuman = [];
+    let editIndex = null;
+
+    function renderDaftar() {
+      const list = dataPengumuman.map((item, index) => `
+        <div class="bg-white rounded-lg shadow p-4 border border-gray-200">
+          <div class="flex justify-between items-start mb-2">
+            <div>
+              <h3 class="font-semibold text-lg text-[#5C7988]">${item.judul}</h3>
+              <p class="text-sm text-gray-500">${item.tanggal} ${item.waktu}</p>
+              <p class="text-sm mt-1">${item.isi}</p>
+              <p class="text-xs text-gray-500 mt-1 italic">Kategori: ${item.kategori}</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="editPengumuman(${index})" class="text-blue-600 hover:underline text-sm">Edit</button>
+              <button onclick="hapusPengumuman(${index})" class="text-red-600 hover:underline text-sm">Hapus</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      daftarPengumuman.innerHTML = `<h2 class="text-xl font-bold text-[#5C7988] mb-4">Daftar Pengumuman</h2>${list || '<p class="text-sm text-gray-500">Belum ada pengumuman.</p>'}`;
+    }
+
+    window.editPengumuman = function(index) {
+      const item = dataPengumuman[index];
+      document.getElementById('judul').value = item.judul;
+      document.getElementById('tanggal').value = item.tanggal;
+      document.getElementById('waktu').value = item.waktu;
+      document.getElementById('isi').value = item.isi;
+      document.querySelector(`input[name="kategori"][value="${item.kategori}"]`).checked = true;
+      editIndex = index;
+    };
+
+    window.hapusPengumuman = function(index) {
+      if (confirm('Yakin ingin menghapus pengumuman ini?')) {
+        dataPengumuman.splice(index, 1);
+        renderDaftar();
+      }
+    };
 
     document.getElementById('form-pengumuman').addEventListener('submit', function (e) {
       e.preventDefault();
       const judul = document.getElementById('judul').value;
-      alert(`Pengumuman "${judul}" berhasil disimpan!`);
+      const tanggal = document.getElementById('tanggal').value;
+      const waktu = document.getElementById('waktu').value;
+      const isi = document.getElementById('isi').value;
+      const kategori = document.querySelector('input[name="kategori"]:checked').value;
+      const data = { judul, tanggal, waktu, isi, kategori };
+      if (editIndex !== null) {
+        dataPengumuman[editIndex] = data;
+        editIndex = null;
+      } else {
+        dataPengumuman.push(data);
+      }
+      renderDaftar();
       this.reset();
+      document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
       document.getElementById('nama-file').textContent = 'Belum ada file dipilih';
     });
 
-    const menuButtons = document.querySelectorAll('button[data-menu]');
-    menuButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const menuId = button.dataset.menu;
-        const submenu = document.getElementById(menuId);
-        const icon = button.querySelector('[data-lucide="chevron-down"]');
-        document.querySelectorAll('aside div[id]').forEach(div => {
-          if (div !== submenu) div.classList.add('hidden');
-        });
-        submenu.classList.toggle('hidden');
-        icon?.classList.toggle('rotate-180');
-      });
-    });
+    renderDaftar();
   });
-</script>
 
+  
+
+    // Logika Dropdown Sidebar
+        const menuButtons = document.querySelectorAll('button[data-menu]');
+        menuButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const menuId = button.dataset.menu;
+                const submenu = document.getElementById(menuId);
+                const icon = button.querySelector('[data-lucide="chevron-down"]');
+                
+                if (submenu) {
+                    const isOpening = submenu.classList.contains('hidden');
+                     document.querySelectorAll('[id^="proses-magang"], [id^="kemitraan"], [id^="konten"], [id^="pengaturan"]').forEach(otherSubmenu => {
+                         if (otherSubmenu.id !== menuId) {
+                            otherSubmenu.classList.add('hidden');
+                            const otherButton = document.querySelector(`button[data-menu="${otherSubmenu.id}"]`);
+                            otherButton?.querySelector('[data-lucide="chevron-down"]')?.classList.remove('rotate-180');
+                         }
+                     });
+                    
+                    if (isOpening) {
+                        submenu.classList.remove('hidden');
+                        icon?.classList.add('rotate-180');
+                    } else {
+                        submenu.classList.add('hidden');
+                        icon?.classList.remove('rotate-180');
+                    }
+                }
+            });
+        });
+        
+    </script>
 </body>
 </html>

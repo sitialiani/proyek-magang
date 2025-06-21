@@ -31,10 +31,6 @@ Mahasiswa.belongsTo(User, { foreignKey: 'user_id' });
 Dosen.hasMany(Mahasiswa, { foreignKey: 'dosen_pembimbing_id', as: 'MahasiswaBimbingan', onDelete: 'SET NULL' });
 Mahasiswa.belongsTo(Dosen, { foreignKey: 'dosen_pembimbing_id', as: 'DosenPembimbing' });
 
-// Perusahaan & Lowongan
-Perusahaan.hasMany(Lowongan, { foreignKey: 'perusahaan_id', onDelete: 'CASCADE' });
-Lowongan.belongsTo(Perusahaan, { foreignKey: 'perusahaan_id' });
-
 // Mahasiswa, Lowongan & PengajuanMagang
 Mahasiswa.hasMany(PengajuanMagang, { foreignKey: 'mahasiswa_id', onDelete: 'CASCADE' });
 PengajuanMagang.belongsTo(Mahasiswa, { foreignKey: 'mahasiswa_id' });

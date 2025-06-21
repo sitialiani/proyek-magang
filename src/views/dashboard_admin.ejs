@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Portal Admin</title>
-    
-    <link href="/css/style.css" rel="stylesheet">
-    <!-- Chart.js via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>pengumuman - Portal Admin</title>
+  <link href="/css/style.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.271.0/dist/umd/lucide.min.js"></script>
 </head>
 <body class="bg-content-bg">
 
-    <div class="flex min-h-screen">
-        <!-- =============== Sidebar Admin =============== -->
-        <aside class="w-72 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg">
-            <!-- Profile Photo & Info Admin -->
-            <div class="text-center py-4 border-b border-white/20">
-                <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" alt="Foto Profil Admin" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
-                <h3 class="font-bold text-lg">Admin Jurusan</h3>
-                <p class="text-sm">Sistem Informasi</p>
-            </div>
+<div class="flex min-h-screen">
+  <!-- Sidebar -->
+  <aside class="w-72 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg z-10">
+    <!-- Sidebar Content -->
+    <div class="text-center py-4 border-b border-white/20">
+      <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" alt="Foto Profil Admin"
+           class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
+      <h3 class="font-bold text-lg">Admin Jurusan</h3>
+      <p class="text-sm">Sistem Informasi</p>
+    </div>
 
             <!-- Navigation Links Admin -->
             <nav class="mt-6 flex-grow overflow-y-auto pr-2">
@@ -34,7 +33,7 @@
                             <span class="flex items-center gap-3"><i data-lucide="case-sensitive" class="w-5 h-5"></i> Proses Magang</span>
                             <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
                         </button>
-                        <div id="proses-magang" class="hidden pl-8 pt-1 space-y-1">
+                        <div id="proses-magang" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
                            <a href="/admin/pengajuan-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengajuan Magang</a>
                             <a href="/admin/progress-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Progress Magang</a>
                             <a href="/admin/dosen-pembimbing" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Dosen Pembimbing</a>
@@ -56,8 +55,13 @@
                             <span class="flex items-center gap-3"><i data-lucide="message-square" class="w-5 h-5"></i> Konten & Komunikasi</span>
                             <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
                         </button>
+<<<<<<< HEAD
                         <div id="konten" class="hidden pl-8 pt-1 space-y-1">
                             <a href="/admin/pengumuman" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengumuman</a>
+=======
+                        <div id="konten" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
+                            <a href="#" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengumuman</a>
+>>>>>>> f282ec1557b45cb0e91cee2dd3edbe69dcc04e4c
                             <a href="/admin/template-dokumen" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Template Dokumen</a>
                         </div>
                     </li>
@@ -67,7 +71,7 @@
                             <span class="flex items-center gap-3"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Sistem</span>
                             <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
                         </button>
-                        <div id="pengaturan" class="hidden pl-8 pt-1 space-y-1">
+                        <div id="pengaturan" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
                             <a href="#" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Konfigurasi Notifikasi</a>
                             <a href="/admin/manajemen-backup" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Manajemen Backup</a>
                         </div>
@@ -75,13 +79,12 @@
                 </ul>
             </nav>
 
-            <div class="mt-auto pt-4 border-t border-white/20">
-                <a href="#" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
-                    <i data-lucide="log-out" class="w-5 h-5"></i>
-                    Logout
-                </a>
-            </div>
-        </aside>
+    <div class="mt-auto pt-4 border-t border-white/20">
+      <a href="Logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+        <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+      </a>
+    </div>
+  </aside>
 
         <!-- =============== Main Content =============== -->
         <main class="ml-72 flex-1 p-8 overflow-y-auto">

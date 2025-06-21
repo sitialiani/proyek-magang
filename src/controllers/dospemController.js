@@ -142,7 +142,7 @@ exports.getDashboard = async (req, res) => {
             aktivitasTerbaru.push({
                 type: 'Logbook',
                 message: `Logbook Magang dari ${log.Mahasiswa.nama} - Status: Perlu Evaluasi`,
-                date: log.tanggal,
+                date: new Date(log.tanggal),
                 link: `/dospem/logbook/evaluasi/${log.id}`
             });
         });
@@ -161,7 +161,7 @@ exports.getDashboard = async (req, res) => {
             aktivitasTerbaru.push({
                 type: 'Laporan',
                 message: `Laporan Akhir dari ${lap.Mahasiswa.nama} - Status: Perlu Penilaian`,
-                date: lap.tanggal_upload,
+                date: new Date(lap.tanggal_upload),
                 link: `/dospem/laporan-akhir/nilai/${lap.id}`
             });
         });
@@ -180,7 +180,7 @@ exports.getDashboard = async (req, res) => {
             aktivitasTerbaru.push({
                 type: 'Pengajuan',
                 message: `Pengajuan magang dari ${peng.Mahasiswa.nama} - Status: ${peng.status.toUpperCase()}`,
-                date: peng.tanggal_pengajuan,
+                date: new Date(peng.tanggal_pengajuan),
                 link: `/dospem/pengajuan/${peng.id}/detail`
             });
         });
