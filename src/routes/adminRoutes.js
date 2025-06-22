@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const adminController = require('../controllers/adminController');
 
 // Data untuk Dashboard
 const dashboardData = {
@@ -79,7 +80,6 @@ const backupData = {
 // =================================================================
 // --- DEFINISI RUTE ADMIN ---
 // =================================================================
-
 // --- Rute Utama & Manajemen Pengguna ---
 router.get('/dashboard', (req, res) => {
     res.render('dashboard_admin', { data: dashboardData });
@@ -113,14 +113,17 @@ router.get('/dosen-pembimbing', (req, res) => {
 
 
 // --- Rute Kemitraan & Lowongan ---
-router.get('/lowongan-magang', (req, res) => {
-    // Nantinya di sini bisa ditambahkan logika untuk mengambil data lowongan dari DB
-    res.render('lowongan_magang');
-});
+//tampila,hapus,tambah
+router.get('/lowongan-magang', adminController.getLowongan);
+router.post('/lowongan/tambah', adminController.tambahLowongan);
+router.post('/lowongan/hapus/:id', adminController.hapusLowongan);
 
-router.get('/mitra-perusahaan', (req, res) => {
-    res.render('mitra_perusahaan', { mitra: mitraList });
-});
+
+// Tampilkan halaman mitra
+router.get('/mitra-perusahaan', adminController.getMitra);
+router.post('/mitra-perusahaan/tambah', adminController.tambahMitra);
+router.post('/mitra-perusahaan/hapus/:id', adminController.hapusMitra);
+
 
 router.get('/feedback-perusahaan', (req, res) => {
     res.render('feedback_perusahaan', { feedback: feedbackData });

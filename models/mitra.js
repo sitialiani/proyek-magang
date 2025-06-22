@@ -1,33 +1,27 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../src/config/sequelize');
 
-const Lowongan = sequelize.define('Lowongan', {
+const Mitra = sequelize.define('Mitra', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true
   },
-  perusahaan: {
+  nama: {
     type: DataTypes.STRING(150),
     allowNull: false
   },
-  lokasi: {
-    type: DataTypes.STRING(150),
+  alamat: {
+    type: DataTypes.STRING(255),
     allowNull: false
   },
-  durasi: {
+  kontak: {
     type: DataTypes.STRING(150),
     allowNull: false
-  },
-  deadlinependaftaran: {
-    type: DataTypes.DATEONLY
-  },
-  deskripsi: {
-    type: DataTypes.TEXT
   }
 }, {
-  tableName: 'lowongan',
+  tableName: 'mitra_perusahaan',
   timestamps: false
 });
 
-module.exports = Lowongan;
+module.exports = Mitra;
