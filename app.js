@@ -15,51 +15,45 @@ app.use(express.json());
 // Serving file statis (CSS, JS, gambar, dokumen dari folder public)
 app.use(express.static(path.join(__dirname, "public")));
 
--
+// Middleware simulasi user login (harus sebelum rute yang membutuhkannya)
 app.use((req, res, next) => {
-    // Ini mensimulasikan user yang sudah login sebagai dosen dengan ID 1.
-    // Di aplikasi nyata, Anda akan memiliki sistem login/sesi yang sebenarnya.
-    // Penting: Pastikan user_id 1 di tabel `users` adalah user dengan role 'dosen' di database Anda.
-    req.user = { id: 8, role: 'dosen' }; // Dosen dummy dengan user_id 1
+    // Ini mensimulasikan user yang sudah login sebagai dosen.
+    // Penting: Sesuaikan ID ini dengan ID user 'andi' (role 'dosen') yang ada di tabel `users` setelah seeding.
+    // Berdasarkan seeder terakhir kita, 'andi' (dosen) akan mendapatkan ID 1.
+    // Menggunakan ID 1 karena seeder biasanya memberikan ID 1 untuk user pertama (andi).
+    req.user = { id: 1, role: 'dosen' }; 
     next();
 });
 
-// Impor dan gunakan rute mahasiswa
+// Impor dan gunakan rute-rute (harus setelah middleware dan sebelum app.listen)
 const mahasiswaRoutes = require('./src/routes/mahasiswaRoutes');
 app.use('/mahasiswa', mahasiswaRoutes);
 
-// Impor dan gunakan rute admin
 const adminRoutes = require('./src/routes/adminRoutes');
 app.use('/admin', adminRoutes);
 
-// Impor dan gunakan rute dospem
 const dospemRoutes = require('./src/routes/dospemRoutes');
 app.use('/dospem', dospemRoutes);
 
-<<<<<<< HEAD
-
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-=======
-// --- 4. Route Halaman Utama dan Logout ---
+// --- Route Halaman Utama dan Logout (harus sebelum app.listen) ---
 app.get('/', (req, res) => {
-    
     if (req.user && req.user.role === 'dosen') {
         return res.redirect('/dospem/dashboard');
     }
-
+    // Jika tidak login atau bukan dosen, tampilkan halaman index umum
     res.render('index', { title: 'Selamat Datang di Sistem Magang' });
 });
 
 app.get('/logout', (req, res) => {
     req.user = null; // Menghapus user dummy
     res.redirect('/');
->>>>>>> cc0cdb57045addbe316ab0aae806fbc6f0694f6e
 });
 
+// Port untuk aplikasi
 const PORT = process.env.PORT || 3000;
+
+// Sinkronisasi model Sequelize dengan database, lalu mulai server
+// Pastikan hanya ada satu app.listen dan di dalam blok then() dari sequelize.sync()
 sequelize.sync().then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
