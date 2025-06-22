@@ -1,24 +1,11 @@
+'use strict';
 const express = require('express');
 const router = express.Router();
 
-// --- Data Contoh (nantinya dari database) ---
-const laporanData = {
-    status: 'Perlu Revisi',
-    dosen: 'Dr. Ir. Anjali, S.Kom., M.Kom.',
-    catatan: 'Isi catatan revisi dari dosen...',
-    tanggalCatatan: '17 Juni 2025' // Tanggal disesuaikan dengan waktu sekarang
-};
-
-const riwayatData = [
-    {
-        id: 1,
-        versi: 'v.1',
-        namaFile: 'Laporan_Akhir_Budi.pdf',
-        tanggal: '15 Juni 2025, 14:30',
-        status: 'Direvisi'
-    }
-];
-
+// 1. Impor controller dan middleware yang dibutuhkan
+const mahasiswaController = require('../controllers/mahasiswaController');
+const upload = require('../../config/multerConfig');
+// const { isLoggedIn } = require('../middleware/auth'); // Aktifkan ini nanti setelah membuat sistem login
 
 // const pengajuanList = Object.values(pengajuanDummy);
 
@@ -77,29 +64,23 @@ router.get("/pengajuan/:id", detailPengajuanController.getDetailPengajuan);
 
 /**
  * @route   GET /mahasiswa/laporan-akhir
- * @desc    Menampilkan halaman laporan akhir mahasiswa dengan data revisi.
+ * @desc    Menampilkan halaman laporan akhir mahasiswa dengan data dari database.
  */
-router.get('/laporan-akhir', (req, res) => {
-    // Merender template `laporan_akhir.ejs` dengan data yang sudah disiapkan.
-    res.render('laporan_akhir', {
-        laporan: laporanData,
-        riwayat: riwayatData
-    });
-});
+// PERBAIKAN: Rute ini sekarang memanggil fungsi dari controller
+router.get('/laporan-akhir', mahasiswaController.getLaporanAkhirPage);
 
 /**
- * @route   GET /mahasiswa/laporan
- * @desc    (Alternatif) Menampilkan halaman laporan akhir.
+ * @route   POST /mahasiswa/laporan-akhir/upload
+ * @desc    Menangani proses unggah file laporan.
  */
-router.get("/laporan", (req, res) => {
-    console.log("Route /mahasiswa/laporan dipanggil!");
-    // Pastikan Anda memiliki file view bernama 'laporanakhir.ejs'
-    res.render("laporanakhir");
-});
+// PERBAIKAN: Rute ini juga memanggil fungsi dari controller
+router.post('/laporan-akhir/upload', upload.single('fileLaporan'), mahasiswaController.uploadLaporan);
+
+
+// --- Rute untuk Halaman Lain (Contoh Placeholder) ---
 
 /**
  * @route   GET /mahasiswa/logbook
- * @desc    Menampilkan halaman untuk mengisi logbook harian.
  */
 router.get('/logbook', logbookController.getLogbookPage);
 
@@ -129,7 +110,6 @@ router.delete('/logbook/delete/:id', logbookController.deleteLogbook);
 
 /**
  * @route   GET /mahasiswa/pengumuman
- * @desc    Menampilkan halaman pengumuman untuk mahasiswa.
  */
 router.get("/pengumuman", pengumumanController.getPengumumanPage);
 
@@ -148,8 +128,4 @@ router.get("/penilaian", (req, res) => {
     // Pastikan Anda memiliki file view bernama 'penilaian.ejs'
     res.render("penilaian");
 });
-
-
-// --- Ekspor Router ---
-// Wajib ada di baris paling akhir agar semua rute di atas bisa dikenali.
 module.exports = router;

@@ -1,5 +1,3 @@
-// src/controllers/dospemController.js
-
 // Impor semua model dari index.js
 const db = require('../config/sequelize'); // Ini adalah instance Sequelize
 const { Op } = require('sequelize'); // Impor Op untuk operator Sequelize seperti LIKE
@@ -1154,4 +1152,5 @@ exports.exportLaporanDetailPdf = async (req, res) => {
         console.error('Error in exportLaporanDetailPdf:', error);
         res.status(500).send('Terjadi kesalahan saat membuat PDF detail laporan akhir.');
     }
+
 };

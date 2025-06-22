@@ -43,7 +43,7 @@
   </nav>
 
   <div class="mt-auto pt-4 border-t border-white/20">
-    <a href="#" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+    <a href="/logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
       <i data-lucide="log-out" class="w-5 h-5"></i> Logout
     </a>
   </div>
@@ -74,66 +74,66 @@
                     <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center"><i data-lucide="user-round-check" class="w-6 h-6 text-blue-600"></i></div>
                     <div>
                         <p class="text-gray-500 text-sm">Mahasiswa Aktif</p>
-                        <p class="text-2xl font-bold text-gray-800">58</p>
+                        <p class="text-2xl font-bold text-gray-800"><%= stats.mahasiswaAktif %></p>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
                     <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center"><i data-lucide="book-clock" class="w-6 h-6 text-yellow-600"></i></div>
                     <div>
                         <p class="text-gray-500 text-sm">Logbook Belum Diisi</p>
-                        <p class="text-2xl font-bold text-gray-800">12</p>
+                        <p class="text-2xl font-bold text-gray-800"><%= stats.logbookBelumDiisi %></p>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
                     <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center"><i data-lucide="file-clock" class="w-6 h-6 text-orange-600"></i></div>
                     <div>
                         <p class="text-gray-500 text-sm">Laporan Review</p>
-                        <p class="text-2xl font-bold text-gray-800">5</p>
+                        <p class="text-2xl font-bold text-gray-800"><%= stats.laporanReview %></p>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
                     <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center"><i data-lucide="graduation-cap" class="w-6 h-6 text-green-600"></i></div>
                     <div>
                         <p class="text-gray-500 text-sm">Telah Selesai</p>
-                        <p class="text-2xl font-bold text-gray-800">150</p>
+                        <p class="text-2xl font-bold text-gray-800"><%= stats.telahSelesai %></p>
                     </div>
                 </div>
             </div>
             
             <!-- Filter & Aksi -->
             <div class="bg-white p-4 rounded-lg shadow-md mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <input type="text" placeholder="Cari Nama/NIM..." class="col-span-1 lg:col-span-1 border border-gray-300 rounded-md text-sm p-2">
-                    <select class="col-span-1 lg:col-span-1 border border-gray-300 rounded-md text-sm p-2">
-                        <option>Semua Status Magang</option>
-                        <option>Aktif Magang</option>
-                        <option>Selesai</option>
+                <form method="GET" action="/admin/progress-magang" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <input type="text" name="search" placeholder="Cari Nama/NIM..." value="<%= filters.currentSearch %>" class="col-span-1 lg:col-span-1 border border-gray-300 rounded-md text-sm p-2">
+                    <select name="status" class="col-span-1 lg:col-span-1 border border-gray-300 rounded-md text-sm p-2">
+                        <option value="Semua Status Magang" <%= filters.currentStatus === 'Semua Status Magang' ? 'selected' : '' %>>Semua Status Magang</option>
+                        <option value="Aktif Magang" <%= filters.currentStatus === 'Aktif Magang' ? 'selected' : '' %>>Aktif Magang</option>
+                        <option value="Selesai" <%= filters.currentStatus === 'Selesai' ? 'selected' : '' %>>Selesai</option>
                     </select>
-                    <select class="col-span-1 lg:col-span-1 border border-gray-300 rounded-md text-sm p-2">
-                        <option>Semua Dosen</option>
-                        <option>Dr. Anjali, S.Kom.</option>
+                    <select name="dosen" class="col-span-1 lg:col-span-1 border border-gray-300 rounded-md text-sm p-2">
+                        <option value="Semua Dosen" <%= filters.currentDosen === 'Semua Dosen' ? 'selected' : '' %>>Semua Dosen</option>
+                        <% filters.semuaDosen.forEach(dosen => { %>
+                            <option value="<%= dosen %>" <%= filters.currentDosen === dosen ? 'selected' : '' %>><%= dosen %></option>
+                        <% }); %>
                     </select>
-                    <select class="col-span-1 lg:col-span-1 border border-gray-300 rounded-md text-sm p-2">
-                        <option>Semua Perusahaan</option>
-                        <option>PT. Teknologi Nusantara</option>
+                    <select name="perusahaan" class="col-span-1 lg:col-span-1 border border-gray-300 rounded-md text-sm p-2">
+                        <option value="Semua Perusahaan" <%= filters.currentPerusahaan === 'Semua Perusahaan' ? 'selected' : '' %>>Semua Perusahaan</option>
+                        <% filters.semuaPerusahaan.forEach(perusahaan => { %>
+                            <option value="<%= perusahaan %>" <%= filters.currentPerusahaan === perusahaan ? 'selected' : '' %>><%= perusahaan %></option>
+                        <% }); %>
                     </select>
                     <div class="col-span-1 lg:col-span-1 flex gap-2">
-                        <button class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700">Terapkan</button>
-                        <button class="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-semibold rounded-md hover:bg-gray-300">Reset</button>
+                        <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700">Terapkan</button>
+                        <a href="/admin/progress-magang" class="flex-1 px-4 py-2 bg-gray-200 text-gray-800 text-sm font-semibold rounded-md hover:bg-gray-300 text-center">Reset</a>
                     </div>
-                </div>
+                </form>
             </div>
 
             <!-- Header Tabel & Aksi Ekspor -->
              <div class="flex justify-end mb-4">
                  <div class="flex gap-2">
-                    <button class="flex items-center gap-2 px-3 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-colors shadow-sm">
+                    <button onclick="exportCSV()" class="flex items-center gap-2 px-3 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-colors shadow-sm">
                         <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
                         Export CSV
-                    </button>
-                    <button class="flex items-center gap-2 px-3 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow-sm">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                        Cetak PDF
                     </button>
                  </div>
              </div>
@@ -156,48 +156,73 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Contoh Data 1 -->
-                            <tr class="bg-white border-b hover:bg-gray-50">
-                                <td class="py-4 px-6">1</td>
-                                <td class="py-4 px-6">2311522006</td>
-                                <td class="py-4 px-6"><a href="#" class="font-semibold text-blue-600 hover:underline">Siti Aliani</a></td>
-                                <td class="py-4 px-6">PT. Teknologi Nusantara</td>
-                                <td class="py-4 px-6"><span class="px-2 py-1 text-xs font-bold text-green-800 bg-green-100 rounded-full">Aktif Magang</span></td>
-                                <td class="py-4 px-6">Dr. Anjali, S.Kom.</td>
-                                <td class="py-4 px-6"><div class="flex items-center gap-1 text-green-600"><i data-lucide="check-circle-2" class="w-4 h-4"></i><span class="text-xs">Terisi</span></div></td>
-                                <td class="py-4 px-6">Menunggu Review</td>
-                                <td class="py-4 px-6 text-center"><a href="#" class="font-medium text-blue-600 hover:underline">Lihat Detail</a></td>
-                            </tr>
-                            <!-- Contoh Data 2 -->
-                            <tr class="bg-white border-b hover:bg-gray-50">
-                                <td class="py-4 px-6">2</td>
-                                <td class="py-4 px-6">2311522001</td>
-                                <td class="py-4 px-6"><a href="#" class="font-semibold text-blue-600 hover:underline">Budi Santoso</a></td>
-                                <td class="py-4 px-6">CV. Cipta Karya</td>
-                                <td class="py-4 px-6"><span class="px-2 py-1 text-xs font-bold text-blue-800 bg-blue-100 rounded-full">Menunggu Nilai</span></td>
-                                <td class="py-4 px-6">Dr. Anjali, S.Kom.</td>
-                                <td class="py-4 px-6"><div class="flex items-center gap-1 text-green-600"><i data-lucide="check-circle-2" class="w-4 h-4"></i><span class="text-xs">Lengkap</span></div></td>
-                                <td class="py-4 px-6">Disetujui</td>
-                                <td class="py-4 px-6 text-center"><a href="#" class="font-medium text-blue-600 hover:underline">Lihat Detail</a></td>
-                            </tr>
-                            <!-- Contoh Data 3 -->
-                             <tr class="bg-white border-b hover:bg-gray-50">
-                                <td class="py-4 px-6">3</td>
-                                <td class="py-4 px-6">2311522010</td>
-                                <td class="py-4 px-6"><a href="#" class="font-semibold text-blue-600 hover:underline">Rina Hartati</a></td>
-                                <td class="py-4 px-6">Dinas Kominfo</td>
-                                <td class="py-4 px-6"><span class="px-2 py-1 text-xs font-bold text-green-800 bg-green-100 rounded-full">Aktif Magang</span></td>
-                                <td class="py-4 px-6">Dr. Anjali, S.Kom.</td>
-                                <td class="py-4 px-6"><div class="flex items-center gap-1 text-yellow-600"><i data-lucide="alert-triangle" class="w-4 h-4"></i><span class="text-xs">Terlambat 8 hari</span></div></td>
-                                <td class="py-4 px-6">Belum Unggah</td>
-                                <td class="py-4 px-6 text-center"><a href="#" class="font-medium text-blue-600 hover:underline">Lihat Detail</a></td>
-                            </tr>
+                            <% if (progressList && progressList.length > 0) { %>
+                                <% progressList.forEach((item, index) => { %>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="py-4 px-6"><%= index + 1 %></td>
+                                        <td class="py-4 px-6"><%= item.nim %></td>
+                                        <td class="py-4 px-6"><a href="#" class="font-semibold text-blue-600 hover:underline"><%= item.nama %></a></td>
+                                        <td class="py-4 px-6"><%= item.perusahaan %></td>
+                                        <td class="py-4 px-6">
+                                            <% if (item.statusMagang === 'Aktif Magang') { %>
+                                                <span class="px-2 py-1 text-xs font-bold text-green-800 bg-green-100 rounded-full">Aktif Magang</span>
+                                            <% } else if (item.statusMagang === 'Selesai') { %>
+                                                <span class="px-2 py-1 text-xs font-bold text-blue-800 bg-blue-100 rounded-full">Selesai</span>
+                                            <% } else { %>
+                                                <span class="px-2 py-1 text-xs font-bold text-gray-800 bg-gray-100 rounded-full"><%= item.statusMagang %></span>
+                                            <% } %>
+                                        </td>
+                                        <td class="py-4 px-6"><%= item.dosenPembimbing %></td>
+                                        <td class="py-4 px-6">
+                                            <% if (item.logbookStatus === 'Terisi') { %>
+                                                <div class="flex items-center gap-1 text-green-600">
+                                                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                                                    <span class="text-xs">Terisi</span>
+                                                </div>
+                                            <% } else if (item.logbookStatus === 'Terlambat') { %>
+                                                <div class="flex items-center gap-1 text-yellow-600">
+                                                    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                                                    <span class="text-xs">Terlambat</span>
+                                                </div>
+                                            <% } else { %>
+                                                <div class="flex items-center gap-1 text-red-600">
+                                                    <i data-lucide="x-circle" class="w-4 h-4"></i>
+                                                    <span class="text-xs">Belum</span>
+                                                </div>
+                                            <% } %>
+                                        </td>
+                                        <td class="py-4 px-6">
+                                            <% if (item.laporanStatus === 'diterima') { %>
+                                                <span class="text-green-600 text-xs font-semibold">Disetujui</span>
+                                            <% } else if (item.laporanStatus === 'revisi') { %>
+                                                <span class="text-orange-600 text-xs font-semibold">Revisi</span>
+                                            <% } else if (item.laporanStatus === 'menunggu') { %>
+                                                <span class="text-blue-600 text-xs font-semibold">Menunggu Review</span>
+                                            <% } else { %>
+                                                <span class="text-gray-600 text-xs">Belum Unggah</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="py-4 px-6 text-center">
+                                            <a href="#" class="font-medium text-blue-600 hover:underline">Lihat Detail</a>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr class="bg-white border-b">
+                                    <td colspan="9" class="py-8 px-6 text-center text-gray-500">
+                                        <div class="flex flex-col items-center gap-2">
+                                            <i data-lucide="inbox" class="w-8 h-8 text-gray-400"></i>
+                                            <p>Tidak ada data progress magang</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% } %>
                         </tbody>
                     </table>
                 </div>
                  <!-- Paginasi -->
                 <div class="p-4 flex justify-between items-center text-sm text-gray-600">
-                    <span>Menampilkan <span class="font-semibold">1</span>- <span class="font-semibold">3</span> dari <span class="font-semibold">3</span> data</span>
+                    <span>Menampilkan <span class="font-semibold">1</span>- <span class="font-semibold"><%= progressList ? progressList.length : 0 %></span> dari <span class="font-semibold"><%= progressList ? progressList.length : 0 %></span> data</span>
                     <div class="flex items-center gap-1">
                         <button class="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
                         <button class="px-3 py-1 rounded-md bg-blue-600 text-white font-semibold">1</button>
@@ -239,6 +264,13 @@
                 icon?.classList.toggle('rotate-180');
             });
         });
+
+        // Fungsi untuk export CSV
+        window.exportCSV = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const exportUrl = `/admin/progress-magang/export-csv?${urlParams.toString()}`;
+            window.open(exportUrl, '_blank');
+        };
 
       });
     </script>

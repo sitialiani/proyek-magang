@@ -1,43 +1,64 @@
+// src/controllers/mahasiswaController.js
+
+// Pastikan Anda mengimpor semua model yang dibutuhkan
 const { Laporan, Mahasiswa, Dosen, User, Feedback } = require('../../models');
 
-// Fungsi untuk menampilkan halaman Laporan Akhir
 exports.getLaporanAkhirPage = async (req, res) => {
     try {
-        // Untuk testing, kita tentukan ID mahasiswa secara manual.
-        // Nantinya, ID ini akan didapat dari sesi login (req.user.mahasiswaId).
-        const mahasiswaId = 1; // Ganti dengan ID yang ada di database lokal Anda
-
-        // 1. Ambil semua riwayat laporan untuk mahasiswa ini
-        const riwayat = await Laporan.findAll({
-            where: { mahasiswa_id: mahasiswaId },
-            order: [['tanggal_upload', 'DESC']]
+        // Ambil data mahasiswa berdasarkan user yang login
+        const userId = req.user ? req.user.id : 1; // Fallback untuk testing
+        
+        const mahasiswa = await Mahasiswa.findOne({
+            where: { user_id: userId },
+            include: [
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: ['email']
+                },
+                {
+                    model: Dosen,
+                    as: 'dosen',
+                    attributes: ['nama']
+                }
+            ]
         });
 
-        // 2. Ambil data laporan terakhir untuk mendapatkan info detail
-        // Kita gunakan 'include' untuk melakukan JOIN dan mengambil data Dosen & Feedback
+        if (!mahasiswa) {
+            return res.status(404).send('Data mahasiswa tidak ditemukan');
+        }
+
+        const mahasiswaId = mahasiswa.id;
+
+        const riwayat = await Laporan.findAll({
+            where: { mahasiswa_id: mahasiswaId }, // Gunakan snake_case sesuai database
+            order: [['tanggal_upload', 'DESC']] // Gunakan snake_case sesuai database
+        });
+
         const laporan = await Laporan.findOne({
-            where: { mahasiswa_id: mahasiswaId },
+            where: { mahasiswa_id: mahasiswaId }, // Gunakan snake_case sesuai database
             order: [['tanggal_upload', 'DESC']],
             include: [
                 {
                     model: Mahasiswa,
+                    as: 'mahasiswa',
                     include: [{
                         model: Dosen,
-                        include: [User] // Untuk mendapatkan nama dosen dari tabel User
+                        as: 'dosen'
                     }]
                 },
                 {
-                    model: Feedback, // Untuk mendapatkan catatan revisi
+                    model: Feedback,
+                    as: 'feedbacks',
                     limit: 1,
                     order: [['tanggal', 'DESC']]
                 }
             ]
         });
 
-        // 3. Render halaman dengan data dari database
         res.render('laporan_akhir', {
-            // Jika tidak ada laporan sama sekali, kirim objek kosong
-            laporan: laporan || {}, 
+            mahasiswa: mahasiswa, // Kirim data mahasiswa ke view
+            laporan: laporan || {},
             riwayat: riwayat || []
         });
 
@@ -47,27 +68,41 @@ exports.getLaporanAkhirPage = async (req, res) => {
     }
 };
 
-// Fungsi untuk mengunggah file laporan baru
 exports.uploadLaporan = async (req, res) => {
     try {
-        const mahasiswaId = req.user.mahasiswaId; // ID dari sesi login
+        // Ambil data mahasiswa berdasarkan user yang login
+        const userId = req.user ? req.user.id : 1; // Fallback untuk testing
+        
+        const mahasiswa = await Mahasiswa.findOne({
+            where: { user_id: userId }
+        });
 
-        if (!req.file) {
-            return res.status(400).send('File tidak ditemukan.');
+        if (!mahasiswa) {
+            return res.status(404).send('Data mahasiswa tidak ditemukan');
         }
 
-        // Simpan informasi file ke database
+        const mahasiswaId = mahasiswa.id;
+        const { judul } = req.body; 
+
+        if (!req.file) {
+            return res.status(400).send('Mohon pilih file untuk diunggah.');
+        }
+        if (!judul || judul.trim() === '') {
+            return res.status(400).send('Judul laporan tidak boleh kosong.');
+        }
+        
         await Laporan.create({
-            mahasiswaId: mahasiswaId,
-            nama_file: req.file.originalname,
-            path_file: req.file.path,
-            versi: 'v.baru', // Anda bisa membuat logika versi lebih canggih
-            status: 'Menunggu Review'
+            mahasiswa_id: mahasiswaId, // Gunakan snake_case sesuai database
+            judul: judul,
+            file_path: req.file.path, // Gunakan snake_case sesuai database
+            status: 'menunggu',
+            tanggal_upload: new Date(), // Gunakan snake_case sesuai database
+            versi: 'v' + Date.now() 
         });
 
         res.redirect('/mahasiswa/laporan-akhir');
     } catch (error) {
-        console.error(error);
+        console.error("Error di uploadLaporan:", error);
         res.status(500).send('Gagal mengunggah file');
     }
 };
