@@ -3,16 +3,16 @@ const router = express.Router();
 const dospemController = require('../controllers/dospemController'); // Pastikan nama file controller sudah dospemController.js
 
 // Middleware otorisasi dummy: hanya izinkan jika req.user ada dan role-nya 'dosen'
-function authorizeDosen(req, res, next) {
-    if (req.user && req.user.role === 'dosen') {
-        next(); // Lanjutkan ke controller
-    } else {
-        res.status(403).send('Akses ditolak. Anda tidak memiliki izin sebagai Dosen Pembimbing.');
-    }
-}
+//function authorizeDosen(req, res, next) {
+//    if (req.user && req.user.role === 'dosen') {
+//        next(); // Lanjutkan ke controller
+//    } else {
+//        res.status(403).send('Akses ditolak. Anda tidak memiliki izin sebagai Dosen Pembimbing.');
+//    }
+//}
 
 // Terapkan middleware otorisasi ke semua rute dospem
-router.use(authorizeDosen);
+//router.use(authorizeDosen);
 
 // Item 30: Dashboard Dosen Pembimbing
 router.get('/dashboard', dospemController.getDashboard);
@@ -33,5 +33,11 @@ router.post('/logbook/evaluasi/:logbookId', dospemController.postEvaluasiLogbook
 router.get('/penilaian-laporan-akhir', dospemController.getPenilaianLaporanAkhirList); // Daftar Laporan Akhir untuk dinilai
 router.get('/laporan-akhir/nilai/:laporanId', dospemController.getPenilaianLaporanFormModal); // Form penilaian laporan (seperti modal)
 router.post('/laporan-akhir/nilai/:laporanId', dospemController.postPenilaianLaporan); // Submit penilaian laporan
+
+// Item BARU: Ekspor Rekapitulasi PDF (untuk semua mahasiswa bimbingan)
+router.get('/export-rekapitulasi-pdf', dospemController.exportRekapitulasiPdf);
+
+// Item BARU: Ekspor PDF Detail Laporan Akhir (untuk satu mahasiswa)
+router.get('/laporan-akhir/export-detail-pdf/:laporanId', dospemController.exportLaporanDetailPdf);
 
 module.exports = router;
