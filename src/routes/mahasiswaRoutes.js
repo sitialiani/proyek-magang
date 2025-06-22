@@ -52,6 +52,11 @@ router.get("/formulir/:lowonganId", (req, res) => {
   res.render("formPengajuan", { lowonganId });
 });
 
+<<<<<<< HEAD
+=======
+const upload = require('../../config/multer');
+
+>>>>>>> main
 // POST formulir pengajuan
 router.post(
   "/formulir/:lowonganId",
