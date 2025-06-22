@@ -67,24 +67,49 @@
   </div>
 
   <!-- Konten Detail Lowongan -->
-  <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md">
-  <h1 class="text-2xl font-bold text-[#333] mb-4"><%= lowongan.judul %></h1>
+  <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
+    <h1 class="text-3xl font-bold text-gray-800"><%= lowongan.judul %></h1>
+    <p class="text-xl font-semibold text-gray-700 mt-1"><%= lowongan.perusahaanData.nama %></p>
+    
+    <div class="mt-6 border-t pt-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+        <div>
+          <h3 class="font-semibold text-gray-600">Lokasi</h3>
+          <p><%= lowongan.lokasi %></p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-600">Durasi</h3>
+          <p><%= lowongan.durasi %></p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-600">Periode Pendaftaran</h3>
+          <p><%= new Date(lowongan.tanggal_dibuka).toLocaleDateString('id-ID') %> - <%= new Date(lowongan.tanggal_ditutup).toLocaleDateString('id-ID') %></p>
+        </div>
+        <% if(lowongan.link_berkas) { %>
+        <div>
+          <h3 class="font-semibold text-gray-600">Berkas Persyaratan</h3>
+          <a href="<%= lowongan.link_berkas %>" target="_blank" class="text-blue-600 hover:underline">Lihat Berkas</a>
+        </div>
+        <% } %>
+      </div>
+    </div>
 
-  <p><span class="font-semibold">Perusahaan:</span> <%= lowongan.perusahaan %></p>
-  <p><span class="font-semibold">Lokasi:</span> <%= lowongan.lokasi %></p>
-  <p><span class="font-semibold">Deadline Pendaftaran:</span> <%= lowongan.deadline %></p>
+    <div class="mt-6 border-t pt-6">
+      <h2 class="text-xl font-bold mb-2">Deskripsi Pekerjaan</h2>
+      <div class="prose max-w-none text-gray-700"><%- lowongan.deskripsi %></div>
+    </div>
+    
+    <div class="mt-6 border-t pt-6">
+      <h2 class="text-xl font-bold mb-2">Kualifikasi</h2>
+      <div class="prose max-w-none text-gray-700"><%- lowongan.kualifikasi %></div>
+    </div>
 
-  <div class="mt-4">
-    <h2 class="font-semibold mb-2">Deskripsi Pekerjaan:</h2>
-    <p><%= lowongan.deskripsi %></p>
+    <% if (lowongan && lowongan.id) { %>
+      <div class="mt-8 text-center">
+        <a href="/mahasiswa/formulir/<%= lowongan.id %>" class="bg-[#7c9dab] text-white px-8 py-3 rounded-lg hover:bg-[#658894] transition-colors duration-200 text-lg font-semibold">Ajukan Magang</a>
+      </div>
+    <% } %>
   </div>
-
-  <% if (lowongan && lowongan.id) { %>
-  <div class="mt-6">
-    <a href="/mahasiswa/formulir/<%= lowongan.id %>" class="bg-[#7c9dab] text-white px-6 py-2 rounded hover:bg-[#658894] transition-colors duration-200">Ajukan Magang</a>
-  </div>
-<% } %>
-</div>
 </main>
 </body>
 </html>

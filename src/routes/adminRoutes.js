@@ -129,6 +129,9 @@ router.get('/feedback-perusahaan', (req, res) => {
     res.render('feedback_perusahaan', { feedback: feedbackData });
 });
 
+// Laporan Statistik
+router.get('/laporan-statistik', adminController.getLaporanStatistik);
+
 
 // --- Rute Konten & Komunikasi ---
 router.get("/pengumuman", (req, res) => {

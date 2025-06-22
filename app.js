@@ -29,11 +29,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware simulasi user login (harus sebelum rute yang membutuhkannya)
 app.use((req, res, next) => {
-    // Ini mensimulasikan user yang sudah login sebagai dosen.
-    // Penting: Sesuaikan ID ini dengan ID user 'andi' (role 'dosen') yang ada di tabel `users` setelah seeding.
-    // Berdasarkan seeder terakhir kita, 'andi' (dosen) akan mendapatkan ID 1.
+    // Ini mensimulasikan user yang sudah login sebagai admin.
+    // Penting: Sesuaikan ID ini dengan ID user 'andi' (role 'admin') yang ada di tabel `users` setelah seeding.
+    // Berdasarkan seeder terakhir kita, 'andi' (admin) akan mendapatkan ID 1.
     // Menggunakan ID 1 karena seeder biasanya memberikan ID 1 untuk user pertama (andi).
-    req.user = { id: 1, role: 'dosen' }; 
+    req.user = { id: 1, role: 'admin' }; 
     next();
 });
 

@@ -3,7 +3,6 @@ const sequelize = require('../src/config/sequelize');
 const User = require('./user');
 const Mahasiswa = require('./mahasiswa');
 const Dosen = require('./dosen');
-const Mitra = require('./mitra');
 const Lowongan = require('./lowongan');
 const PengajuanMagang = require('./pengajuanMagang');
 const Dokumen = require('./dokumen');
@@ -34,8 +33,6 @@ Mahasiswa.belongsTo(Dosen, { foreignKey: 'dosen_pembimbing_id', as: 'DosenPembim
 // Mahasiswa, Lowongan & PengajuanMagang
 Mahasiswa.hasMany(PengajuanMagang, { foreignKey: 'mahasiswa_id', onDelete: 'CASCADE' });
 PengajuanMagang.belongsTo(Mahasiswa, { foreignKey: 'mahasiswa_id' });
-Lowongan.hasMany(PengajuanMagang, { foreignKey: 'lowongan_id', onDelete: 'CASCADE' });
-PengajuanMagang.belongsTo(Lowongan, { foreignKey: 'lowongan_id' });
 
 // PengajuanMagang & Dokumen
 PengajuanMagang.hasMany(Dokumen, { foreignKey: 'pengajuan_id', onDelete: 'CASCADE' });
@@ -73,6 +70,19 @@ Rekapitulasi.belongsTo(Mahasiswa, { foreignKey: 'mahasiswa_id' });
 User.hasMany(Pengumuman, { foreignKey: 'admin_user_id', onDelete: 'SET NULL' });
 Pengumuman.belongsTo(User, { foreignKey: 'admin_user_id' });
 
+// Perusahaan & Lowongan association is defined in lowongan.js model with alias 'perusahaanData'
+
+// Perusahaan & Lowongan (One-to-Many)
+Perusahaan.hasMany(Lowongan, { foreignKey: 'perusahaan_id', as: 'lowonganData' });
+Lowongan.belongsTo(Perusahaan, { foreignKey: 'perusahaan_id', as: 'perusahaanData' });
+
+// Lowongan & PengajuanMagang (One-to-Many)
+Lowongan.hasMany(PengajuanMagang, { foreignKey: 'lowongan_id', as: 'pengajuanData' });
+PengajuanMagang.belongsTo(Lowongan, { foreignKey: 'lowongan_id', as: 'lowonganData' });
+
+// Mahasiswa & PengajuanMagang (One-to-Many)
+Mahasiswa.hasMany(PengajuanMagang, { foreignKey: 'mahasiswa_id', as: 'pengajuanData' });
+PengajuanMagang.belongsTo(Mahasiswa, { foreignKey: 'mahasiswa_id', as: 'mahasiswaData' });
 
 // Ekspor semua model dan instance sequelize
 module.exports = {
@@ -80,7 +90,6 @@ module.exports = {
     User,
     Mahasiswa,
     Dosen,
-    Mitra,
     Lowongan,
     PengajuanMagang,
     Dokumen,

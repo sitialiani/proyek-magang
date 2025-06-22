@@ -16,7 +16,10 @@ exports.getDetailPengajuan = async (req, res) => {
         },
         {
           model: Lowongan,
-          include: [{ model: Perusahaan }],
+          include: [{ 
+            model: Perusahaan,
+            as: 'perusahaanData'
+          }],
         },
       ],
     });
@@ -28,7 +31,7 @@ exports.getDetailPengajuan = async (req, res) => {
     const detail = {
       nama: pengajuan.Mahasiswa?.nama || "Tidak diketahui",
       nim: pengajuan.Mahasiswa?.npm || "-",
-      perusahaan: pengajuan.Lowongan?.Perusahaan?.nama || "-",
+      perusahaan: pengajuan.Lowongan?.perusahaanData?.nama || "-",
       deskripsi: pengajuan.Lowongan?.deskripsi || "-",
       tanggal:
         typeof pengajuan.tanggal_pengajuan === "string"

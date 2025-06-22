@@ -76,9 +76,7 @@
                     <p class="text-sm text-gray-500">Kontak: <%= item.kontak %></p>
                   </div>
                   <div class="flex gap-2">
-                    <a href="/admin/mitra-perusahaan/edit/<%= item.id %>" class="text-blue-600 text-sm hover:underline flex items-center gap-1" title="Edit Mitra">
-                      <i data-lucide="edit-3" class="w-4 h-4"></i> Edit
-                    </a>
+                  
                     <form action="/admin/mitra-perusahaan/hapus/<%= item.id %>" method="POST" onsubmit="return confirm('Hapus mitra ini?')">
                       <button class="text-red-600 text-sm hover:underline flex items-center gap-1" type="submit" title="Hapus Mitra">
                         <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus

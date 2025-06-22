@@ -76,23 +76,25 @@
 
     <!-- Lowongan Cards -->
     <div class="space-y-6">
-      <!-- Card 1 -->
-      <% lowonganList.forEach(lowongan => { %>
-        <div class="bg-white p-6 rounded-xl flex justify-between items-center mb-4">
-          <div>
-            <h2 class="text-xl font-semibold"><%= lowongan.judul %></h2>
-            <p class="text-sm text-gray-700"><%= lowongan.Perusahaan.nama %></p>
-            <p class="text-sm text-gray-500"><%= lowongan.deskripsi %></p>
-            <!-- Tombol Lihat Berkas Persyaratan -->
-            <% if (lowongan.link_berkas) { %>
-              <a href="<%= lowongan.link_berkas %>" target="_blank" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
-                📎 Lihat Berkas Persyaratan
-              </a>
-            <% } %>
-          </div>
-          <a href="/mahasiswa/lowongan/<%= lowongan.id %>" class="bg-[#7c9dab] text-white px-4 py-2 rounded hover:bg-[#658894]">Lihat Detail</a>
+      <% if (!lowonganList || lowonganList.length === 0) { %>
+        <div class="bg-white p-6 rounded-xl text-center">
+          <p class="text-gray-500">Belum ada lowongan yang tersedia.</p>
         </div>
-      <% }) %>
+      <% } else { %>
+        <% lowonganList.forEach(lowongan => { %>
+          <div class="bg-white p-6 rounded-xl flex justify-between items-center mb-4 shadow-sm border border-gray-200">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-800"><%= lowongan.judul %></h2>
+              <p class="text-md text-gray-700 font-medium"><%= lowongan.perusahaanData.nama %></p>
+              <p class="text-sm text-gray-500 mt-1"><%= lowongan.lokasi %> - <%= lowongan.durasi %></p>
+              <p class="text-sm text-red-600 mt-2">
+                <strong>Ditutup:</strong> <%= lowongan.tanggal_ditutup ? new Date(lowongan.tanggal_ditutup).toLocaleDateString('id-ID') : 'N/A' %>
+              </p>
+            </div>
+            <a href="/mahasiswa/lowongan/<%= lowongan.id %>" class="bg-[#7c9dab] text-white px-4 py-2 rounded hover:bg-[#658894] transition-colors duration-200">Lihat Detail</a>
+          </div>
+        <% }) %>
+      <% } %>
     </div>
   </main>
 

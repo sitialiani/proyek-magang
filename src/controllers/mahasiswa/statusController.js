@@ -7,7 +7,8 @@ const Perusahaan = db.Perusahaan;
 
 exports.getStatusPengajuan = async (req, res) => {
   try {
-    const userId = req.session.user.id;
+    // Gunakan req.user.id sesuai middleware di app.js
+    const userId = req.user ? req.user.id : 1; // Fallback ke ID 1 jika tidak ada user
 
     // Ambil data mahasiswa berdasarkan user login
     const mahasiswa = await Mahasiswa.findOne({
@@ -29,6 +30,7 @@ exports.getStatusPengajuan = async (req, res) => {
           include: [
             {
               model: Perusahaan,
+              as: 'perusahaanData',
               attributes: ["nama"]
             }
           ]
@@ -39,7 +41,7 @@ exports.getStatusPengajuan = async (req, res) => {
     // Format data untuk ditampilkan di view
     const formattedPengajuan = pengajuanList.map((item) => ({
       id: item.id,
-      perusahaan: item.Lowongan?.Perusahaan?.nama || "-",
+      perusahaan: item.Lowongan?.perusahaanData?.nama || "-",
       tanggal: typeof item.tanggal_pengajuan === "string"
         ? item.tanggal_pengajuan.slice(0, 10)
         : new Date(item.tanggal_pengajuan).toISOString().slice(0, 10),
@@ -48,8 +50,8 @@ exports.getStatusPengajuan = async (req, res) => {
 
     // Hitung total, diajukan, ditolak
     const total = pengajuanList.length;
-    const menunggu = pengajuanList.filter(p => p.status === 'Diajukan').length;
-    const ditolak = pengajuanList.filter(p => p.status === 'Ditolak').length;
+    const menunggu = pengajuanList.filter(p => p.status === 'diajukan').length;
+    const ditolak = pengajuanList.filter(p => p.status === 'ditolak').length;
 
     res.render("statusPengajuan", {
       pengajuanList: formattedPengajuan,

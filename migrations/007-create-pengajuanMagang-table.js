@@ -40,6 +40,30 @@ module.exports = {
       status: {
         type: Sequelize.ENUM('diajukan', 'diterima', 'ditolak', 'selesai'),
         allowNull: false
+      },
+      cv: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      transkrip: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      krs: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      dokumen_pendukung: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      verifikasi: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      keterangan: {
+        type: Sequelize.STRING,
+        allowNull: true
       }
       // Karena Anda memiliki `timestamps: false` di model PengajuanMagang Anda,
       // maka tidak perlu menambahkan kolom timestamp otomatis seperti `createdAt` atau `updatedAt` di migrasi ini.
