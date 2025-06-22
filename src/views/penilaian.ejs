@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Logbook - Portal Mahasiswa</title>
+  <title>Penilaian - Portal Mahasiswa</title>
   <link href="/css/style.css" rel="stylesheet">
 </head>
 <body class="bg-content-bg">
@@ -14,27 +14,26 @@
       <!-- Profile -->
       <div class="text-center py-4 border-b border-white/20">
         <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Foto" alt="Foto Profil Mahasiswa" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
-        <h3 class="font-bold text-lg">Siti Aliani</h3>
-        <p class="text-sm">2311522006</p>
+        <h3 class="font-bold text-lg"><%= mahasiswa.nama %></h3>
+        <p class="text-sm"><%= mahasiswa.npm %></p>
       </div>
 
       <!-- Navigation -->
       <nav class="mt-6 flex-grow">
         <ul class="space-y-2">
-           <li><a href="Dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Dashboard</a></li>
-                    <li><a href="Daftar Lowongan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Daftar Lowongan</a></li>
-                    <li><a href="Formulir Pengajuan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Formulir Pengajuan</a></li>
-                    <li><a href="Status & Verifikasi" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Status & Verifikasi</a></li>
-                    <li><a href="Logbook" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Logbook</a></li>
-                    <li><a href="Laporan Akhir" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Laporan Akhir</a></li>
-                    <li><a href="Penilaian" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Penilaian</a></li>
-                    <li><a href="Pengumuman" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Pengumuman</a></li>
+           <li><a href="/mahasiswa/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Dashboard</a></li>
+                    <li><a href="/mahasiswa/lowongan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Daftar Lowongan</a></li>
+                    <li><a href="/mahasiswa/status-pengajuan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Status & Verifikasi</a></li>
+                    <li><a href="/mahasiswa/logbook" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Logbook</a></li>
+                    <li><a href="/mahasiswa/laporan-akhir" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Laporan Akhir</a></li>
+                    <li><a href="/mahasiswa/penilaian" class="flex items-center gap-3 px-4 py-2.5 rounded-md bg-sidebar-active transition-colors duration-200">Penilaian</a></li>
+                    <li><a href="/mahasiswa/pengumuman" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Pengumuman</a></li>
         </ul>
       </nav>
 
       <!-- Logout -->
       <div class="mt-auto">
-        <a href="Logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition">
+        <a href="/logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition">
           <i data-lucide="log-out" class="w-5 h-5"></i>
           Logout
         </a>
@@ -47,7 +46,7 @@
       <header class="flex justify-end items-center mb-8">
         <div class="flex items-center gap-4">
           <div class="text-right">
-            <p class="font-semibold text-gray-800">Siti Aliani</p>
+            <p class="font-semibold text-gray-800"><%= mahasiswa.nama %></p>
             <p class="text-sm text-gray-500">Mahasiswa Aktif</p>
           </div>
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
@@ -65,10 +64,40 @@
         <!-- Informasi Mahasiswa -->
         <div class="bg-[#f1f4fa] p-4 rounded shadow space-y-6">
           <div class="bg-white p-4 rounded shadow">
-            <p><strong>Nama</strong> : <span id="nama">-</span></p>
-            <p><strong>NIM</strong> : <span id="nim">-</span></p>
-            <p><strong>Perusahaan</strong> : <span id="perusahaan">-</span></p>
+            <h3 class="font-semibold text-[#5C7988] mb-3">Informasi Mahasiswa</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p><strong>Nama</strong> : <span id="nama"><%= data.nama %></span></p>
+                <p><strong>NIM</strong> : <span id="nim"><%= data.nim %></span></p>
+                <p><strong>Perusahaan</strong> : <span id="perusahaan"><%= data.perusahaan %></span></p>
+              </div>
+              <div>
+                <p><strong>Dosen Penilai</strong> : <span id="dosenPenilai"><%= data.dosen_penilai %></span></p>
+                <p><strong>Tanggal Penilaian</strong> : <span id="tanggalPenilaian"><%= data.tanggal_penilaian %></span></p>
+              </div>
+            </div>
           </div>
+
+          <!-- Status Penilaian -->
+          <% if (data.nilai_akhir) { %>
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-green-800 font-medium">Penilaian telah selesai</span>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-yellow-800 font-medium">Menunggu penilaian dari dosen pembimbing</span>
+              </div>
+            </div>
+          <% } %>
 
           <!-- Aspek Penilaian -->
           <div>
@@ -76,28 +105,92 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <!-- Kinerja Tugas -->
               <div class="bg-white p-4 rounded-lg shadow text-center hover:bg-[#f1f4fa] transition">
-                <h3 class="font-bold text-[#5C7988]">Kinerja Tugas</h3>
-                <p class="text-2xl text-yellow-600 font-bold" id="nilai1">-</p>
-                <p class="text-sm text-gray-600" id="deskripsi1">-</p>
+                <h3 class="font-bold text-[#5C7988] mb-2">Kinerja Tugas</h3>
+                <div class="text-2xl font-bold mb-2">
+                  <% if (data.komentar && data.komentar.kinerja) { %>
+                    <span class="text-green-600"><%= data.komentar.kinerja %></span>
+                  <% } else { %>
+                    <span class="text-gray-400">-</span>
+                  <% } %>
+                </div>
+                <p class="text-sm text-gray-600">
+                  <% if (data.komentar && data.komentar.kinerja) { %>
+                    Penilaian kinerja dalam menyelesaikan tugas magang
+                  <% } else { %>
+                    Belum ada penilaian
+                  <% } %>
+                </p>
               </div>
               <!-- Kedisiplinan -->
               <div class="bg-white p-4 rounded-lg shadow text-center hover:bg-[#f1f4fa] transition">
-                <h3 class="font-bold text-[#5C7988]">Kedisiplinan</h3>
-                <p class="text-2xl text-yellow-600 font-bold" id="nilai2">-</p>
-                <p class="text-sm text-gray-600" id="deskripsi2">-</p>
+                <h3 class="font-bold text-[#5C7988] mb-2">Kedisiplinan</h3>
+                <div class="text-2xl font-bold mb-2">
+                  <% if (data.komentar && data.komentar.kedisiplinan) { %>
+                    <span class="text-blue-600"><%= data.komentar.kedisiplinan %></span>
+                  <% } else { %>
+                    <span class="text-gray-400">-</span>
+                  <% } %>
+                </div>
+                <p class="text-sm text-gray-600">
+                  <% if (data.komentar && data.komentar.kedisiplinan) { %>
+                    Penilaian kedisiplinan waktu dan aturan
+                  <% } else { %>
+                    Belum ada penilaian
+                  <% } %>
+                </p>
               </div>
               <!-- Kolaborasi -->
               <div class="bg-white p-4 rounded-lg shadow text-center hover:bg-[#f1f4fa] transition">
-                <h3 class="font-bold text-[#5C7988]">Kolaborasi & Komunikasi</h3>
-                <p class="text-2xl text-yellow-600 font-bold" id="nilai3">-</p>
-                <p class="text-sm text-gray-600" id="deskripsi3">-</p>
+                <h3 class="font-bold text-[#5C7988] mb-2">Kolaborasi & Komunikasi</h3>
+                <div class="text-2xl font-bold mb-2">
+                  <% if (data.komentar && data.komentar.kolaborasi) { %>
+                    <span class="text-purple-600"><%= data.komentar.kolaborasi %></span>
+                  <% } else { %>
+                    <span class="text-gray-400">-</span>
+                  <% } %>
+                </div>
+                <p class="text-sm text-gray-600">
+                  <% if (data.komentar && data.komentar.kolaborasi) { %>
+                    Penilaian kemampuan kolaborasi dan komunikasi
+                  <% } else { %>
+                    Belum ada penilaian
+                  <% } %>
+                </p>
               </div>
             </div>
 
             <!-- Nilai Akhir -->
-            <div class="mt-6 bg-white p-4 rounded shadow flex justify-between items-center hover:bg-[#f1f4fa] transition">
-              <span class="text-[#5C7988] font-semibold">Nilai Akhir : <span id="nilaiAkhir">-</span></span>
-              <button class="bg-[#8EAAB8] text-white px-4 py-2 rounded hover:bg-[#7A99A7] transition">Ekspor Pdf</button>
+            <div class="mt-6 bg-white p-6 rounded-lg shadow">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="text-lg font-semibold text-[#5C7988] mb-1">Nilai Akhir</h3>
+                  <div class="text-3xl font-bold">
+                    <% if (data.nilai_akhir) { %>
+                      <span class="text-green-600"><%= data.nilai_akhir %></span>
+                      <span class="text-sm text-gray-500 ml-2">/ 100</span>
+                    <% } else { %>
+                      <span class="text-gray-400">-</span>
+                    <% } %>
+                  </div>
+                </div>
+                <div>
+                  <% if (data.nilai_akhir) { %>
+                    <button onclick="exportPenilaianToPDF()" class="bg-[#8EAAB8] text-white px-6 py-3 rounded-lg hover:bg-[#7A99A7] transition flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                      Ekspor PDF
+                    </button>
+                  <% } else { %>
+                    <button disabled class="bg-gray-400 text-white px-6 py-3 rounded-lg cursor-not-allowed flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                      Ekspor PDF
+                    </button>
+                  <% } %>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -112,14 +205,17 @@
       const menuLinks = document.querySelectorAll('nav ul li a');
 
       menuLinks.forEach(link => {
-        link.classList.remove('bg-[#7A99A7]');
-        link.classList.add('hover:bg-[#7A99A7]');
         if (link.getAttribute('href') === currentPath) {
           link.classList.add('bg-[#7A99A7]');
           link.classList.remove('hover:bg-[#7A99A7]');
         }
       });
     });
+
+    function exportPenilaianToPDF() {
+      // Implementasi ekspor PDF bisa ditambahkan di sini
+      alert('Fitur ekspor PDF akan segera tersedia!');
+    }
   </script>
 </body>
 </html>

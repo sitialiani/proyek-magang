@@ -14,27 +14,26 @@
       <!-- Profile -->
       <div class="text-center py-4 border-b border-white/20">
         <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Foto" alt="Foto Profil Mahasiswa" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
-        <h3 class="font-bold text-lg">Siti Aliani</h3>
-        <p class="text-sm">2311522006</p>
+        <h3 class="font-bold text-lg"><%= mahasiswa.nama %></h3>
+        <p class="text-sm"><%= mahasiswa.npm %></p>
       </div>
 
       <!-- Navigation -->
       <nav class="mt-6 flex-grow">
         <ul class="space-y-2">
-           <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Dashboard</a></li>
-                    <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Daftar Lowongan</a></li>
-                    <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Formulir Pengajuan</a></li>
-                    <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Status & Verifikasi</a></li>
-                    <li><a href="/mahasiswa/logbook" class="flex items-center gap-3 px-4 py-2.5 rounded-md bg-sidebar-active font-semibold shadow-inner transition-colors duration-200">Logbook</a></li>
+           <li><a href="/mahasiswa/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Dashboard</a></li>
+                    <li><a href="/mahasiswa/lowongan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Daftar Lowongan</a></li>
+                    <li><a href="/mahasiswa/status-pengajuan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Status & Verifikasi</a></li>
+                    <li><a href="/mahasiswa/logbook" class="flex items-center gap-3 px-4 py-2.5 rounded-md bg-sidebar-active transition-colors duration-200">Logbook</a></li>
                     <li><a href="/mahasiswa/laporan-akhir" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Laporan Akhir</a></li>
-                    <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Penilaian</a></li>
+                    <li><a href="/mahasiswa/penilaian" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Penilaian</a></li>
                     <li><a href="/mahasiswa/pengumuman" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Pengumuman</a></li>
         </ul>
       </nav>
 
       <!-- Logout -->
       <div class="mt-auto">
-        <a href="Logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition">
+        <a href="/logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition">
           <i data-lucide="log-out" class="w-5 h-5"></i>
           Logout
         </a>
@@ -47,7 +46,7 @@
       <header class="flex justify-end items-center mb-8">
         <div class="flex items-center gap-4">
           <div class="text-right">
-            <p class="font-semibold text-gray-800">Siti Aliani</p>
+            <p class="font-semibold text-gray-800"><%= mahasiswa.nama %></p>
             <p class="text-sm text-gray-500">Mahasiswa Aktif</p>
           </div>
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
@@ -62,7 +61,7 @@
 <div id="logbook-content">
   <div class="flex items-center justify-between mb-6">
     <h1 class="text-2xl font-bold text-[#5C7988]">Pengisian Logbook</h1>
-    <a href="/mahasiswa/riwayatlogbook">
+    <a href="/mahasiswa/riwayat-logbook">
       <button class="bg-[#8EAAB8] text-white px-4 py-2 rounded hover:bg-[#7A99A7] shadow-md transition">
         Riwayat Logbook
       </button>
@@ -127,6 +126,8 @@
           if (result.success) {
             alert('Logbook berhasil disimpan!');
             logbookForm.reset();
+            // Redirect ke riwayat logbook setelah berhasil
+            window.location.href = '/mahasiswa/riwayat-logbook';
           } else {
             alert('Gagal menyimpan logbook: ' + result.message);
           }
