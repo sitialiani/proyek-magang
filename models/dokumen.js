@@ -1,5 +1,6 @@
+// src/models/Dokumen.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../src/config/sequelize');
+const sequelize = require('../src/config/sequelize'); // Sesuaikan path ke config/sequelize Anda
 
 const Dokumen = sequelize.define('Dokumen', {
     id: {
@@ -31,5 +32,14 @@ const Dokumen = sequelize.define('Dokumen', {
     tableName: 'dokumen',
     timestamps: false
 });
+
+// Penting: Definisi asosiasi untuk relasi antar model
+Dokumen.associate = (models) => {
+    // Dokumen milik satu PengajuanMagang
+    Dokumen.belongsTo(models.PengajuanMagang, {
+        foreignKey: 'pengajuan_id',
+        as: 'pengajuan' // Alias untuk saat mengambil relasi dari sisi Dokumen
+    });
+};
 
 module.exports = Dokumen;

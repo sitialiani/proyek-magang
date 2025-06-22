@@ -26,11 +26,6 @@ const Pengumuman = sequelize.define('Pengumuman', {
     ditujukan_kepada: {
         type: DataTypes.ENUM('semua', 'mahasiswa', 'dosen'),
         allowNull: false
-    },
-    lampiran: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-        comment: 'Path file lampiran pengumuman'
     }
 }, {
     tableName: 'pengumuman',

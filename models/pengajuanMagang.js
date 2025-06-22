@@ -1,3 +1,4 @@
+// src/models/PengajuanMagang.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../src/config/sequelize');
 
@@ -16,40 +17,29 @@ const PengajuanMagang = sequelize.define('PengajuanMagang', {
         allowNull: false
     },
     tanggal_pengajuan: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DATE,
         allowNull: false
     },
     status: {
-        type: DataTypes.ENUM('diajukan', 'diterima', 'ditolak', 'selesai'),
+        type: DataTypes.STRING(50),
         allowNull: false
     },
-    cv: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    transkrip: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    krs: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    dokumen_pendukung: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    verifikasi: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    keterangan: {
-        type: DataTypes.STRING,
-        allowNull: true
+    // Pastikan kolom ini ADA di MODEL Anda
+    komentar_dosen: {
+        type: DataTypes.TEXT, // Atau STRING(sesuaikan panjangnya jika tidak terlalu panjang)
+        allowNull: true // Sesuaikan apakah boleh null atau tidak
     }
 }, {
     tableName: 'pengajuan_magang',
     timestamps: false
 });
+
+PengajuanMagang.associate = (models) => {
+    // ... relasi lain ...
+    PengajuanMagang.hasMany(models.Dokumen, {
+        foreignKey: 'pengajuan_id',
+        as: 'dokumen'
+    });
+};
 
 module.exports = PengajuanMagang;
