@@ -10,19 +10,26 @@ const {
     Perusahaan,
     Lowongan,
     PengajuanMagang,
-    Dokumen,
+    Dokumen, // PASTIKAN DOKUMEN SUDAH DIIMPOR
     Logbook,
     Laporan,
     Penilaian,
-    Feedback
+    Feedback,
+    Rekapitulasi // Pastikan Rekapitulasi juga diimpor jika digunakan
 } = require('../../models'); // Ini mengimpor semua model yang sudah didefinisikan relasinya
 
 // Helper untuk mendapatkan data mahasiswa lengkap (termasuk status progres)
 const getMahasiswaDetail = async (mhsId) => {
     try {
+        // Pastikan mhsId adalah angka dan valid
+        if (isNaN(mhsId) || mhsId <= 0) {
+            console.error("Invalid Mahasiswa ID provided to getMahasiswaDetail:", mhsId);
+            return null;
+        }
+
         const mahasiswa = await Mahasiswa.findByPk(mhsId, {
             include: [
-                { model: User, attributes: ['email'] },
+                { model: User, as: 'User', attributes: ['email'] },
                 {
                     model: Dosen,
                     as: 'DosenPembimbing',
@@ -31,7 +38,9 @@ const getMahasiswaDetail = async (mhsId) => {
             ]
         });
 
-        if (!mahasiswa) return null;
+        if (!mahasiswa) {
+            return null;
+        }
 
         // Hitung logbook pending
         const logbookPendingCount = await Logbook.count({
@@ -46,31 +55,29 @@ const getMahasiswaDetail = async (mhsId) => {
             where: { mahasiswa_id: mahasiswa.id },
             attributes: ['status']
         });
-        const statusLaporanAkhir = laporan ? laporan.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) : 'Belum Unggah';
+        const statusLaporanAkhir = laporan ? laporan.status.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) : 'Belum Unggah';
 
-        // Ambil pengajuan magang yang diterima untuk info perusahaan dan periode (hanya untuk tampilan detail)
-        // Ini tidak akan digunakan untuk filter di daftarMahasiswa, melainkan statusPengajuanTerbaru di bawah.
+        // Ambil pengajuan magang yang diterima untuk info perusahaan dan periode
         const pengajuanInfoDiterima = await PengajuanMagang.findOne({
-            where: { mahasiswa_id: mahasiswa.id, status: 'diterima' }, // Hanya ambil status 'diterima' untuk perusahaan/periode
+            where: { mahasiswa_id: mahasiswa.id, status: 'diterima' },
             include: [
                 {
                     model: Lowongan,
+                    as: 'Lowongan',
                     attributes: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi'],
                 }
             ],
             order: [['tanggal_pengajuan', 'DESC']]
         });
 
-        // PENTING: Ambil STATUS PENGAJUAN TERBARU untuk filter di daftarMahasiswa
+        // Ambil STATUS PENGAJUAN TERBARU untuk filter di daftarMahasiswa
         const statusPengajuanTerbaruObj = await PengajuanMagang.findOne({
             where: { mahasiswa_id: mahasiswa.id },
             attributes: ['status'],
-            order: [['tanggal_pengajuan', 'DESC']] // Ambil status pengajuan terbaru
+            order: [['tanggal_pengajuan', 'DESC']]
         });
 
-        // Normalisasi statusMagang ke lowercase tanpa spasi untuk pencocokan filter
         const statusMagang = statusPengajuanTerbaruObj ? statusPengajuanTerbaruObj.status.toLowerCase().replace(/ /g, '') : 'belum ada pengajuan';
-
 
         const perusahaanTujuan = pengajuanInfoDiterima && pengajuanInfoDiterima.Lowongan
                                  ? pengajuanInfoDiterima.Lowongan.perusahaan
@@ -87,11 +94,11 @@ const getMahasiswaDetail = async (mhsId) => {
             email: mahasiswa.User ? mahasiswa.User.email : '-',
             angkatan: mahasiswa.angkatan,
             dosen_pembimbing_id: mahasiswa.dosen_pembimbing_id,
-            statusMagang: statusMagang, // Ini akan digunakan untuk filter status pengajuan
+            statusMagang: statusMagang,
             perusahaanTujuan: perusahaanTujuan,
             periodeMagang: periodeMagang,
             logbookPending: logbookPendingCount,
-            statusLaporanAkhir: statusLaporanAkhir
+            statusLaporanAkhir: statusLaporanAkhir,
         };
 
     } catch (error) {
@@ -109,6 +116,7 @@ exports.getDashboard = async (req, res) => {
         const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
 
         if (!dosen) {
+            console.error('Error: Dosen data not found for user ID:', dosenUserId);
             return res.status(404).send('Data dosen tidak ditemukan. Pastikan user_id dosen di tabel users sesuai dengan id user di tabel dosen.');
         }
 
@@ -121,18 +129,18 @@ exports.getDashboard = async (req, res) => {
         });
 
         const totalMahasiswaBimbingan = mahasiswaBimbingan.length;
-        const mahasiswaIdsBimbingan = mahasiswaBimbingan.map(mhs => mhs.id);
+        const mahasiswaIdsBimbingan = mahasiswaBimbingan.length > 0 ? mahasiswaBimbingan.map(mhs => mhs.id) : [0];
 
         const logbookMenungguEvaluasi = await Logbook.count({
             where: {
-                mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
+                mahasiswa_id: mahasiswaIdsBimbingan,
                 verifikasi_dosen: false
             }
         });
 
         const laporanMenungguPenilaian = await Laporan.count({
             where: {
-                mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
+                mahasiswa_id: mahasiswaIdsBimbingan,
                 status: 'menunggu'
             }
         });
@@ -142,10 +150,10 @@ exports.getDashboard = async (req, res) => {
         // Recent Logbooks (menunggu evaluasi)
         const recentLogbooks = await Logbook.findAll({
             where: {
-                mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
+                mahasiswa_id: mahasiswaIdsBimbingan,
                 verifikasi_dosen: false
             },
-            include: [{ model: Mahasiswa, attributes: ['nama'] }],
+            include: [{ model: Mahasiswa, as: 'Mahasiswa', attributes: ['nama'] }],
             order: [['tanggal', 'DESC']],
             limit: 5
         });
@@ -161,10 +169,10 @@ exports.getDashboard = async (req, res) => {
         // Recent Laporan (menunggu penilaian)
         const recentLaporan = await Laporan.findAll({
             where: {
-                mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
+                mahasiswa_id: mahasiswaIdsBimbingan,
                 status: 'menunggu'
             },
-            include: [{ model: Mahasiswa, attributes: ['nama'] }],
+            include: [{ model: Mahasiswa, as: 'Mahasiswa', attributes: ['nama'] }],
             order: [['tanggal_upload', 'DESC']],
             limit: 5
         });
@@ -180,10 +188,10 @@ exports.getDashboard = async (req, res) => {
         // Recent Pengajuan (diajukan)
         const recentPengajuan = await PengajuanMagang.findAll({
             where: {
-                mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
+                mahasiswa_id: mahasiswaIdsBimbingan,
                 status: 'diajukan'
             },
-            include: [{ model: Mahasiswa, attributes: ['nama'] }],
+            include: [{ model: Mahasiswa, as: 'Mahasiswa', attributes: ['nama'] }],
             order: [['tanggal_pengajuan', 'DESC']],
             limit: 5
         });
@@ -197,9 +205,9 @@ exports.getDashboard = async (req, res) => {
         });
 
         aktivitasTerbaru.sort((a, b) => b.date.getTime() - a.date.getTime());
-        aktivitasTerbaru = aktivitasTerbaru.slice(0, 5);
+        aktivitasTerbaru = aktivitasTerbaru.slice(0, 5); // Ambil 5 aktivitas terbaru saja
 
-        // Calendar Events
+        // Calendar Events (memastikan tanggal format ISO untuk JS)
         const calendarEvents = [];
         recentLogbooks.forEach(log => {
              calendarEvents.push({
@@ -256,45 +264,37 @@ exports.getMahasiswaBimbinganList = async (req, res) => {
     try {
         const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
         if (!dosen) {
+            console.error('Error: Dosen data not found for user ID:', dosenUserId);
             return res.status(404).send('Data dosen tidak ditemukan.');
         }
         const namaDosen = dosen.nama;
         const dosenId = dosen.id;
 
-        // Awalnya, dapatkan semua ID mahasiswa bimbingan dosen ini
         let whereMahasiswa = {
             dosen_pembimbing_id: dosenId
         };
 
-        // Jika ada search query, tambahkan kondisi ke pencarian nama mahasiswa
         if (search) {
             whereMahasiswa.nama = { [Op.like]: `%${search}%` };
         }
 
         const mahasiswaList = await Mahasiswa.findAll({
             where: whereMahasiswa,
-            attributes: ['id', 'nama'] // Ambil id dan nama untuk selanjutnya diproses
+            attributes: ['id', 'nama']
         });
 
-        let mahasiswaIdsBimbingan = mahasiswaList.map(mhs => mhs.id);
-
-        // Jika tidak ada mahasiswa yang cocok dengan pencarian nama, atau tidak ada mahasiswa bimbingan sama sekali
-        if (mahasiswaIdsBimbingan.length === 0) {
-            // Kita set id ke [0] agar query Sequelize berikutnya (IN clause) tidak error jika array kosong
-            // Ini akan menyebabkan Promise.all mengembalikan null untuk setiap ID 0, yang kemudian akan difilter
-            mahasiswaIdsBimbingan = [0];
+        let daftarMahasiswa = [];
+        for (const mhs of mahasiswaList) {
+            const detail = await getMahasiswaDetail(mhs.id);
+            if (detail) {
+                daftarMahasiswa.push(detail);
+            }
         }
-
-
-        // Ambil detail lengkap untuk setiap mahasiswa yang cocok dengan filter nama (atau semua jika tidak ada search)
-        const daftarMahasiswaPromises = mahasiswaIdsBimbingan.map(mhsId => getMahasiswaDetail(mhsId));
-        let daftarMahasiswa = (await Promise.all(daftarMahasiswaPromises)).filter(mhs => mhs !== null);
 
         // Filter daftarMahasiswa berdasarkan status pengajuan jika statusFilter diberikan
         if (statusFilter) {
             daftarMahasiswa = daftarMahasiswa.filter(mhs => {
-                // 'mhs.statusMagang' sudah dinormalisasi menjadi lowercase tanpa spasi di getMahasiswaDetail
-                return mhs.statusMagang === statusFilter;
+                return mhs.statusMagang === statusFilter; // 'mhs.statusMagang' sudah dinormalisasi di getMahasiswaDetail
             });
         }
 
@@ -303,8 +303,8 @@ exports.getMahasiswaBimbinganList = async (req, res) => {
             title: 'Mahasiswa Bimbingan',
             mahasiswa: daftarMahasiswa,
             namaDosen: namaDosen,
-            search: search || '', // Kirim kembali nilai search ke template
-            statusFilter: statusFilter || '' // Kirim kembali nilai statusFilter ke template
+            search: search || '',
+            statusFilter: statusFilter || ''
         });
 
     } catch (error) {
@@ -316,11 +316,18 @@ exports.getMahasiswaBimbinganList = async (req, res) => {
 // Item 31 (lanjutan): Melihat Detail Mahasiswa Bimbingan
 exports.getDetailMahasiswa = async (req, res) => {
     const dosenUserId = req.user.id;
-    const mahasiswaId = parseInt(req.params.id);
+    const mahasiswaId = parseInt(req.params.id); // Pastikan ini adalah INTEGER
+
+    // Validasi ID
+    if (isNaN(mahasiswaId) || mahasiswaId <= 0) {
+        console.error('Invalid Mahasiswa ID received:', req.params.id);
+        return res.status(400).send('ID Mahasiswa tidak valid.');
+    }
 
     try {
         const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
         if (!dosen) {
+            console.error('Error: Dosen data not found for user ID:', dosenUserId);
             return res.status(404).send('Data dosen tidak ditemukan.');
         }
         const namaDosen = dosen.nama;
@@ -328,8 +335,13 @@ exports.getDetailMahasiswa = async (req, res) => {
 
         const mahasiswa = await getMahasiswaDetail(mahasiswaId);
 
-        if (!mahasiswa || mahasiswa.dosen_pembimbing_id !== dosenId) {
-            return res.status(403).send('Mahasiswa tidak ditemukan atau Anda tidak memiliki akses.');
+        if (!mahasiswa) {
+            console.error(`Mahasiswa with ID ${mahasiswaId} not found or getMahasiswaDetail failed.`);
+            return res.status(404).send('Mahasiswa tidak ditemukan.');
+        }
+        if (mahasiswa.dosen_pembimbing_id !== dosenId) {
+            console.error(`Unauthorized access: Dosen ${dosenId} tried to access Mahasiswa ${mahasiswaId} (Pembimbing: ${mahasiswa.dosen_pembimbing_id})`);
+            return res.status(403).send('Anda tidak memiliki akses ke mahasiswa ini.');
         }
 
         const logbooks = await Logbook.findAll({
@@ -338,18 +350,18 @@ exports.getDetailMahasiswa = async (req, res) => {
         });
         const formattedLogbooks = logbooks.map(log => ({
             id: log.id,
-            minggu: 'N/A', // Jika tidak ada di DB, Anda bisa menambahkan ini secara manual di tabel logbook
+            minggu: 'N/A', // Asumsi ini tidak ada di DB Anda, bisa disesuaikan
             tanggal: log.tanggal,
             deskripsiKegiatan: log.kegiatan,
             statusEvaluasi: log.verifikasi_dosen ? 'sudah dievaluasi' : 'menunggu evaluasi',
-            komentarDosen: '', // Perlu diambil dari tabel Feedback
+            komentarDosen: '', // Perlu diambil dari tabel Feedback jika ada
             judulKegiatan: log.kegiatan.substring(0, Math.min(log.kegiatan.length, 50)) + (log.kegiatan.length > 50 ? '...' : '')
         }));
 
 
         const laporanAkhir = await Laporan.findOne({
             where: { mahasiswa_id: mahasiswaId },
-            include: [{ model: Penilaian, attributes: ['nilai_akhir', 'komentar'] }] // Include Penilaian
+            include: [{ model: Penilaian, as: 'Penilaian', attributes: ['nilai_akhir', 'komentar'] }]
         });
 
         const formattedLaporanAkhir = laporanAkhir ? {
@@ -368,24 +380,39 @@ exports.getDetailMahasiswa = async (req, res) => {
             include: [
                 {
                     model: Lowongan,
+                    as: 'Lowongan',
                     attributes: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi'],
+                },
+                { // BARIS INI: TAMBAHKAN INCLUDE DOKUMEN UNTUK MENGAMBIL PATH FILE
+                    model: Dokumen,
+                    as: 'Dokumen',
+                    attributes: ['nama_file', 'jenis', 'file_path'],
+                    required: false
                 }
             ],
             order: [['tanggal_pengajuan', 'DESC']]
         });
 
-        const formattedPengajuanMagang = pengajuanMagang.map(peng => ({
-            id: peng.id,
-            mahasiswaId: peng.mahasiswa_id,
-            namaPerusahaan: peng.Lowongan ? peng.Lowongan.perusahaan : '-',
-            posisi: peng.Lowongan ? peng.Lowongan.deskripsi.substring(0, Math.min(peng.Lowongan.deskripsi.length, 50)) + '...' : '-',
-            tanggalMulai: peng.Lowongan ? new Date(peng.Lowongan.deadlinependaftaran) : null,
-            tanggalSelesai: peng.Lowongan ? new Date(new Date(peng.Lowongan.deadlinependaftaran).setMonth(new Date(peng.Lowongan.deadlinependaftaran).getMonth() + parseInt(peng.Lowongan.durasi))) : null,
-            dokumenPendukung: '',
-            statusPengajuan: peng.status,
-            komentarDosen: '',
-            surat: '', cv: '', proposal: ''
-        }));
+        const formattedPengajuanMagang = pengajuanMagang.map(peng => {
+            // EKSTRAK PATH DOKUMEN DARI ARRAY Dokumen YANG DI-INCLUDE
+            const suratDoc = peng.Dokumen ? peng.Dokumen.find(doc => doc.jenis === 'surat') : null;
+            const cvDoc = peng.Dokumen ? peng.Dokumen.find(doc => doc.jenis === 'CV') : null;
+            const proposalDoc = peng.Dokumen ? peng.Dokumen.find(doc => doc.jenis === 'proposal') : null;
+
+            return {
+                id: peng.id,
+                mahasiswaId: peng.mahasiswa_id,
+                namaPerusahaan: peng.Lowongan ? peng.Lowongan.perusahaan : '-',
+                posisi: peng.Lowongan ? peng.Lowongan.deskripsi.substring(0, Math.min(peng.Lowongan.deskripsi.length, 50)) + '...' : '-',
+                tanggalMulai: peng.Lowongan ? new Date(peng.Lowongan.deadlinependaftaran) : null,
+                tanggalSelesai: peng.Lowongan ? new Date(new Date(peng.Lowongan.deadlinependaftaran).setMonth(new Date(peng.Lowongan.deadlinependaftaran).getMonth() + parseInt(peng.Lowongan.durasi))) : null,
+                statusPengajuan: peng.status,
+                komentarDosen: peng.komentar_dosen,
+                suratPath: suratDoc ? suratDoc.file_path : null, // PATH DINAMIS
+                cvPath: cvDoc ? cvDoc.file_path : null,         // PATH DINAMIS
+                proposalPath: proposalDoc ? proposalDoc.file_path : null // PATH DINAMIS
+            };
+        });
 
 
         res.render('dospem/detailMahasiswa', {
@@ -399,7 +426,7 @@ exports.getDetailMahasiswa = async (req, res) => {
 
     } catch (error) {
         console.error('Error in getDetailMahasiswa:', error);
-        res.status(500).send('Terjadi kesalahan saat memuat detail mahasiswa.');
+        res.status(500).send('Terjadi kesalahan saat memuat detail mahasiswa. Silakan coba lagi.');
     }
 };
 
@@ -420,11 +447,13 @@ exports.getDetailPengajuanMagangModal = async (req, res) => {
             include: [
                 {
                     model: Mahasiswa,
+                    as: 'Mahasiswa',
                     attributes: ['nama', 'npm', 'jurusan', 'no_hp', 'dosen_pembimbing_id'],
-                    include: [{ model: User, attributes: ['email'] }]
+                    include: [{ model: User, as: 'User', attributes: ['email'] }]
                 },
                 {
                     model: Lowongan,
+                    as: 'Lowongan',
                     attributes: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi'],
                 }
             ]
@@ -494,26 +523,50 @@ exports.getDetailPengajuanMagangModal = async (req, res) => {
 // Item 33, 34: Evaluasi Logbook (List View)
 exports.getEvaluasiLogbookList = async (req, res) => {
     const dosenUserId = req.user.id;
+    const { search, statusFilter } = req.query; // Ambil parameter search dan statusFilter
 
     try {
         const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
         if (!dosen) {
+            console.error('Error: Dosen data not found for user ID:', dosenUserId);
             return res.status(404).send('Data dosen tidak ditemukan.');
         }
         const namaDosen = dosen.nama;
         const dosenId = dosen.id;
 
-        const mahasiswaIdsBimbingan = await Mahasiswa.findAll({
+        // Ambil semua mahasiswa bimbingan untuk mendapatkan ID dan nama mereka
+        const mahasiswaBimbingan = await Mahasiswa.findAll({
             where: { dosen_pembimbing_id: dosenId },
-            attributes: ['id']
+            attributes: ['id', 'nama'] // Pastikan 'nama' disertakan untuk pencarian
         });
-        const safeMahasiswaIds = mahasiswaIdsBimbingan.map(mhs => mhs.id);
+
+        // Filter ID mahasiswa berdasarkan pencarian nama jika ada
+        let safeMahasiswaIds = mahasiswaBimbingan.map(mhs => mhs.id);
+        if (search) {
+            const searchedMahasiswaIds = mahasiswaBimbingan
+                .filter(mhs => mhs.nama.toLowerCase().includes(search.toLowerCase()))
+                .map(mhs => mhs.id);
+            
+            // Irisan ID mahasiswa bimbingan dengan ID mahasiswa hasil pencarian
+            safeMahasiswaIds = safeMahasiswaIds.filter(id => searchedMahasiswaIds.includes(id));
+
+            // Jika tidak ada mahasiswa yang cocok dengan pencarian, pastikan tidak ada logbook yang dikembalikan
+            if (safeMahasiswaIds.length === 0) {
+                safeMahasiswaIds = [0]; // Gunakan ID yang tidak mungkin ada untuk mengembalikan hasil kosong
+            }
+        }
+
+        let whereLogbook = {
+            mahasiswa_id: safeMahasiswaIds.length > 0 ? safeMahasiswaIds : [0] // Pastikan array tidak kosong
+        };
+
+        if (statusFilter && statusFilter !== '') { // Filter berdasarkan status jika dipilih
+            whereLogbook.verifikasi_dosen = (statusFilter === 'sudah dievaluasi');
+        }
 
         const logbooksForEvaluation = await Logbook.findAll({
-            where: {
-                mahasiswa_id: safeMahasiswaIds.length > 0 ? safeMahasiswaIds : [0]
-            },
-            include: [{ model: Mahasiswa, attributes: ['nama', 'npm'] }],
+            where: whereLogbook, // Gunakan objek where yang sudah dibangun secara dinamis
+            include: [{ model: Mahasiswa, as: 'Mahasiswa', attributes: ['nama', 'npm'] }],
             order: [['tanggal', 'DESC']]
         });
 
@@ -530,7 +583,9 @@ exports.getEvaluasiLogbookList = async (req, res) => {
         res.render('dospem/evaluasiLogbookList', {
             title: 'Evaluasi Logbook',
             logbooks: formattedLogbooks,
-            namaDosen: namaDosen
+            namaDosen: namaDosen,
+            search: search || '',        // Kirim kembali nilai pencarian
+            statusFilter: statusFilter || '' // Kirim kembali nilai filter status
         });
 
     } catch (error) {
@@ -556,8 +611,9 @@ exports.getEvaluasiLogbookFormModal = async (req, res) => {
             include: [
                 {
                     model: Mahasiswa,
-                    attributes: ['nama', 'npm', 'dosen_pembimbing_id'],
-                    include: [{ model: User, attributes: ['email'] }]
+                    as: 'Mahasiswa',
+                    attributes: ['id', 'nama', 'npm', 'dosen_pembimbing_id'],
+                    include: [{ model: User, as: 'User', attributes: ['email'] }]
                 }
             ]
         });
@@ -581,6 +637,7 @@ exports.getEvaluasiLogbookFormModal = async (req, res) => {
             include: [
                 {
                     model: Lowongan,
+                    as: 'Lowongan',
                     attributes: ['perusahaan', 'deskripsi'],
                 }
             ],
@@ -635,7 +692,7 @@ exports.postEvaluasiLogbook = async (req, res) => {
         const dosenId = dosen.id;
 
         const logbook = await Logbook.findByPk(logbookId, {
-            include: [{ model: Mahasiswa, attributes: ['dosen_pembimbing_id'] }]
+            include: [{ model: Mahasiswa, as: 'Mahasiswa', attributes: ['dosen_pembimbing_id'] }]
         });
 
         if (!logbook) {
@@ -690,8 +747,8 @@ exports.getPenilaianLaporanAkhirList = async (req, res) => {
                 mahasiswa_id: safeMahasiswaIds.length > 0 ? safeMahasiswaIds : [0]
             },
             include: [
-                { model: Mahasiswa, attributes: ['nama', 'npm'] },
-                { model: Penilaian, attributes: ['nilai_akhir', 'komentar', 'tanggal'], required: false }
+                { model: Mahasiswa, as: 'Mahasiswa', attributes: ['nama', 'npm'] },
+                { model: Penilaian, as: 'Penilaian', attributes: ['nilai_akhir', 'komentar', 'tanggal'], required: false }
             ],
             order: [['tanggal_upload', 'DESC']]
         });
@@ -701,6 +758,7 @@ exports.getPenilaianLaporanAkhirList = async (req, res) => {
                 where: { mahasiswa_id: lap.mahasiswa_id, status: 'diterima' },
                 include: [{
                     model: Lowongan,
+                    as: 'Lowongan',
                     attributes: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi']
                 }],
                 order: [['tanggal_pengajuan', 'DESC']]
@@ -755,10 +813,12 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
             include: [
                 {
                     model: Mahasiswa,
-                    attributes: ['nama', 'npm', 'dosen_pembimbing_id']
+                    as: 'Mahasiswa',
+                    attributes: ['id', 'nama', 'npm', 'dosen_pembimbing_id']
                 },
                 {
                     model: Penilaian,
+                    as: 'Penilaian',
                     attributes: ['nilai_akhir', 'komentar'],
                     required: false
                 }
@@ -784,11 +844,13 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
             include: [
                 {
                     model: Lowongan,
+                    as: 'Lowongan',
                     attributes: ['perusahaan', 'deskripsi'],
                 }
             ],
             order: [['tanggal_pengajuan', 'DESC']]
         });
+
         const companyInfo = pengajuan && pengajuan.Lowongan ? {
             namaPerusahaan: pengajuan.Lowongan.perusahaan,
             posisi: pengajuan.Lowongan.deskripsi.substring(0, Math.min(pengajuan.Lowongan.deskripsi.length, 50)) + '...'
@@ -852,7 +914,7 @@ exports.postPenilaianLaporan = async (req, res) => {
         const dosenId = dosen.id;
 
         const laporanAkhir = await Laporan.findByPk(laporanId, {
-            include: [{ model: Mahasiswa, attributes: ['id', 'dosen_pembimbing_id'] }]
+            include: [{ model: Mahasiswa, as: 'Mahasiswa', attributes: ['id', 'dosen_pembimbing_id'] }]
         });
 
         if (!laporanAkhir) {
