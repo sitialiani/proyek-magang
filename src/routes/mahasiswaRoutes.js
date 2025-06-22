@@ -27,6 +27,10 @@ const riwayatData = [
 // =======================
 
 const lowonganController = require('../controllers/mahasiswa/lowonganController');
+const logbookController = require('../controllers/mahasiswa/logbookController');
+const pengumumanController = require('../controllers/mahasiswa/pengumumanController');
+const penilaianController = require('../controllers/mahasiswa/penilaianController');
+const { upload } = require("../config/multer");
 
 router.get("/", (req, res) => {
   res.render("index");
@@ -47,8 +51,6 @@ router.get("/formulir/:lowonganId", (req, res) => {
   const lowonganId = req.params.lowonganId;
   res.render("formPengajuan", { lowonganId });
 });
-
-const upload = require("../config/multer");
 
 // POST formulir pengajuan
 router.post(
@@ -99,31 +101,43 @@ router.get("/laporan", (req, res) => {
  * @route   GET /mahasiswa/logbook
  * @desc    Menampilkan halaman untuk mengisi logbook harian.
  */
-router.get('/logbook', (req, res) => {
-    console.log("Route /mahasiswa/logbook dipanggil!");
-    // Pastikan Anda memiliki file view bernama 'logbook.ejs'
-    res.render('logbook');
-});
+router.get('/logbook', logbookController.getLogbookPage);
 
 /**
  * @route   GET /mahasiswa/riwayatlogbook
  * @desc    Menampilkan halaman riwayat logbook yang telah diisi.
  */
-router.get('/riwayatlogbook', (req, res) => {
-    console.log("Route /mahasiswa/riwayatlogbook dipanggil!");
-    // Pastikan Anda memiliki file view bernama 'riwayatlogbook.ejs'
-    res.render('riwayatlogbook');
-});
+router.get('/riwayatlogbook', logbookController.getRiwayatLogbook);
+
+/**
+ * @route   POST /mahasiswa/logbook/save
+ * @desc    Menyimpan logbook baru.
+ */
+router.post('/logbook/save', logbookController.saveLogbook);
+
+/**
+ * @route   PUT /mahasiswa/logbook/update
+ * @desc    Mengupdate logbook yang sudah ada.
+ */
+router.put('/logbook/update', logbookController.updateLogbook);
+
+/**
+ * @route   DELETE /mahasiswa/logbook/delete/:id
+ * @desc    Menghapus logbook berdasarkan ID.
+ */
+router.delete('/logbook/delete/:id', logbookController.deleteLogbook);
 
 /**
  * @route   GET /mahasiswa/pengumuman
  * @desc    Menampilkan halaman pengumuman untuk mahasiswa.
  */
-router.get("/pengumuman", (req, res) => {
-    console.log("Route /mahasiswa/pengumuman dipanggil!");
-    // Pastikan Anda memiliki file view bernama 'pengumuman.ejs'
-    res.render("pengumuman");
-});
+router.get("/pengumuman", pengumumanController.getPengumumanPage);
+
+/**
+ * @route   GET /mahasiswa/pengumuman/:id
+ * @desc    Mengambil detail pengumuman berdasarkan ID.
+ */
+router.get("/pengumuman/:id", pengumumanController.getPengumumanDetail);
 
 /**
  * @route   GET /mahasiswa/penilaian

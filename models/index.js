@@ -3,11 +3,7 @@ const sequelize = require('../src/config/sequelize');
 const User = require('./user');
 const Mahasiswa = require('./mahasiswa');
 const Dosen = require('./dosen');
-<<<<<<< HEAD
-const Mitra = require('./mitra');
-=======
 const Perusahaan = require('./perusahaan');
->>>>>>> 03d0be88ae68d2002cbd1ca11dddb146e91326a8
 const Lowongan = require('./lowongan');
 const PengajuanMagang = require('./pengajuanMagang');
 const Dokumen = require('./dokumen');
@@ -74,8 +70,8 @@ Mahasiswa.hasOne(Rekapitulasi, { foreignKey: 'mahasiswa_id', onDelete: 'CASCADE'
 Rekapitulasi.belongsTo(Mahasiswa, { foreignKey: 'mahasiswa_id' });
 
 // Users (Admin) & Pengumuman
-User.hasMany(Pengumuman, { foreignKey: 'admin_user_id', onDelete: 'SET NULL' });
-Pengumuman.belongsTo(User, { foreignKey: 'admin_user_id' });
+User.hasMany(Pengumuman, { as: 'Pengumuman', foreignKey: 'admin_user_id', onDelete: 'SET NULL' });
+Pengumuman.belongsTo(User, { as: 'Admin', foreignKey: 'admin_user_id' });
 
 
 // Ekspor semua model dan instance sequelize
@@ -84,11 +80,7 @@ module.exports = {
     User,
     Mahasiswa,
     Dosen,
-<<<<<<< HEAD
-    Mitra,
-=======
     Perusahaan,
->>>>>>> 03d0be88ae68d2002cbd1ca11dddb146e91326a8
     Lowongan,
     PengajuanMagang,
     Dokumen,
