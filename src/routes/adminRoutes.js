@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const { uploadPengumuman } = require('../config/multer');
 
 // Data untuk Dashboard
 const dashboardData = {
@@ -134,11 +135,47 @@ router.get('/laporan-statistik', adminController.getLaporanStatistik);
 
 
 // --- Rute Konten & Komunikasi ---
-router.get("/pengumuman", (req, res) => {
-    console.log("Route /admin/pengumuman dipanggil!");
-    // Pastikan ada file view bernama 'pengumuman_admin.ejs'
-    res.render("pengumuman_admin");
-});
+router.get("/pengumuman", adminController.getPengumumanPage);
+
+/**
+ * @route   POST /admin/pengumuman/save
+ * @desc    Menyimpan pengumuman baru.
+ */
+router.post('/pengumuman/save', uploadPengumuman.single('lampiran'), (err, req, res, next) => {
+    if (err) {
+        return res.status(400).json({ 
+            success: false, 
+            message: err.message 
+        });
+    }
+    next();
+}, adminController.savePengumuman);
+
+/**
+ * @route   PUT /admin/pengumuman/update
+ * @desc    Mengupdate pengumuman yang sudah ada.
+ */
+router.put('/pengumuman/update', uploadPengumuman.single('lampiran'), (err, req, res, next) => {
+    if (err) {
+        return res.status(400).json({ 
+            success: false, 
+            message: err.message 
+        });
+    }
+    next();
+}, adminController.updatePengumuman);
+
+/**
+ * @route   DELETE /admin/pengumuman/delete/:id
+ * @desc    Menghapus pengumuman berdasarkan ID.
+ */
+router.delete('/pengumuman/delete/:id', adminController.deletePengumuman);
+
+/**
+ * @route   GET /admin/pengumuman/api/all
+ * @desc    Mengambil semua pengumuman untuk API.
+ */
+router.get('/pengumuman/api/all', adminController.getAllPengumuman);
 
 router.get('/template-dokumen', (req, res) => {
     res.render('template_dokumen', { templates: templateDokumen });

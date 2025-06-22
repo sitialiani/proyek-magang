@@ -69,18 +69,18 @@
     </a>
   </div>
 
-        <form class="space-y-4">
+        <form id="logbookForm" class="space-y-4">
           <div>
             <label for="tanggal" class="block font-medium text-[#5C7988]">Tanggal</label>
-            <input type="date" id="tanggal" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]" />
+            <input type="date" id="tanggal" name="tanggal" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]" required />
           </div>
           <div>
             <label for="aktivitas" class="block font-medium text-[#5C7988]">Aktivitas</label>
-            <input type="text" id="aktivitas" placeholder="Masukkan aktivitas" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]" />
+            <input type="text" id="aktivitas" name="aktivitas" placeholder="Masukkan aktivitas" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]" required />
           </div>
           <div>
             <label for="deskripsi" class="block font-medium text-[#5C7988]">Deskripsi</label>
-            <textarea id="deskripsi" rows="4" placeholder="Masukkan deskripsi aktivitas" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]"></textarea>
+            <textarea id="deskripsi" name="deskripsi" rows="4" placeholder="Masukkan deskripsi aktivitas" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]" required></textarea>
           </div>
           <button type="submit" class="bg-[#8EAAB8] text-white px-4 py-2 rounded-md hover:bg-[#7A99A7] transition">Save</button>
         </form>
@@ -98,6 +98,41 @@
         if (link.getAttribute('href') === currentPath) {
           link.classList.add('bg-[#7A99A7]');
           link.classList.remove('hover:bg-[#7A99A7]');
+        }
+      });
+
+      // Handle form submission
+      const logbookForm = document.getElementById('logbookForm');
+      logbookForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(logbookForm);
+        const data = {
+          tanggal: formData.get('tanggal'),
+          aktivitas: formData.get('aktivitas'),
+          deskripsi: formData.get('deskripsi')
+        };
+
+        try {
+          const response = await fetch('/mahasiswa/logbook/save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            alert('Logbook berhasil disimpan!');
+            logbookForm.reset();
+          } else {
+            alert('Gagal menyimpan logbook: ' + result.message);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menyimpan logbook');
         }
       });
     });

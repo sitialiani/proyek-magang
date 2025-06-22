@@ -139,6 +139,14 @@
           </div>
         </div>
         <div>
+          <label for="ditujukan_kepada" class="block font-medium text-[#5C7988] mb-2">Ditujukan Kepada</label>
+          <select id="ditujukan_kepada" class="w-full p-3 border border-[#8EAAB8] rounded-lg">
+            <option value="semua">Semua</option>
+            <option value="mahasiswa">Mahasiswa</option>
+            <option value="dosen">Dosen</option>
+          </select>
+        </div>
+        <div>
           <label class="block font-medium text-[#5C7988] mb-2">Kategori</label>
           <div class="flex flex-wrap gap-4">
             <label class="inline-flex items-center">
@@ -174,67 +182,172 @@
     });
 
     const daftarPengumuman = document.getElementById('daftar-pengumuman');
-    let dataPengumuman = [];
     let editIndex = null;
 
-    function renderDaftar() {
-      const list = dataPengumuman.map((item, index) => `
-        <div class="bg-white rounded-lg shadow p-4 border border-gray-200">
-          <div class="flex justify-between items-start mb-2">
-            <div>
-              <h3 class="font-semibold text-lg text-[#5C7988]">${item.judul}</h3>
-              <p class="text-sm text-gray-500">${item.tanggal} ${item.waktu}</p>
-              <p class="text-sm mt-1">${item.isi}</p>
-              <p class="text-xs text-gray-500 mt-1 italic">Kategori: ${item.kategori}</p>
-            </div>
-            <div class="flex gap-2">
-              <button onclick="editPengumuman(${index})" class="text-blue-600 hover:underline text-sm">Edit</button>
-              <button onclick="hapusPengumuman(${index})" class="text-red-600 hover:underline text-sm">Hapus</button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-      daftarPengumuman.innerHTML = `<h2 class="text-xl font-bold text-[#5C7988] mb-4">Daftar Pengumuman</h2>${list || '<p class="text-sm text-gray-500">Belum ada pengumuman.</p>'}`;
+    // Load pengumuman dari database
+    async function loadPengumuman() {
+      try {
+        const response = await fetch('/admin/pengumuman/api/all');
+        const result = await response.json();
+        
+        if (result.success) {
+          renderDaftar(result.data);
+        } else {
+          console.error('Gagal memuat pengumuman:', result.message);
+        }
+      } catch (error) {
+        console.error('Error loading pengumuman:', error);
+      }
     }
 
-    window.editPengumuman = function(index) {
-      const item = dataPengumuman[index];
-      document.getElementById('judul').value = item.judul;
-      document.getElementById('tanggal').value = item.tanggal;
-      document.getElementById('waktu').value = item.waktu;
-      document.getElementById('isi').value = item.isi;
-      document.querySelector(`input[name="kategori"][value="${item.kategori}"]`).checked = true;
-      editIndex = index;
-    };
-
-    window.hapusPengumuman = function(index) {
-      if (confirm('Yakin ingin menghapus pengumuman ini?')) {
-        dataPengumuman.splice(index, 1);
-        renderDaftar();
-      }
-    };
-
-    document.getElementById('form-pengumuman').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const judul = document.getElementById('judul').value;
-      const tanggal = document.getElementById('tanggal').value;
-      const waktu = document.getElementById('waktu').value;
-      const isi = document.getElementById('isi').value;
-      const kategori = document.querySelector('input[name="kategori"]:checked').value;
-      const data = { judul, tanggal, waktu, isi, kategori };
-      if (editIndex !== null) {
-        dataPengumuman[editIndex] = data;
-        editIndex = null;
+    function renderDaftar(dataPengumuman) {
+      if (dataPengumuman && dataPengumuman.length > 0) {
+        const list = dataPengumuman.map((item, index) => {
+          const tanggal = new Date(item.tanggal).toLocaleDateString('id-ID');
+          const waktu = new Date(item.tanggal).toLocaleTimeString('id-ID', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          });
+          
+          const lampiranHtml = item.lampiran ? 
+            `<div class="mt-2">
+              <span class="text-xs text-green-600 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Lampiran</span>
+              </span>
+            </div>` : '';
+          
+          return `
+            <div class="bg-white rounded-lg shadow p-4 border border-gray-200">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex-1">
+                  <h3 class="font-semibold text-lg text-[#5C7988]">${item.judul}</h3>
+                  <p class="text-sm text-gray-500">${tanggal} ${waktu}</p>
+                  <p class="text-sm mt-1">${item.isi.substring(0, 100)}${item.isi.length > 100 ? '...' : ''}</p>
+                  <p class="text-xs text-gray-500 mt-1 italic">Target: ${item.ditujukan_kepada}</p>
+                  ${lampiranHtml}
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="editPengumuman(${item.id})" class="text-blue-600 hover:underline text-sm">Edit</button>
+                  <button onclick="hapusPengumuman(${item.id})" class="text-red-600 hover:underline text-sm">Hapus</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        daftarPengumuman.innerHTML = `<h2 class="text-xl font-bold text-[#5C7988] mb-4">Daftar Pengumuman</h2>${list}`;
       } else {
-        dataPengumuman.push(data);
+        daftarPengumuman.innerHTML = `<h2 class="text-xl font-bold text-[#5C7988] mb-4">Daftar Pengumuman</h2><p class="text-sm text-gray-500">Belum ada pengumuman.</p>`;
       }
-      renderDaftar();
-      this.reset();
-      document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-      document.getElementById('nama-file').textContent = 'Belum ada file dipilih';
+    }
+
+    window.editPengumuman = async function(id) {
+      try {
+        const response = await fetch(`/admin/pengumuman/api/all`);
+        const result = await response.json();
+        
+        if (result.success) {
+          const pengumuman = result.data.find(p => p.id === id);
+          if (pengumuman) {
+            document.getElementById('judul').value = pengumuman.judul;
+            document.getElementById('tanggal').value = new Date(pengumuman.tanggal).toISOString().split('T')[0];
+            document.getElementById('waktu').value = new Date(pengumuman.tanggal).toTimeString().slice(0, 5);
+            document.getElementById('isi').value = pengumuman.isi;
+            document.getElementById('ditujukan_kepada').value = pengumuman.ditujukan_kepada;
+            
+            // Tampilkan lampiran yang sudah ada
+            if (pengumuman.lampiran) {
+              const fileName = pengumuman.lampiran.split('/').pop();
+              document.getElementById('nama-file').textContent = `File saat ini: ${fileName}`;
+            } else {
+              document.getElementById('nama-file').textContent = 'Belum ada file dipilih';
+            }
+            
+            editIndex = id;
+          }
+        }
+      } catch (error) {
+        console.error('Error editing pengumuman:', error);
+      }
+    };
+
+    window.hapusPengumuman = async function(id) {
+      if (confirm('Yakin ingin menghapus pengumuman ini?')) {
+        try {
+          const response = await fetch(`/admin/pengumuman/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            alert('Pengumuman berhasil dihapus!');
+            loadPengumuman();
+          } else {
+            alert('Gagal menghapus pengumuman: ' + result.message);
+          }
+        } catch (error) {
+          console.error('Error deleting pengumuman:', error);
+          alert('Terjadi kesalahan saat menghapus pengumuman');
+        }
+      }
+    };
+
+    document.getElementById('form-pengumuman').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      
+      const formData = new FormData();
+      formData.append('judul', document.getElementById('judul').value);
+      formData.append('tanggal', document.getElementById('tanggal').value);
+      formData.append('waktu', document.getElementById('waktu').value);
+      formData.append('isi', document.getElementById('isi').value);
+      formData.append('ditujukan_kepada', document.getElementById('ditujukan_kepada').value);
+      formData.append('kategori', document.querySelector('input[name="kategori"]:checked').value);
+      
+      // Tambahkan file lampiran jika ada
+      const fileInput = document.getElementById('lampiran');
+      if (fileInput.files[0]) {
+        formData.append('lampiran', fileInput.files[0]);
+      }
+      
+      if (editIndex) {
+        formData.append('id', editIndex);
+      }
+
+      try {
+        const url = editIndex ? `/admin/pengumuman/update` : `/admin/pengumuman/save`;
+        const method = editIndex ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method: method,
+          body: formData // Gunakan FormData untuk upload file
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert(editIndex ? 'Pengumuman berhasil diupdate!' : 'Pengumuman berhasil disimpan!');
+          this.reset();
+          document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+          document.getElementById('nama-file').textContent = 'Belum ada file dipilih';
+          editIndex = null;
+          loadPengumuman();
+        } else {
+          alert('Gagal menyimpan pengumuman: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error saving pengumuman:', error);
+        alert('Terjadi kesalahan saat menyimpan pengumuman');
+      }
     });
 
-    renderDaftar();
+    // Load pengumuman saat halaman dimuat
+    loadPengumuman();
   });
 
   
