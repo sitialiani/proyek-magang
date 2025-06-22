@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
@@ -50,3 +51,36 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Logbook;
 }; 
+=======
+const { DataTypes } = require('sequelize');
+const sequelize = require('../src/config/sequelize');
+
+const Logbook = sequelize.define('Logbook', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    mahasiswa_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    tanggal: {
+        type: DataTypes.DATEONLY, // DATEONLY untuk hanya tanggal
+        allowNull: false
+    },
+    kegiatan: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    verifikasi_dosen: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    }
+}, {
+    tableName: 'logbook',
+    timestamps: false
+});
+
+module.exports = Logbook;
+>>>>>>> 7e7ac080241c89bb016f2879b7eaf063e8d85df5

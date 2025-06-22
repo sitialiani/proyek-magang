@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Riwayat Logbook</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
   <style>
     .status-pending { background-color: #FEF3C7; color: #92400E; }
     .status-approved { background-color: #D1FAE5; color: #065F46; }
@@ -41,51 +43,35 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 text-sm">
-            <!-- Baris 1: Disetujui -->
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3">1</td>
-              <td class="px-4 py-3">12/07/2023</td>
-              <td class="px-4 py-3">Pembuatan Modul</td>
-              <td class="px-4 py-3">Membuat modul autentikasi pengguna</td>
-              <td class="px-4 py-3">
-                <span class="status-approved px-3 py-1 rounded-full text-xs font-semibold">Disetujui</span>
-              </td>
-              <td class="px-4 py-3 italic text-gray-400">Terkunci</td>
-            </tr>
-
-            <!-- Baris 2: Pending -->
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3">2</td>
-              <td class="px-4 py-3">13/07/2023</td>
-              <td class="px-4 py-3">Bug Fixing</td>
-              <td class="px-4 py-3">Memperbaiki error pada form input</td>
-              <td class="px-4 py-3">
-                <span class="status-pending px-3 py-1 rounded-full text-xs font-semibold">Pending</span>
-              </td>
-              <td class="px-4 py-3">
-                <div class="flex gap-2">
-                  <button onclick="openEditModal('2', '13/07/2023', 'Bug Fixing', 'Memperbaiki error pada form input')" class="text-blue-600 hover:underline">✏️ Edit</button>
-                  <button onclick="confirmDelete('2')" class="text-red-600 hover:underline">🗑️ Hapus</button>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Baris 3: Ditolak -->
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3">3</td>
-              <td class="px-4 py-3">14/07/2023</td>
-              <td class="px-4 py-3">Testing</td>
-              <td class="px-4 py-3">Melakukan pengujian sistem</td>
-              <td class="px-4 py-3">
-                <span class="status-rejected px-3 py-1 rounded-full text-xs font-semibold">Ditolak</span>
-              </td>
-              <td class="px-4 py-3">
-                <div class="flex gap-2">
-                  <button onclick="openEditModal('3', '14/07/2023', 'Testing', 'Melakukan pengujian sistem')" class="text-blue-600 hover:underline">✏️ Edit</button>
-                  <button onclick="confirmDelete('3')" class="text-red-600 hover:underline">🗑️ Hapus</button>
-                </div>
-              </td>
-            </tr>
+            <% if (logbooks && logbooks.length > 0) { %>
+              <% logbooks.forEach(log => { %>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3"><%= log.nomor %></td>
+                  <td class="px-4 py-3"><%= log.tanggal %></td>
+                  <td class="px-4 py-3"><%= log.aktivitas %></td>
+                  <td class="px-4 py-3"><%= log.deskripsi %></td>
+                  <td class="px-4 py-3">
+                    <span class="<%= log.statusClass %> px-3 py-1 rounded-full text-xs font-semibold"><%= log.status %></span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <% if (log.status === 'Menunggu') { %>
+                      <button onclick="openEditModal('<%= log.id %>', '<%= log.tanggal %>', '<%= log.aktivitas %>', '<%= log.deskripsi %>')" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                      <button onclick="confirmDelete('<%= log.id %>')" class="text-red-600 hover:text-red-800">Hapus</button>
+                    <% } else if (log.status === 'Disetujui') { %>
+                      <button onclick="exportLogbookToPDF('<%= log.tanggal %>', '<%= log.aktivitas %>', '<%= log.deskripsi %>')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-xs">Ekspor PDF</button>
+                    <% } else { %>
+                      <span class="italic text-gray-400">Terkunci</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                  Belum ada data logbook. Silakan isi logbook terlebih dahulu.
+                </td>
+              </tr>
+            <% } %>
           </tbody>
         </table>
 
@@ -94,9 +80,6 @@
           <a href="/mahasiswa/logbook" class="bg-[#7a98a7] hover:bg-[#6a8b9a] text-white px-4 py-2 rounded-md flex items-center gap-2">
            Kembali ke Dashboard
           </a>
-          <button class="bg-[#7a98a7] hover:bg-[#6a8b9a] text-white px-4 py-2 rounded-md flex items-center gap-2">
-            Ekspor PDF
-          </button>
         </div>
       </div>
     </div>
@@ -106,7 +89,7 @@
   <div id="editModal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
       <h3 class="text-lg font-bold mb-4">Edit Logbook</h3>
-      <form id="editForm" method="POST" action="/logbook/edit">
+      <form id="editForm" method="POST" action="/mahasiswa/logbook/update">
         <input type="hidden" name="id" id="edit-id">
         <div class="mb-3">
           <label class="block text-sm font-medium">Tanggal</label>
@@ -132,11 +115,25 @@
   <script>
     function confirmDelete(id) {
       if (confirm("Yakin ingin menghapus logbook ini?")) {
-        fetch(`/logbook/delete/${id}`, { method: "DELETE" })
-          .then(res => {
-            if (res.ok) location.reload();
-            else alert("Gagal menghapus.");
-          });
+        fetch(`/mahasiswa/logbook/delete/${id}`, { 
+          method: "DELETE",
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert('Logbook berhasil dihapus!');
+            location.reload();
+          } else {
+            alert('Gagal menghapus: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menghapus logbook');
+        });
       }
     }
 
@@ -155,7 +152,70 @@
 
     function formatDate(dmy) {
       const [day, month, year] = dmy.split('/');
-      return `${year}-${month}-${day}`;
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
+
+    // Handle edit form submission
+    document.getElementById('editForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const data = {
+        id: formData.get('id'),
+        tanggal: formData.get('tanggal'),
+        aktivitas: formData.get('aktivitas'),
+        deskripsi: formData.get('deskripsi')
+      };
+
+      try {
+        const response = await fetch('/mahasiswa/logbook/update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Logbook berhasil diupdate!');
+          closeEditModal();
+          location.reload();
+        } else {
+          alert('Gagal mengupdate logbook: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat mengupdate logbook');
+      }
+    });
+
+    function exportLogbookToPDF(tanggal, aktivitas, deskripsi) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Judul Dokumen
+      doc.setFontSize(18);
+      doc.text("Logbook Harian Mahasiswa", 14, 22);
+
+      // Informasi Mahasiswa (contoh)
+      doc.setFontSize(11);
+      doc.text("Nama Mahasiswa: Budi Santoso", 14, 32);
+      doc.text("NIM: 123456789", 14, 38);
+      doc.text("Perusahaan: PT. Teknologi Maju", 14, 44);
+
+      // Tabel Logbook
+      doc.autoTable({
+        startY: 50,
+        head: [['Tanggal', 'Aktivitas', 'Deskripsi']],
+        body: [[tanggal, aktivitas, deskripsi]],
+        theme: 'striped',
+        headStyles: { fillColor: [41, 128, 185] },
+      });
+
+      // Simpan file PDF
+      doc.save(`logbook-${tanggal}.pdf`);
     }
   </script>
 </body>

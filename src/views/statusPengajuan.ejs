@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Status Pengajuan & Verifikasi Dokumen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <div class="flex min-h-screen">
+     <!-- =============== Sidebar Mahasiswa =============== -->
+<aside class="w-72 bg-[#7c9dab] text-white flex flex-col p-4 fixed h-full shadow-lg">
+  <!-- Profile Photo & Info Mahasiswa -->
+  <div class="text-center py-4 border-b border-white/20">
+      <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" alt="Foto Profil Admin" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
+    <h3 class="font-bold text-lg">Dinda Arfitri</h3>
+    <p class="text-sm">Mahasiswa SI</p>
+  </div>
+
+  <!-- Navigation Links Mahasiswa -->
+  <nav class="mt-6 flex-grow overflow-y-auto pr-2">
+    <ul class="space-y-1 pb-4 text-md font-medium">
+      <li><a href="/mahasiswa/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#6b8c9a] transition-colors duration-200"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
+      <li><a href="/mahasiswa/lowongan" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#6b8c9a] transition-colors duration-200"><i data-lucide="briefcase" class="w-5 h-5"></i> Daftar Lowongan</a></li>
+      <li>
+      <a href="/formulir"
+        class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#6b8c9a] transition-colors duration-200 pointer-events-none text-gray-400">
+        <i data-lucide="file-text" class="w-5 h-5"></i> Formulir Pengajuan Magang
+      </a>
+     </li>
+      <li><a href="/mahasiswa/status-pengajuan" class="flex items-center gap-3 px-4 py-3 rounded-md bg-white text-[#7c9dab] font-semibold shadow-inner transition-colors duration-200"><i data-lucide="check-circle" class="w-5 h-5"></i> Status & Verifikasi Dokumen</a></li>
+      <li><a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#6b8c9a] transition-colors duration-200"><i data-lucide="book-open" class="w-5 h-5"></i> Logbook</a></li>
+      <li><a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#6b8c9a] transition-colors duration-200"><i data-lucide="file-check" class="w-5 h-5"></i> Laporan Akhir</a></li>
+      <li><a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#6b8c9a] transition-colors duration-200"><i data-lucide="star" class="w-5 h-5"></i> Penilaian</a></li>
+      <li><a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#6b8c9a] transition-colors duration-200"><i data-lucide="megaphone" class="w-5 h-5"></i> Pengumuman</a></li>
+    </ul>
+  </nav>
+
+  <!-- Logout -->
+  <div class="mt-auto pt-4 border-t border-white/20">
+                <a href="/logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+   <!-- Konten Utama -->
+<main class="flex-1 ml-72 bg-[#E4ECEF] p-6 overflow-y-auto">
+  <!-- Header: Judul dan Profil -->
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-gray-800">Status Pengajuan & Verifikasi Dokumen</h1>
+    
+    <!-- Profil Mahasiswa -->
+    <div class="flex items-center gap-4">
+      <div class="text-right">
+        <p class="font-semibold text-gray-800">Dinda Arfitri</p>
+        <p class="text-sm text-gray-500">Mahasiswa Aktif</p>
+      </div>
+      <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistik -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="bg-white rounded-xl shadow text-center p-6">
+    <p class="text-4xl font-bold text-gray-800"><%= total %></p>
+    <p class="text-gray-600">Total Pengajuan Magang</p>
+  </div>
+  <div class="bg-white rounded-xl shadow text-center p-6">
+    <p class="text-4xl font-bold text-yellow-500"><%= menunggu %></p>
+    <p class="text-gray-600">Menunggu Verifikasi</p>
+  </div>
+  <div class="bg-white rounded-xl shadow text-center p-6">
+    <p class="text-4xl font-bold text-red-500"><%= ditolak %></p>
+    <p class="text-gray-600">Ditolak</p>
+  </div>
+</div>
+
+  <!-- Tabel Pengajuan -->
+  <div class="overflow-x-auto bg-white rounded-xl shadow p-4">
+    <table class="w-full table-auto text-sm border border-gray-200">
+      <thead>
+        <tr class="bg-gray-100 text-left text-gray-700">
+          <th class="px-4 py-2 border">No.</th>
+          <th class="px-4 py-2 border">Nama Perusahaan Tujuan</th>
+          <th class="px-4 py-2 border">Tanggal Pengajuan</th>
+          <th class="px-4 py-2 border">Status</th>
+          <th class="px-4 py-2 border">Verifikasi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pengajuanList.forEach((pengajuan, index) => { %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 border"><%= index + 1 %></td>
+          <td class="px-4 py-2 border"><%= pengajuan.perusahaan %></td>
+          <td class="px-4 py-2 border"><%= pengajuan.tanggal %></td>
+          <td class="px-4 py-2 border">
+            <span class="<%= pengajuan.status === 'Diterima' ? 'text-green-600' : pengajuan.status === 'Ditolak' ? 'text-red-600' : 'text-yellow-600' %> font-semibold">
+              <%= pengajuan.status %>
+            </span>
+          </td>
+          <td class="px-4 py-2 border">
+            <a href="/mahasiswa/pengajuan/<%= pengajuan.id %>" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Detail</a>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</main>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,45 +1,35 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Pengumuman extends Model {
-    static associate(models) {
-      // Pengumuman dibuat oleh admin (user)
-      this.belongsTo(models.User, {
-        foreignKey: 'admin_user_id',
-        as: 'admin'
-      });
-    }
-  }
-  
-  Pengumuman.init({
+const { DataTypes } = require('sequelize');
+const sequelize = require('../src/config/sequelize');
+
+const Pengumuman = sequelize.define('Pengumuman', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     admin_user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: true // Bisa null jika tidak merujuk ke user admin
     },
     judul: {
-      type: DataTypes.STRING,
-      allowNull: false
+        type: DataTypes.STRING(150),
+        allowNull: false
     },
     isi: {
-      type: DataTypes.TEXT,
-      allowNull: false
+        type: DataTypes.TEXT,
+        allowNull: false
     },
     tanggal: {
-      type: DataTypes.DATE,
-      allowNull: false
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     },
     ditujukan_kepada: {
-      type: DataTypes.ENUM('mahasiswa', 'dosen', 'semua'),
-      allowNull: false,
-      defaultValue: 'semua'
+        type: DataTypes.ENUM('semua', 'mahasiswa', 'dosen'),
+        allowNull: false
     }
-  }, {
-    sequelize,
-    modelName: 'Pengumuman',
+}, {
     tableName: 'pengumuman',
-    timestamps: true
-  });
-  return Pengumuman;
-}; 
+    timestamps: false
+});
+
+module.exports = Pengumuman;

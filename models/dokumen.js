@@ -1,29 +1,45 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Dokumen extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+// src/models/Dokumen.js
+const { DataTypes } = require('sequelize');
+const sequelize = require('../src/config/sequelize'); // Sesuaikan path ke config/sequelize Anda
+
+const Dokumen = sequelize.define('Dokumen', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    pengajuan_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    nama_file: {
+        type: DataTypes.STRING(150),
+        allowNull: false
+    },
+    jenis: {
+        type: DataTypes.ENUM('CV', 'transkrip', 'surat', 'proposal', 'lainnya'),
+        allowNull: false
+    },
+    file_path: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    tanggal_upload: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
-  }
-  Dokumen.init({
-    pengajuan_id: DataTypes.INTEGER,
-    nama_file: DataTypes.STRING,
-    jenis: DataTypes.STRING,
-    file_path: DataTypes.TEXT,
-    tanggal_upload: DataTypes.DATE
-  }, {
-    sequelize,
-    modelName: 'Dokumen',
+}, {
     tableName: 'dokumen',
     timestamps: false
-  });
-  return Dokumen;
+});
+
+// Penting: Definisi asosiasi untuk relasi antar model
+Dokumen.associate = (models) => {
+    // Dokumen milik satu PengajuanMagang
+    Dokumen.belongsTo(models.PengajuanMagang, {
+        foreignKey: 'pengajuan_id',
+        as: 'pengajuan' // Alias untuk saat mengambil relasi dari sisi Dokumen
+    });
 };
+
+module.exports = Dokumen;

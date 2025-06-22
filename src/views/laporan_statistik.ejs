@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laporan Statistik - Portal Admin</title>
+  <link href="/css/style.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-content-bg">
+
+<div class="flex min-h-screen">
+  <!-- Sidebar -->
+  <aside class="w-72 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg">
+    <div class="text-center py-4 border-b border-white/20">
+      <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30" />
+      <h3 class="font-bold text-lg">Admin Jurusan</h3>
+      <p class="text-sm">Sistem Informasi</p>
+    </div>
+
+    <nav class="mt-6 flex-grow overflow-y-auto pr-2">
+      <ul class="space-y-1 pb-4">
+        <li>
+          <a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200">
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="/admin/laporan-statistik" class="flex items-center gap-3 px-4 py-3 rounded-md bg-sidebar-active transition-colors duration-200">
+            <i data-lucide="pie-chart" class="w-5 h-5"></i> Laporan Statistik
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="mt-auto pt-4 border-t border-white/20">
+      <a href="/logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+        <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-72 flex-1 p-8 bg-gray-100">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Laporan Statistik Magang</h1>
+      <p class="text-gray-600">Analisis data dan statistik sistem magang jurusan.</p>
+    </header>
+
+    <!-- Statistik Utama -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">Total Mahasiswa</p>
+            <p class="text-2xl font-bold text-gray-800"><%= stats.totalMahasiswa %></p>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+            <i data-lucide="users" class="w-6 h-6 text-blue-600"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">Total Perusahaan</p>
+            <p class="text-2xl font-bold text-gray-800"><%= stats.totalPerusahaan %></p>
+          </div>
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+            <i data-lucide="building-2" class="w-6 h-6 text-green-600"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">Total Lowongan</p>
+            <p class="text-2xl font-bold text-gray-800"><%= stats.totalLowongan %></p>
+          </div>
+          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+            <i data-lucide="briefcase" class="w-6 h-6 text-purple-600"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-600">Total Pengajuan</p>
+            <p class="text-2xl font-bold text-gray-800"><%= stats.totalPengajuan %></p>
+          </div>
+          <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+            <i data-lucide="file-text" class="w-6 h-6 text-orange-600"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grafik dan Tabel -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Grafik Status Pengajuan -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Status Pengajuan Magang</h2>
+        <div class="h-64">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Grafik Tren Bulanan -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Tren Pengajuan Bulanan</h2>
+        <div class="h-64">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabel Detail -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Top Perusahaan -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Top 5 Perusahaan Terpopuler</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b">
+                <th class="text-left py-2">Perusahaan</th>
+                <th class="text-right py-2">Jumlah Lowongan</th>
+                <th class="text-right py-2">Jumlah Pengajuan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% topPerusahaan.forEach(perusahaan => { %>
+                <tr class="border-b hover:bg-gray-50">
+                  <td class="py-2"><%= perusahaan.nama %></td>
+                  <td class="text-right py-2"><%= perusahaan.jumlahLowongan %></td>
+                  <td class="text-right py-2"><%= perusahaan.jumlahPengajuan %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Statistik Jurusan -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Statistik per Jurusan</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b">
+                <th class="text-left py-2">Jurusan</th>
+                <th class="text-right py-2">Mahasiswa</th>
+                <th class="text-right py-2">Pengajuan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% statistikJurusan.forEach(jurusan => { %>
+                <tr class="border-b hover:bg-gray-50">
+                  <td class="py-2"><%= jurusan.jurusan %></td>
+                  <td class="text-right py-2"><%= jurusan.jumlahMahasiswa %></td>
+                  <td class="text-right py-2"><%= jurusan.jumlahPengajuan %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabel Pengajuan Detail -->
+    <div class="bg-white p-6 rounded-lg shadow mt-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Detail Pengajuan Magang</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b">
+              <th class="text-left py-2">Mahasiswa</th>
+              <th class="text-left py-2">Perusahaan</th>
+              <th class="text-left py-2">Lowongan</th>
+              <th class="text-left py-2">Tanggal</th>
+              <th class="text-left py-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% pengajuanList.forEach(pengajuan => { %>
+              <tr class="border-b hover:bg-gray-50">
+                <td class="py-2"><%= pengajuan.namaMahasiswa %></td>
+                <td class="py-2"><%= pengajuan.namaPerusahaan %></td>
+                <td class="py-2"><%= pengajuan.judulLowongan %></td>
+                <td class="py-2"><%= pengajuan.tanggal %></td>
+                <td class="py-2">
+                  <span class="px-2 py-1 rounded-full text-xs font-semibold
+                    <%= pengajuan.status === 'diterima' ? 'bg-green-100 text-green-800' : 
+                        pengajuan.status === 'ditolak' ? 'bg-red-100 text-red-800' : 
+                        'bg-yellow-100 text-yellow-800' %>">
+                    <%= pengajuan.status %>
+                  </span>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.271.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Render icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+
+    // Chart.js configurations
+    const statusData = {
+      labels: ['Diajukan', 'Diterima', 'Ditolak'],
+      datasets: [{
+        data: [<%= stats.pengajuanDiajukan %>, <%= stats.pengajuanDiterima %>, <%= stats.pengajuanDitolak %>],
+        backgroundColor: ['#fbbf24', '#10b981', '#ef4444'],
+        borderWidth: 0
+      }]
+    };
+
+    const trendData = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+      datasets: [{
+        label: 'Pengajuan',
+        data: [<%= trendData.join(', ') %>],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.4
+      }]
+    };
+
+    // Status Chart
+    const statusCtx = document.getElementById('statusChart');
+    if (statusCtx) {
+      new Chart(statusCtx, {
+        type: 'doughnut',
+        data: statusData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+
+    // Trend Chart
+    const trendCtx = document.getElementById('trendChart');
+    if (trendCtx) {
+      new Chart(trendCtx, {
+        type: 'line',
+        data: trendData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html> 
