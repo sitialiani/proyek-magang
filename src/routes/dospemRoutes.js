@@ -18,8 +18,8 @@ router.use(authorizeDosen);
 router.get('/dashboard', dospemController.getDashboard);
 
 // Item 31: Melihat Daftar Mahasiswa Bimbingan
-router.get('/mahasiswa', dospemController.getMahasiswaBimbinganList); // Menggunakan fungsi baru
-router.get('/mahasiswa/:id', dospemController.getDetailMahasiswa); // Untuk melihat detail 1 mahasiswa
+router.get('/detailMahasiswa', dospemController.getMahasiswaBimbinganList); // Menggunakan fungsi baru
+router.get('/detailMahasiswa/:id', dospemController.getDetailMahasiswa); // Untuk melihat detail 1 mahasiswa
 
 // Item 32: Detail Pengajuan Magang (Simulasi Modal)
 router.get('/pengajuan/:id/detail', dospemController.getDetailPengajuanMagangModal); // Detail Pengajuan (seperti modal)
