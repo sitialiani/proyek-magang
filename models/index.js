@@ -70,8 +70,8 @@ Mahasiswa.hasOne(Rekapitulasi, { foreignKey: 'mahasiswa_id', onDelete: 'CASCADE'
 Rekapitulasi.belongsTo(Mahasiswa, { foreignKey: 'mahasiswa_id' });
 
 // Users (Admin) & Pengumuman
-User.hasMany(Pengumuman, { foreignKey: 'admin_user_id', onDelete: 'SET NULL' });
-Pengumuman.belongsTo(User, { foreignKey: 'admin_user_id' });
+User.hasMany(Pengumuman, { as: 'Pengumuman', foreignKey: 'admin_user_id', onDelete: 'SET NULL' });
+Pengumuman.belongsTo(User, { as: 'Admin', foreignKey: 'admin_user_id' });
 
 
 // Ekspor semua model dan instance sequelize

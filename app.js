@@ -27,6 +27,9 @@ app.use(express.json());
 // Serving file statis (CSS, JS, gambar, dokumen dari folder public)
 app.use(express.static(path.join(__dirname, "public")));
 
+// Serving file uploads untuk lampiran pengumuman
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 // Middleware simulasi user login (harus sebelum rute yang membutuhkannya)
 app.use((req, res, next) => {
     // Ini mensimulasikan user yang sudah login sebagai dosen.
