@@ -6,53 +6,33 @@ module.exports = {
     /**
      * Logika untuk membuat tabel 'lowongan'
      */
-    await queryInterface.createTable('lowongan', {
+    await queryInterface.createTable('lowongan', { // Nama tabel: 'lowongan' sesuai tableName di model
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
       },
-      perusahaan_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'perusahaan',
-          key: 'id'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      },
-      judul: {
+      perusahaan: { // Kolom 'perusahaan' baru, menggantikan 'perusahaan_id'
         type: Sequelize.STRING(150),
         allowNull: false
       },
-      deskripsi: {
+      lokasi: { // Kolom 'lokasi' baru
+        type: Sequelize.STRING(150),
+        allowNull: false
+      },
+      durasi: { // Kolom 'durasi' baru
+        type: Sequelize.STRING(150),
+        allowNull: false
+      },
+      deadlinependaftaran: { // Kolom 'deadlinependaftaran' baru, menggantikan 'tanggal_dibuka' dan 'tanggal_ditutup'
+        type: Sequelize.DATEONLY
+      },
+      deskripsi: { // Kolom 'deskripsi' tetap sama
         type: Sequelize.TEXT
-      },
-      kualifikasi: {
-        type: Sequelize.TEXT
-      },
-      tanggal_dibuka: {
-        type: Sequelize.DATE
-      },
-      tanggal_ditutup: {
-        type: Sequelize.DATE
-      },
-      link_berkas: {
-        type: Sequelize.STRING(2500)
-      },
-      lokasi: {
-        type: Sequelize.STRING(150),
-        allowNull: false
-      },
-      durasi: {
-        type: Sequelize.STRING(150),
-        allowNull: false
-      },
-      deadlinependaftaran: {
-        type: Sequelize.DATE
       }
+      // Karena Anda memiliki `timestamps: false` di model Lowongan Anda,
+      // maka tidak perlu menambahkan kolom timestamp otomatis seperti `createdAt` atau `updatedAt` di migrasi ini.
     });
   },
 

@@ -3,10 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Logika untuk membuat tabel 'penilaian'
-     */
-    await queryInterface.createTable('penilaian', { // Nama tabel: 'penilaian' sesuai tableName di model
+    await queryInterface.createTable('penilaian', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -17,46 +14,49 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true, // Karena ini adalah relasi One-to-One antara Mahasiswa dan Penilaian
-        references: { // Ini adalah kunci asing ke tabel 'mahasiswa'
-          model: 'mahasiswa', // Nama tabel yang direferensikan (pastikan sudah ada migrasi untuk tabel 'mahasiswa')
+        references: {
+          model: 'mahasiswa',
           key: 'id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE' // Atau 'SET NULL', 'RESTRICT', dll., sesuaikan dengan logika bisnis Anda
+        onDelete: 'CASCADE'
       },
       dosen_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { // Ini adalah kunci asing ke tabel 'dosen'
-          model: 'dosen', // Nama tabel yang direferensikan (pastikan sudah ada migrasi untuk tabel 'dosen')
+        references: {
+          model: 'dosen',
           key: 'id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE' // Atau 'SET NULL', 'RESTRICT', dll., sesuaikan dengan logika bisnis Anda
+        onDelete: 'CASCADE'
       },
+      // --- PENAMBAHAN KOLOM BARU ---
+      laporan_id: { // Kunci asing ke tabel 'laporan'
+        type: Sequelize.INTEGER,
+        allowNull: true, // Bisa null jika penilaian tidak selalu terkait dengan laporan akhir
+        references: {
+          model: 'laporan', // Nama tabel 'laporan'
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL' // Jika laporan dihapus, penilaian terkait bisa jadi null
+      },
+      // --- AKHIR PENAMBAHAN ---
       nilai_akhir: {
         type: Sequelize.FLOAT
       },
       komentar: {
         type: Sequelize.TEXT
       },
-      tanggal: { // Sesuai dengan definisi di model penilaian.js
+      tanggal: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
       }
-      // Karena Anda memiliki `timestamps: false` di model Penilaian Anda,
-      // maka tidak perlu menambahkan kolom timestamp otomatis seperti `createdAt` atau `updatedAt` di migrasi ini.
-    }, {
-        // Karena `tableName: 'penilaian'` sudah didefinisikan di model,
-        // dan `timestamps: false` juga sudah didefinisikan,
-        // Anda tidak perlu secara eksplisit menambahkannya di bagian options ini untuk `createTable`.
     });
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Logika untuk mengembalikan perubahan (menghapus tabel 'penilaian')
-     */
     await queryInterface.dropTable('penilaian');
   }
 };
