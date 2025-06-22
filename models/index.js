@@ -3,7 +3,11 @@ const sequelize = require('../src/config/sequelize');
 const User = require('./user');
 const Mahasiswa = require('./mahasiswa');
 const Dosen = require('./dosen');
+<<<<<<< HEAD
 const Mitra = require('./mitra');
+=======
+const Perusahaan = require('./perusahaan');
+>>>>>>> 03d0be88ae68d2002cbd1ca11dddb146e91326a8
 const Lowongan = require('./lowongan');
 const PengajuanMagang = require('./pengajuanMagang');
 const Dokumen = require('./dokumen');
@@ -80,7 +84,11 @@ module.exports = {
     User,
     Mahasiswa,
     Dosen,
+<<<<<<< HEAD
     Mitra,
+=======
+    Perusahaan,
+>>>>>>> 03d0be88ae68d2002cbd1ca11dddb146e91326a8
     Lowongan,
     PengajuanMagang,
     Dokumen,
