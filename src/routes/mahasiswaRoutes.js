@@ -19,9 +19,6 @@ const riwayatData = [
     }
 ];
 
-
-// const pengajuanList = Object.values(pengajuanDummy);
-
 // =======================
 // ROUTES MAHASISWA
 // =======================
@@ -30,27 +27,24 @@ const lowonganController = require('../controllers/mahasiswa/lowonganController'
 const logbookController = require('../controllers/mahasiswa/logbookController');
 const pengumumanController = require('../controllers/mahasiswa/pengumumanController');
 const penilaianController = require('../controllers/mahasiswa/penilaianController');
+const dashboardController = require('../controllers/mahasiswa/dashboardController');
+const pengajuanController = require("../controllers/mahasiswa/pengajuanController");
+const statusController = require("../controllers/mahasiswa/statusController");
+const detailPengajuanController = require("../controllers/mahasiswa/detailPengajuanController");
 const { upload } = require("../config/multer");
 
 router.get("/", (req, res) => {
   res.render("index");
 });
 
-router.get("/dashboard", (req, res) => {
-  res.render("dashboard-mahasiswa");
-});
+router.get("/dashboard", dashboardController.getDashboard);
 
-router.get('/lowongan', lowonganController.getDaftarLowongan);
+router.get('/lowongan', lowonganController.getAllLowongan);
 
 router.get("/lowongan/:id", lowonganController.getDetailLowongan);
 
-const pengajuanController = require("../controllers/mahasiswa/pengajuanController");
-
+// Formulir pengajuan
 router.get("/formulir/:lowonganId", pengajuanController.getFormPengajuan);
-router.get("/formulir/:lowonganId", (req, res) => {
-  const lowonganId = req.params.lowonganId;
-  res.render("formPengajuan", { lowonganId });
-});
 
 // POST formulir pengajuan
 router.post(
@@ -64,14 +58,9 @@ router.post(
   pengajuanController.postFormPengajuan
 );
 
-const statusController = require("../controllers/mahasiswa/statusController");
-
 router.get("/status-pengajuan", statusController.getStatusPengajuan);
 
-const detailPengajuanController = require("../controllers/mahasiswa/detailPengajuanController");
-
 router.get("/pengajuan/:id", detailPengajuanController.getDetailPengajuan);
-
 
 // --- Definisi Rute (Routes) ---
 
@@ -80,21 +69,42 @@ router.get("/pengajuan/:id", detailPengajuanController.getDetailPengajuan);
  * @desc    Menampilkan halaman laporan akhir mahasiswa dengan data revisi.
  */
 router.get('/laporan-akhir', (req, res) => {
-    // Merender template `laporan_akhir.ejs` dengan data yang sudah disiapkan.
-    res.render('laporan_akhir', {
-        laporan: laporanData,
-        riwayat: riwayatData
+    // Perbaiki penanganan session user
+    let userId;
+    if (req.session && req.session.user && req.session.user.id) {
+        userId = req.session.user.id;
+    } else {
+        userId = 2; // ID mahasiswa default
+    }
+    
+    // Get mahasiswa data
+    const Mahasiswa = require('../../models/mahasiswa');
+    Mahasiswa.findOne({
+        where: { user_id: userId },
+        attributes: ["nama", "npm"]
+    }).then(mahasiswa => {
+        res.render('laporan_akhir', {
+            laporan: laporanData,
+            riwayat: riwayatData,
+            mahasiswa: mahasiswa ? {
+                nama: mahasiswa.nama,
+                npm: mahasiswa.npm
+            } : {
+                nama: "Nama Mahasiswa",
+                npm: "NIM Mahasiswa"
+            }
+        });
+    }).catch(err => {
+        console.error('Error:', err);
+        res.render('laporan_akhir', {
+            laporan: laporanData,
+            riwayat: riwayatData,
+            mahasiswa: {
+                nama: "Nama Mahasiswa",
+                npm: "NIM Mahasiswa"
+            }
+        });
     });
-});
-
-/**
- * @route   GET /mahasiswa/laporan
- * @desc    (Alternatif) Menampilkan halaman laporan akhir.
- */
-router.get("/laporan", (req, res) => {
-    console.log("Route /mahasiswa/laporan dipanggil!");
-    // Pastikan Anda memiliki file view bernama 'laporanakhir.ejs'
-    res.render("laporanakhir");
 });
 
 /**
@@ -104,26 +114,32 @@ router.get("/laporan", (req, res) => {
 router.get('/logbook', logbookController.getLogbookPage);
 
 /**
- * @route   GET /mahasiswa/riwayatlogbook
- * @desc    Menampilkan halaman riwayat logbook yang telah diisi.
+ * @route   GET /mahasiswa/riwayat-logbook
+ * @desc    Menampilkan halaman riwayat logbook mahasiswa.
  */
-router.get('/riwayatlogbook', logbookController.getRiwayatLogbook);
+router.get('/riwayat-logbook', logbookController.getRiwayatLogbook);
+
+/**
+ * @route   POST /mahasiswa/logbook
+ * @desc    Menyimpan logbook baru.
+ */
+router.post('/logbook', logbookController.postLogbook);
 
 /**
  * @route   POST /mahasiswa/logbook/save
- * @desc    Menyimpan logbook baru.
+ * @desc    Menyimpan logbook baru via AJAX.
  */
 router.post('/logbook/save', logbookController.saveLogbook);
 
 /**
  * @route   PUT /mahasiswa/logbook/update
- * @desc    Mengupdate logbook yang sudah ada.
+ * @desc    Mengupdate logbook.
  */
 router.put('/logbook/update', logbookController.updateLogbook);
 
 /**
  * @route   DELETE /mahasiswa/logbook/delete/:id
- * @desc    Menghapus logbook berdasarkan ID.
+ * @desc    Menghapus logbook.
  */
 router.delete('/logbook/delete/:id', logbookController.deleteLogbook);
 
@@ -143,13 +159,8 @@ router.get("/pengumuman/:id", pengumumanController.getPengumumanDetail);
  * @route   GET /mahasiswa/penilaian
  * @desc    Menampilkan halaman hasil penilaian magang mahasiswa.
  */
-router.get("/penilaian", (req, res) => {
-    console.log("Route /mahasiswa/penilaian dipanggil!");
-    // Pastikan Anda memiliki file view bernama 'penilaian.ejs'
-    res.render("penilaian");
-});
-
+router.get("/penilaian", penilaianController.getPenilaianPage);
 
 // --- Ekspor Router ---
 // Wajib ada di baris paling akhir agar semua rute di atas bisa dikenali.
-module.exports = router;
+module.exports = router; 

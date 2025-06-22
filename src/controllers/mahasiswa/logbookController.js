@@ -1,42 +1,119 @@
-const Logbook = require('../../../models/logbook');
-const Mahasiswa = require('../../../models/mahasiswa');
+const db = require("../../../models");
+const Mahasiswa = db.Mahasiswa;
+const Logbook = db.Logbook;
 
 // Menampilkan halaman logbook
 exports.getLogbookPage = async (req, res) => {
     try {
-        res.render('logbook');
-    } catch (error) {
-        console.error('Error in getLogbookPage:', error);
-        res.status(500).send('Terjadi kesalahan saat memuat halaman logbook.');
+        // Perbaiki penanganan session user
+        let userId;
+        if (req.session && req.session.user && req.session.user.id) {
+            userId = req.session.user.id;
+        } else {
+            // Fallback untuk development - gunakan user_id 2 (Budi Sanjaya)
+            userId = 2;
+        }
+        
+        // Ambil data mahasiswa
+        const mahasiswa = await Mahasiswa.findOne({
+            where: { user_id: userId },
+            attributes: ["id", "nama", "npm"]
+        });
+
+        // Jika mahasiswa tidak ditemukan, gunakan data default
+        const mahasiswaData = mahasiswa ? {
+            id: mahasiswa.id,
+            nama: mahasiswa.nama,
+            npm: mahasiswa.npm
+        } : {
+            id: 1,
+            nama: "Budi Sanjaya",
+            npm: "2021001"
+        };
+
+        // Jika mahasiswa ditemukan, ambil logbook
+        let logbookList = [];
+        if (mahasiswa) {
+            logbookList = await Logbook.findAll({
+                where: { mahasiswa_id: mahasiswa.id },
+                order: [['tanggal', 'DESC']]
+            });
+        }
+
+        res.render("logbook", {
+            logbookList: logbookList,
+            mahasiswa: mahasiswaData
+        });
+    } catch (err) {
+        console.error("ERROR DETAIL:", err);
+        res.status(500).send("Terjadi kesalahan saat memuat logbook.");
     }
 };
 
 // Menampilkan riwayat logbook
 exports.getRiwayatLogbook = async (req, res) => {
     try {
-        // Ambil data mahasiswa dari session atau middleware
-        const mahasiswaId = req.user ? req.user.id : 1; // Fallback ke ID 1 untuk testing
+        // Perbaiki penanganan session user
+        let userId;
+        if (req.session && req.session.user && req.session.user.id) {
+            userId = req.session.user.id;
+        } else {
+            // Fallback untuk development - gunakan user_id 2 (Budi Sanjaya)
+            userId = 2;
+        }
+        
+        // Get mahasiswa data
+        const mahasiswa = await Mahasiswa.findOne({
+            where: { user_id: userId },
+            attributes: ["id", "nama", "npm"]
+        });
+
+        // Jika mahasiswa tidak ditemukan, gunakan data default
+        const mahasiswaData = mahasiswa ? {
+            id: mahasiswa.id,
+            nama: mahasiswa.nama,
+            npm: mahasiswa.npm
+        } : {
+            id: 1,
+            nama: "Budi Sanjaya",
+            npm: "2021001"
+        };
         
         // Ambil data logbook dari database
         const logbooks = await Logbook.findAll({
-            where: { mahasiswa_id: mahasiswaId },
+            where: { mahasiswa_id: mahasiswaData.id },
             order: [['tanggal', 'DESC']]
         });
 
         // Format data untuk view
-        const formattedLogbooks = logbooks.map((log, index) => ({
-            id: log.id,
-            nomor: index + 1,
-            tanggal: new Date(log.tanggal).toLocaleDateString('id-ID'),
-            aktivitas: log.kegiatan.substring(0, 50) + (log.kegiatan.length > 50 ? '...' : ''),
-            deskripsi: log.kegiatan,
-            status: log.verifikasi_dosen ? 'Disetujui' : 'Menunggu',
-            statusClass: log.verifikasi_dosen ? 'status-approved' : 'status-pending'
-        }));
+        const formattedLogbooks = logbooks.map((log, index) => {
+            // Parse kegiatan untuk memisahkan aktivitas dan deskripsi
+            const kegiatanText = log.kegiatan || '';
+            let aktivitas = kegiatanText;
+            let deskripsi = '';
+            
+            // Coba parse jika ada format "aktivitas\n\nDeskripsi:\ndeskripsi"
+            if (kegiatanText.includes('\n\nDeskripsi:\n')) {
+                const parts = kegiatanText.split('\n\nDeskripsi:\n');
+                aktivitas = parts[0] || '';
+                deskripsi = parts[1] || '';
+            }
+            
+            return {
+                id: log.id,
+                nomor: index + 1,
+                tanggal: new Date(log.tanggal).toLocaleDateString('id-ID'),
+                aktivitas: aktivitas.substring(0, 50) + (aktivitas.length > 50 ? '...' : ''),
+                deskripsi: deskripsi || aktivitas, // Jika tidak ada deskripsi terpisah, gunakan aktivitas
+                status: log.verifikasi_dosen ? 'Disetujui' : 'Menunggu',
+                statusClass: log.verifikasi_dosen ? 'status-approved' : 'status-pending'
+            };
+        });
 
         res.render('RiwayatLogbook', { 
             logbooks: formattedLogbooks,
-            title: 'Riwayat Logbook'
+            title: 'Riwayat Logbook',
+            mahasiswa: mahasiswaData
         });
     } catch (error) {
         console.error('Error in getRiwayatLogbook:', error);
@@ -48,7 +125,24 @@ exports.getRiwayatLogbook = async (req, res) => {
 exports.saveLogbook = async (req, res) => {
     try {
         const { tanggal, aktivitas, deskripsi } = req.body;
-        const mahasiswaId = req.user ? req.user.id : 1; // Fallback ke ID 1 untuk testing
+        
+        // Perbaiki penanganan session user
+        let userId;
+        if (req.session && req.session.user && req.session.user.id) {
+            userId = req.session.user.id;
+        } else {
+            // Fallback untuk development - gunakan user_id 2 (Budi Sanjaya)
+            userId = 2;
+        }
+        
+        // Get mahasiswa data
+        const mahasiswa = await Mahasiswa.findOne({
+            where: { user_id: userId },
+            attributes: ["id"]
+        });
+
+        // Jika mahasiswa tidak ditemukan, gunakan data default
+        const mahasiswaId = mahasiswa ? mahasiswa.id : 1;
 
         // Validasi input
         if (!tanggal || !aktivitas || !deskripsi) {
@@ -73,11 +167,14 @@ exports.saveLogbook = async (req, res) => {
             });
         }
 
+        // Gabungkan aktivitas dan deskripsi menjadi kegiatan
+        const kegiatan = `${aktivitas}\n\nDeskripsi:\n${deskripsi}`;
+
         // Simpan logbook baru
         await Logbook.create({
             mahasiswa_id: mahasiswaId,
             tanggal: tanggal,
-            kegiatan: deskripsi, // Menggunakan deskripsi sebagai kegiatan
+            kegiatan: kegiatan,
             verifikasi_dosen: false
         });
 
@@ -98,7 +195,24 @@ exports.saveLogbook = async (req, res) => {
 exports.updateLogbook = async (req, res) => {
     try {
         const { id, tanggal, aktivitas, deskripsi } = req.body;
-        const mahasiswaId = req.user ? req.user.id : 1;
+        
+        // Perbaiki penanganan session user
+        let userId;
+        if (req.session && req.session.user && req.session.user.id) {
+            userId = req.session.user.id;
+        } else {
+            // Fallback untuk development - gunakan user_id 2 (Budi Sanjaya)
+            userId = 2;
+        }
+        
+        // Get mahasiswa data
+        const mahasiswa = await Mahasiswa.findOne({
+            where: { user_id: userId },
+            attributes: ["id"]
+        });
+
+        // Jika mahasiswa tidak ditemukan, gunakan data default
+        const mahasiswaId = mahasiswa ? mahasiswa.id : 1;
 
         const logbook = await Logbook.findOne({
             where: { 
@@ -117,7 +231,7 @@ exports.updateLogbook = async (req, res) => {
         // Update logbook
         await logbook.update({
             tanggal: tanggal,
-            kegiatan: deskripsi
+            kegiatan: `${aktivitas}\n\nDeskripsi:\n${deskripsi}`
         });
 
         res.json({ 
@@ -137,7 +251,24 @@ exports.updateLogbook = async (req, res) => {
 exports.deleteLogbook = async (req, res) => {
     try {
         const { id } = req.params;
-        const mahasiswaId = req.user ? req.user.id : 1;
+        
+        // Perbaiki penanganan session user
+        let userId;
+        if (req.session && req.session.user && req.session.user.id) {
+            userId = req.session.user.id;
+        } else {
+            // Fallback untuk development - gunakan user_id 2 (Budi Sanjaya)
+            userId = 2;
+        }
+        
+        // Get mahasiswa data
+        const mahasiswa = await Mahasiswa.findOne({
+            where: { user_id: userId },
+            attributes: ["id"]
+        });
+
+        // Jika mahasiswa tidak ditemukan, gunakan data default
+        const mahasiswaId = mahasiswa ? mahasiswa.id : 1;
 
         const logbook = await Logbook.findOne({
             where: { 
@@ -165,5 +296,39 @@ exports.deleteLogbook = async (req, res) => {
             success: false, 
             message: 'Terjadi kesalahan saat menghapus logbook' 
         });
+    }
+};
+
+exports.postLogbook = async (req, res) => {
+    try {
+        // Perbaiki penanganan session user
+        let userId;
+        if (req.session && req.session.user && req.session.user.id) {
+            userId = req.session.user.id;
+        } else {
+            // Fallback untuk development - gunakan user_id 2 (Budi Sanjaya)
+            userId = 2;
+        }
+
+        const { tanggal, aktivitas, output, hambatan, rencana } = req.body;
+
+        // Cari mahasiswa berdasarkan user_id
+        const mahasiswa = await Mahasiswa.findOne({ where: { user_id: userId } });
+
+        // Jika mahasiswa tidak ditemukan, gunakan data default
+        const mahasiswaId = mahasiswa ? mahasiswa.id : 1;
+
+        // Simpan logbook baru
+        await Logbook.create({
+            mahasiswa_id: mahasiswaId,
+            tanggal: tanggal,
+            kegiatan: aktivitas,
+            verifikasi_dosen: false
+        });
+
+        res.redirect("/mahasiswa/logbook");
+    } catch (err) {
+        console.error("Gagal menyimpan logbook:", err);
+        res.status(500).send("Terjadi kesalahan saat menyimpan logbook");
     }
 }; 
