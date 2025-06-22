@@ -22,9 +22,30 @@ const Lowongan = sequelize.define('Lowongan', {
   deadlinependaftaran: {
     type: DataTypes.DATEONLY
   },
-  deskripsi: {
-    type: DataTypes.TEXT
-  }
+  perusahaan_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    judul: {
+        type: DataTypes.STRING(150),
+        allowNull: false
+    },
+    deskripsi: {
+        type: DataTypes.TEXT
+    },
+    kualifikasi: {
+        type: DataTypes.TEXT
+    },
+    tanggal_dibuka: {
+        type: DataTypes.DATEONLY
+    },
+    tanggal_ditutup: {
+        type: DataTypes.DATEONLY
+    },
+    link_berkas: {
+        type: DataTypes.STRING(2500),
+        allowNull: false
+    }
 }, {
   tableName: 'lowongan',
   timestamps: false
