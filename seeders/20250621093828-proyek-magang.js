@@ -1,15 +1,15 @@
 'use strict';
-const bcrypt = require('bcryptjs'); // Pastikan Anda sudah menginstal bcryptjs
+const bcrypt = require('bcryptjs');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // 1. Data untuk tabel 'users'
+    // 1. Data untuk tabel 'users' - ID akan di-generate otomatis oleh DB
     const AndiPassword = await bcrypt.hash('andi_password', 10);
     const budiPassword = await bcrypt.hash('budi_password', 10);
-    const sitiPassword = await bcrypt.hash('siti_password', 10);
+    const AminahPassword = await bcrypt.hash('aminah_password', 10);
+    const DinaPassword = await bcrypt.hash('dina_password', 10);
+    const FajarPassword = await bcrypt.hash('fajar_password', 10);
 
-    // Gunakan returning: true untuk mendapatkan ID yang di-generate jika DB Anda mendukung (misalnya PostgreSQL)
-    // Untuk MySQL, bulkInsert biasanya tidak mengembalikan ID, jadi kita akan query setelahnya.
     await queryInterface.bulkInsert('users', [{
       username: 'andi',
       password: AndiPassword,
@@ -24,54 +24,89 @@ module.exports = {
       created_at: new Date()
     }, {
       username: 'aminah',
-      password: aminahPassword,
+      password: AminahPassword,
       email: 'aminah@gmail.com',
-      role: 'admin',
+      role: 'mahasiswa', // Aminah sekarang mahasiswa
+      created_at: new Date()
+    }, {
+      username: 'dina',
+      password: DinaPassword,
+      email: 'dina@gmail.com',
+      role: 'mahasiswa',
+      created_at: new Date()
+    }, {
+      username: 'fajar',
+      password: FajarPassword,
+      email: 'fajar@gmail.com',
+      role: 'mahasiswa',
       created_at: new Date()
     }], { updateOnDuplicate: ['username', 'password', 'email', 'role', 'created_at'] });
 
-    // Dapatkan ID user yang baru saja dibuat
-    const [users] = await queryInterface.sequelize.query("SELECT id, username FROM users;");
-    const dosenAndiUserId = users.find(u => u.username === 'dosenandi').id;
-    const budiSantosoUserId = users.find(u => u.username === 'budi').id;
-    const sitiAminahUserId = users.find(u => u.username === 'aminah').id;
+    // Dapatkan ID user yang baru saja dibuat secara dinamis
+    const [users] = await queryInterface.sequelize.query("SELECT id, username, role FROM users;");
+    const AndiUserId = users.find(u => u.username === 'andi' && u.role === 'dosen').id;
+    const budiUserId = users.find(u => u.username === 'budi' && u.role === 'mahasiswa').id;
+    const AminahUserId = users.find(u => u.username === 'aminah' && u.role === 'mahasiswa').id;
+    const DinaUserId = users.find(u => u.username === 'dina' && u.role === 'mahasiswa').id;
+    const FajarUserId = users.find(u => u.username === 'fajar' && u.role === 'mahasiswa').id;
+
 
     // 2. Data untuk tabel 'dosen'
     await queryInterface.bulkInsert('dosen', [{
-      user_id: AndiUserId, // Gunakan ID dinamis
+      user_id: AndiUserId,
       nama: 'Prof. Dr. Andi Permana',
       nidn: '198001012005011001',
       email: 'andi.permana@example.com',
       telepon: '08123456789'
     }], { updateOnDuplicate: ['user_id', 'nama', 'nidn', 'email', 'telepon'] });
 
-    // Dapatkan ID dosen yang baru saja dibuat
-    const [dosen] = await queryInterface.sequelize.query("SELECT id, nama FROM dosen WHERE user_id = " + dosenAndiUserId + ";");
-    const dosenAndiId = dosen[0].id; // Hanya ada satu dosen yang kita masukkan di sini
+    // Dapatkan ID dosen yang baru saja dibuat secara dinamis
+    const [dosen] = await queryInterface.sequelize.query(`SELECT id, nama FROM dosen WHERE user_id = ${AndiUserId};`);
+    const AndiId = dosen[0].id;
+
 
     // 3. Data untuk tabel 'mahasiswa'
     await queryInterface.bulkInsert('mahasiswa', [{
-      user_id: budiSUserId, // Gunakan ID dinamis
-      dosen_pembimbing_id: AndiId, // Gunakan ID dinamis
+      user_id: budiUserId,
+      dosen_pembimbing_id: AndiId,
       nama: 'Budi Santoso',
       npm: '2022001',
       jurusan: 'Teknik Informatika',
       angkatan: 2022,
       no_hp: '081211122233'
     }, {
-      user_id: AminahUserId, // Gunakan ID dinamis
-      dosen_pembimbing_id: AndiId, // Gunakan ID dinamis
+      user_id: AminahUserId,
+      dosen_pembimbing_id: AndiId,
       nama: 'Siti Aminah',
       npm: '2022002',
       jurusan: 'Sistem Informasi',
       angkatan: 2022,
       no_hp: '081233344455'
+    }, {
+      user_id: DinaUserId,
+      dosen_pembimbing_id: AndiId,
+      nama: 'Dina Permata',
+      npm: '2022003',
+      jurusan: 'Teknik Komputer',
+      angkatan: 2022,
+      no_hp: '081244455566'
+    }, {
+      user_id: FajarUserId,
+      dosen_pembimbing_id: AndiId,
+      nama: 'Fajar Kurniawan',
+      npm: '2022004',
+      jurusan: 'Teknik Informatika',
+      angkatan: 2022,
+      no_hp: '081255566677'
     }], { updateOnDuplicate: ['user_id', 'dosen_pembimbing_id', 'nama', 'npm', 'jurusan', 'angkatan', 'no_hp'] });
 
-    // Dapatkan ID mahasiswa yang baru saja dibuat
+    // Dapatkan ID mahasiswa yang baru saja dibuat secara dinamis
     const [mahasiswa] = await queryInterface.sequelize.query("SELECT id, npm FROM mahasiswa;");
     const budiMhsId = mahasiswa.find(m => m.npm === '2022001').id;
     const AminahMhsId = mahasiswa.find(m => m.npm === '2022002').id;
+    const DinaMhsId = mahasiswa.find(m => m.npm === '2022003').id;
+    const FajarMhsId = mahasiswa.find(m => m.npm === '2022004').id;
+
 
     // 4. Data untuk tabel 'perusahaan'
     await queryInterface.bulkInsert('perusahaan', [{
@@ -88,96 +123,137 @@ module.exports = {
       pic: 'Ibu. Dewi Lestari'
     }], { updateOnDuplicate: ['nama', 'alamat', 'email', 'telepon', 'pic'] });
 
-    // Dapatkan ID perusahaan yang baru saja dibuat
+    // Dapatkan ID perusahaan yang baru saja dibuat secara dinamis
     const [perusahaan] = await queryInterface.sequelize.query("SELECT id, nama FROM perusahaan;");
     const ptTeknologiMajuId = perusahaan.find(p => p.nama === 'PT. Teknologi Maju').id;
     const cvSolusiDigitalId = perusahaan.find(p => p.nama === 'CV. Solusi Digital').id;
 
+
     // 5. Data untuk tabel 'lowongan'
     await queryInterface.bulkInsert('lowongan', [{
-      perusahaan_id: ptTeknologiMajuId, // Gunakan ID dinamis
-      judul: 'Frontend Developer Intern',
+      perusahaan: 'PT. Teknologi Maju',
+      lokasi: 'Jakarta',
+      durasi: '3 Bulan',
+      deadlinependaftaran: '2025-10-31',
       deskripsi: 'Membangun antarmuka pengguna aplikasi web menggunakan ReactJS.',
-      kualifikasi: 'Menguasai HTML, CSS, JavaScript, ReactJS dasar.',
-      tanggal_dibuka: '2025-07-01',
-      tanggal_ditutup: '2025-10-31'
     }, {
-      perusahaan_id: cvSolusiDigitalId, // Gunakan ID dinamis
-      judul: 'Backend Developer Intern',
+      perusahaan: 'CV. Solusi Digital',
+      lokasi: 'Bandung',
+      durasi: '6 Bulan',
+      deadlinependaftaran: '2025-11-15',
       deskripsi: 'Mengembangkan dan memelihara API RESTful menggunakan Node.js dan Express.',
-      kualifikasi: 'Menguasai Node.js, database MySQL, konsep API.',
-      tanggal_dibuka: '2025-07-15',
-      tanggal_ditutup: '2025-11-15'
-    }], { updateOnDuplicate: ['perusahaan_id', 'judul', 'deskripsi', 'kualifikasi', 'tanggal_dibuka', 'tanggal_ditutup'] });
+    }], {
+      updateOnDuplicate: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi']
+    });
 
-    // Dapatkan ID lowongan yang baru saja dibuat
-    const [lowongan] = await queryInterface.sequelize.query("SELECT id, judul FROM lowongan;");
-    const frontendLowonganId = lowongan.find(l => l.judul === 'Frontend Developer Intern').id;
-    const backendLowonganId = lowongan.find(l => l.judul === 'Backend Developer Intern').id;
+    // Dapatkan ID lowongan yang baru saja dibuat secara dinamis
+    const [lowongan] = await queryInterface.sequelize.query("SELECT id, perusahaan, deskripsi FROM lowongan;");
+    const frontendLowonganId = lowongan.find(l => l.perusahaan === 'PT. Teknologi Maju' && l.deskripsi.includes('ReactJS')).id;
+    const backendLowonganId = lowongan.find(l => l.perusahaan === 'CV. Solusi Digital' && l.deskripsi.includes('Node.js')).id;
+
 
     // 6. Data untuk tabel 'pengajuan_magang'
     await queryInterface.bulkInsert('pengajuan_magang', [{
-      mahasiswa_id: budiMhsId, // Gunakan ID dinamis
-      lowongan_id: frontendLowonganId, // Gunakan ID dinamis
-      tanggal_pengajuan: '2025-06-10',
+      // Budi: Magang Diterima
+      mahasiswa_id: budiMhsId,
+      lowongan_id: frontendLowonganId,
+      tanggal_pengajuan: '2025-06-10', // Ini pengajuan yang diterima
       status: 'diterima'
     }, {
-      mahasiswa_id: AminahMhsId, // Gunakan ID dinamis
-      lowongan_id: backendLowonganId, // Gunakan ID dinamis
+      // Aminah: Magang Diterima (Pengajuan terbaru Aminah)
+      mahasiswa_id: AminahMhsId,
+      lowongan_id: backendLowonganId,
+      tanggal_pengajuan: '2025-06-20', // Tanggal lebih baru dari yang sebelumnya 'diajukan'
+      status: 'diterima'
+    }, {
+      // Pengajuan lama Budi (ditolak) - pastikan tanggal lebih lama dari yang diterima
+      mahasiswa_id: budiMhsId,
+      lowongan_id: backendLowonganId,
+      tanggal_pengajuan: '2025-05-01',
+      status: 'ditolak'
+    }, {
+      // Pengajuan lama Aminah (diajukan) - pastikan tanggal lebih lama dari yang diterima
+      mahasiswa_id: AminahMhsId,
+      lowongan_id: frontendLowonganId,
       tanggal_pengajuan: '2025-06-12',
       status: 'diajukan'
     }, {
-      mahasiswa_id: budiMhsId, // Gunakan ID dinamis
-      lowongan_id: backendLowonganId, // Gunakan ID dinamis
-      tanggal_pengajuan: '2025-05-01',
+      // Dina: Magang Ditolak (Pengajuan terbaru Dina)
+      mahasiswa_id: DinaMhsId,
+      lowongan_id: frontendLowonganId,
+      tanggal_pengajuan: '2025-07-01',
       status: 'ditolak'
+    }, {
+      // Fajar: Magang Diajukan (Pengajuan terbaru Fajar)
+      mahasiswa_id: FajarMhsId,
+      lowongan_id: backendLowonganId,
+      tanggal_pengajuan: '2025-07-05',
+      status: 'diajukan'
     }], { updateOnDuplicate: ['mahasiswa_id', 'lowongan_id', 'tanggal_pengajuan', 'status'] });
 
-    // Dapatkan ID pengajuan_magang yang baru saja dibuat
-    const [pengajuanMagang] = await queryInterface.sequelize.query("SELECT id, mahasiswa_id, lowongan_id FROM pengajuan_magang;");
-    const pengajuanBudiFrontendId = pengajuanMagang.find(pm => pm.mahasiswa_id === budiMhsId && pm.lowongan_id === frontendLowonganId).id;
-    const pengajuanSitiBackendId = pengajuanMagang.find(pm => pm.mahasiswa_id === AminahMhsId && pm.lowongan_id === backendLowonganId).id;
-    // const pengajuanBudiBackendId = pengajuanMagang.find(pm => pm.mahasiswa_id === budiSantosoMhsId && pm.lowongan_id === backendLowonganId && pm.status === 'ditolak').id; // Jika perlu spesifik
+    // Dapatkan ID pengajuan_magang yang baru saja dibuat secara dinamis
+    // Perlu mendapatkan ID pengajuan yang spesifik jika akan digunakan untuk dokumen
+    const [pengajuanMagang] = await queryInterface.sequelize.query("SELECT id, mahasiswa_id, lowongan_id, status FROM pengajuan_magang;");
+    const pengajuanBudiDiterimaId = pengajuanMagang.find(pm => pm.mahasiswa_id === budiMhsId && pm.status === 'diterima').id;
+    const pengajuanAminahDiterimaId = pengajuanMagang.find(pm => pm.mahasiswa_id === AminahMhsId && pm.status === 'diterima').id;
+    const pengajuanFajarDiajukanId = pengajuanMagang.find(pm => pm.mahasiswa_id === FajarMhsId && pm.status === 'diajukan').id;
+    const pengajuanDinaDitolakId = pengajuanMagang.find(pm => pm.mahasiswa_id === DinaMhsId && pm.status === 'ditolak').id;
+
 
     // 7. Data untuk tabel 'dokumen'
+    // Dokumen hanya untuk pengajuan yang diterima/diajukan yang relevan
     await queryInterface.bulkInsert('dokumen', [{
-      pengajuan_id: pengajuanBudiFrontendId, // Gunakan ID dinamis
+      // Dokumen Budi (Pengajuan Diterima)
+      pengajuan_id: pengajuanBudiDiterimaId,
       nama_file: 'Surat Penerimaan Budi Santoso.pdf',
       jenis: 'surat',
       file_path: '/docs/surat_budi_pm.pdf',
       tanggal_upload: '2025-06-11 09:00:00'
     }, {
-      pengajuan_id: pengajuanBudiFrontendId, // Gunakan ID dinamis
+      // Dokumen Budi (Pengajuan Diterima)
+      pengajuan_id: pengajuanBudiDiterimaId,
       nama_file: 'CV Budi Santoso.pdf',
       jenis: 'CV',
       file_path: '/docs/cv_budi.pdf',
       tanggal_upload: '2025-06-09 14:30:00'
     }, {
-      pengajuan_id: pengajuanSitiBackendId, // Gunakan ID dinamis
-      nama_file: 'Proposal Magang Siti Aminah.pdf',
+      // Dokumen Aminah (Pengajuan Diterima)
+      pengajuan_id: pengajuanAminahDiterimaId,
+      nama_file: 'Surat Penerimaan Siti Aminah.pdf',
+      jenis: 'surat',
+      file_path: '/docs/surat_siti_pm.pdf',
+      tanggal_upload: '2025-06-21 10:00:00'
+    }, {
+      // Dokumen Fajar (Pengajuan Diajukan)
+      pengajuan_id: pengajuanFajarDiajukanId,
+      nama_file: 'Proposal Magang Fajar.pdf',
       jenis: 'proposal',
-      file_path: '/docs/proposal_siti.pdf',
-      tanggal_upload: '2025-06-12 16:00:00'
+      file_path: '/docs/proposal_fajar.pdf',
+      tanggal_upload: '2025-07-06 11:00:00'
     }], { updateOnDuplicate: ['pengajuan_id', 'nama_file', 'jenis', 'file_path', 'tanggal_upload'] });
 
     // 8. Data untuk tabel 'logbook'
     await queryInterface.bulkInsert('logbook', [{
-      mahasiswa_id: budiMhsId, // Gunakan ID dinamis
+      // Logbook Budi - Evaluasi TRUE
+      mahasiswa_id: budiMhsId,
       tanggal: '2025-07-01',
       kegiatan: 'Hari pertama orientasi perusahaan dan pengenalan tim.',
       verifikasi_dosen: true
     }, {
-      mahasiswa_id: budiMhsId, // Gunakan ID dinamis
+      // Logbook Budi - Evaluasi TRUE
+      mahasiswa_id: budiMhsId,
       tanggal: '2025-07-08',
       kegiatan: 'Mulai mengerjakan modul otentikasi, belajar konfigurasi API.',
-      verifikasi_dosen: false
+      verifikasi_dosen: true
     }, {
-      mahasiswa_id: AminahMhsId, // Gunakan ID dinamis
+      // Logbook Aminah - Evaluasi TRUE
+      mahasiswa_id: AminahMhsId,
       tanggal: '2025-07-15',
       kegiatan: 'Mempelajari arsitektur database proyek inventaris.',
       verifikasi_dosen: true
     }, {
-      mahasiswa_id: AminahMhsId, // Gunakan ID dinamis
+      // Logbook Aminah - Evaluasi FALSE (Belum dievaluasi salah satu)
+      mahasiswa_id: AminahMhsId,
       tanggal: '2025-07-22',
       kegiatan: 'Melakukan debugging pada endpoint laporan stok.',
       verifikasi_dosen: false
@@ -185,13 +261,15 @@ module.exports = {
 
     // 9. Data untuk tabel 'laporan'
     await queryInterface.bulkInsert('laporan', [{
-      mahasiswa_id: budiMhsId, // Gunakan ID dinamis
+      // Laporan Budi - Status diterima (sudah dinilai)
+      mahasiswa_id: budiMhsId,
       judul: 'Pengembangan Antarmuka Pengguna E-Commerce dengan ReactJS',
       file_path: '/files/laporan/budi_final_report.pdf',
-      status: 'menunggu',
+      status: 'diterima', // Sudah diterima, berarti sudah dinilai
       tanggal_upload: '2025-09-30 10:00:00'
     }, {
-      mahasiswa_id: AminahMhsId, // Gunakan ID dinamis
+      // Laporan Aminah - Status belum dikumpulkan (belum dinilai)
+      mahasiswa_id: AminahMhsId,
       judul: 'Implementasi API Restful untuk Sistem Manajemen Inventaris',
       file_path: '/files/laporan/siti_final_report.pdf',
       status: 'belum dikumpulkan',
@@ -200,42 +278,41 @@ module.exports = {
 
     // 10. Data untuk tabel 'penilaian'
     await queryInterface.bulkInsert('penilaian', [{
-      mahasiswa_id: budiMhsId, // Gunakan ID dinamis
-      dosen_id: AndiId, // Gunakan ID dinamis
-      nilai_akhir: null,
-      komentar: null,
-      tanggal: new Date()
+      // Penilaian Budi (karena laporannya sudah diterima/dinilai)
+      mahasiswa_id: budiMhsId,
+      dosen_id: AndiId,
+      nilai_akhir: 88.5,
+      komentar: 'Kinerja: Sangat baik | Kedisiplinan: Sangat baik | Kolaborasi: Baik sekali',
+      tanggal: new Date('2025-10-10')
     }], { updateOnDuplicate: ['mahasiswa_id', 'dosen_id', 'nilai_akhir', 'komentar', 'tanggal'] });
 
     // 11. Data untuk tabel 'feedback'
     await queryInterface.bulkInsert('feedback', [{
-      mahasiswa_id: budiMhsId, // Gunakan ID dinamis
-      dosen_id: AndiId, // Gunakan ID dinamis
+      mahasiswa_id: budiMhsId,
+      dosen_id: AndiId,
       pesan: 'Perkembangan logbook minggu pertama sangat baik, teruskan!',
       tanggal: new Date()
     }, {
-      mahasiswa_id: AminahMhsId, // Gunakan ID dinamis
-      dosen_id: AndiId, // Gunakan ID dinamis
+      mahasiswa_id: AminahMhsId,
+      dosen_id: AndiId,
       pesan: 'Pastikan mencatat setiap detail kegiatan agar mudah dilacak.',
       tanggal: new Date()
     }], { updateOnDuplicate: ['mahasiswa_id', 'dosen_id', 'pesan', 'tanggal'] });
 
     // 14. Data untuk tabel 'pengumuman'
-    // Diasumsikan user_id 1 adalah admin (dari tabel users)
-    const adminUserId = users.find(u => u.role === 'admin')?.id || AndiUserId; // Coba cari admin, fallback ke dosenAndi jika admin belum di-seed atau id-nya beda
-    // Jika Anda punya user dengan role 'admin' di users, pastikan id-nya digunakan di sini.
-    // Untuk contoh ini, saya asumsikan dosenAndiUserId juga bisa digunakan sebagai admin_user_id jika role-nya 'dosen'.
-    // Atau Anda bisa menambahkan user dengan role 'admin' secara eksplisit di user seeder.
-    // Jika tidak ada user admin yang khusus, dan role 'dosen' bisa membuat pengumuman, ini bisa dipakai.
+    // Asumsi user 'aminah' (AminahUserId) adalah mahasiswa, jadi cari user dengan role 'admin' jika ada,
+    // jika tidak, fallback ke AndiUserId.
+    const adminUserCheck = users.find(u => u.role === 'admin');
+    const adminUserId = adminUserCheck ? adminUserCheck.id : AndiUserId;
 
     await queryInterface.bulkInsert('pengumuman', [{
-      admin_user_id: adminUserId, // Gunakan ID dinamis
+      admin_user_id: adminUserId,
       judul: 'Jadwal Batas Akhir Unggah Laporan',
       isi: 'Batas akhir pengunggahan laporan akhir magang adalah 30 September 2025.',
       tanggal: new Date(),
       ditujukan_kepada: 'mahasiswa'
     }, {
-      admin_user_id: adminUserId, // Gunakan ID dinamis
+      admin_user_id: adminUserId,
       judul: 'Pembekalan Dosen Pembimbing',
       isi: 'Akan ada pembekalan untuk dosen pembimbing pada tanggal 25 Juni 2025.',
       tanggal: new Date(),
@@ -243,12 +320,19 @@ module.exports = {
     }], { updateOnDuplicate: ['admin_user_id', 'judul', 'isi', 'tanggal', 'ditujukan_kepada'] });
 
     // 15. Data untuk tabel 'rekapitulasi'
-    // ... (sesuaikan jika Anda punya data rekapitulasi yang akan di-seed)
-    // Ingat untuk menggunakan ID dinamis dari mahasiswa jika Anda menyertakannya.
+    await queryInterface.bulkInsert('rekapitulasi', [{
+      // Rekapitulasi Budi (karena laporannya sudah dinilai)
+      mahasiswa_id: budiMhsId,
+      nilai_akhir: 88.5, // Sesuai dengan nilai di penilaian
+      status_laporan: 'selesai',
+      tanggal_rekap: new Date('2025-10-10')
+    }], { updateOnDuplicate: ['mahasiswa_id', 'nilai_akhir', 'status_laporan', 'tanggal_rekap'] });
+
   },
 
   down: async (queryInterface, Sequelize) => {
     // Hapus semua data yang dimasukkan di atas. Urutan PENTING! Kebalikan dari urutan INSERT.
+    await queryInterface.bulkDelete('rekapitulasi', {}, {});
     await queryInterface.bulkDelete('pengumuman', {}, {});
     await queryInterface.bulkDelete('feedback', {}, {});
     await queryInterface.bulkDelete('penilaian', {}, {});

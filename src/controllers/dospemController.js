@@ -2,6 +2,7 @@
 
 // Impor semua model dari index.js
 const db = require('../config/sequelize'); // Ini adalah instance Sequelize
+const { Op } = require('sequelize'); // Impor Op untuk operator Sequelize seperti LIKE
 const {
     User,
     Mahasiswa,
@@ -24,7 +25,7 @@ const getMahasiswaDetail = async (mhsId) => {
                 { model: User, attributes: ['email'] },
                 {
                     model: Dosen,
-                    as: 'DosenPembimbing', // Menggunakan alias yang didefinisikan di models/index.js
+                    as: 'DosenPembimbing',
                     attributes: ['nama']
                 }
             ]
@@ -47,36 +48,46 @@ const getMahasiswaDetail = async (mhsId) => {
         });
         const statusLaporanAkhir = laporan ? laporan.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) : 'Belum Unggah';
 
-        // Ambil pengajuan magang yang diterima untuk info perusahaan dan periode
-        const pengajuanInfo = await PengajuanMagang.findOne({
-            where: { mahasiswa_id: mahasiswa.id, status: 'diterima' },
+        // Ambil pengajuan magang yang diterima untuk info perusahaan dan periode (hanya untuk tampilan detail)
+        // Ini tidak akan digunakan untuk filter di daftarMahasiswa, melainkan statusPengajuanTerbaru di bawah.
+        const pengajuanInfoDiterima = await PengajuanMagang.findOne({
+            where: { mahasiswa_id: mahasiswa.id, status: 'diterima' }, // Hanya ambil status 'diterima' untuk perusahaan/periode
             include: [
                 {
                     model: Lowongan,
-                    attributes: ['tanggal_dibuka', 'tanggal_ditutup'],
-                    include: { model: Perusahaan, attributes: ['nama'] }
+                    attributes: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi'],
                 }
             ],
             order: [['tanggal_pengajuan', 'DESC']]
         });
 
-        const statusMagang = pengajuanInfo ? pengajuanInfo.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) : 'Belum Ada Pengajuan';
-        const perusahaanTujuan = pengajuanInfo && pengajuanInfo.Lowongan && pengajuanInfo.Lowongan.Perusahaan
-                               ? pengajuanInfo.Lowongan.Perusahaan.nama
-                               : '-';
-        const periodeMagang = pengajuanInfo && pengajuanInfo.Lowongan && pengajuanInfo.Lowongan.tanggal_dibuka && pengajuanInfo.Lowongan.tanggal_ditutup
-                               ? `${new Date(pengajuanInfo.Lowongan.tanggal_dibuka).toLocaleDateString('id-ID')} - ${new Date(pengajuanInfo.Lowongan.tanggal_ditutup).toLocaleDateString('id-ID')}`
-                               : '-';
+        // PENTING: Ambil STATUS PENGAJUAN TERBARU untuk filter di daftarMahasiswa
+        const statusPengajuanTerbaruObj = await PengajuanMagang.findOne({
+            where: { mahasiswa_id: mahasiswa.id },
+            attributes: ['status'],
+            order: [['tanggal_pengajuan', 'DESC']] // Ambil status pengajuan terbaru
+        });
+
+        // Normalisasi statusMagang ke lowercase tanpa spasi untuk pencocokan filter
+        const statusMagang = statusPengajuanTerbaruObj ? statusPengajuanTerbaruObj.status.toLowerCase().replace(/ /g, '') : 'belum ada pengajuan';
+
+
+        const perusahaanTujuan = pengajuanInfoDiterima && pengajuanInfoDiterima.Lowongan
+                                 ? pengajuanInfoDiterima.Lowongan.perusahaan
+                                 : '-';
+        const periodeMagang = pengajuanInfoDiterima && pengajuanInfoDiterima.Lowongan && pengajuanInfoDiterima.Lowongan.deadlinependaftaran
+                                 ? `Deadline: ${new Date(pengajuanInfoDiterima.Lowongan.deadlinependaftaran).toLocaleDateString('id-ID')}`
+                                 : '-';
 
         return {
             id: mahasiswa.id,
             nama: mahasiswa.nama,
-            nim: mahasiswa.npm, // Sesuaikan dengan kolom DB
-            prodi: mahasiswa.jurusan, // Sesuaikan dengan kolom DB
+            nim: mahasiswa.npm,
+            prodi: mahasiswa.jurusan,
             email: mahasiswa.User ? mahasiswa.User.email : '-',
             angkatan: mahasiswa.angkatan,
-            dosen_pembimbing_id: mahasiswa.dosen_pembimbing_id, // Penting untuk verifikasi akses
-            statusMagang: statusMagang,
+            dosen_pembimbing_id: mahasiswa.dosen_pembimbing_id,
+            statusMagang: statusMagang, // Ini akan digunakan untuk filter status pengajuan
             perusahaanTujuan: perusahaanTujuan,
             periodeMagang: periodeMagang,
             logbookPending: logbookPendingCount,
@@ -92,7 +103,7 @@ const getMahasiswaDetail = async (mhsId) => {
 
 // Item 30: Dashboard Dosen Pembimbing
 exports.getDashboard = async (req, res) => {
-    const dosenUserId = req.user.id; // Asumsi req.user.id adalah ID dari tabel 'users'
+    const dosenUserId = req.user.id;
 
     try {
         const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
@@ -102,7 +113,7 @@ exports.getDashboard = async (req, res) => {
         }
 
         const namaDosen = dosen.nama;
-        const dosenId = dosen.id; // ID dari tabel 'dosen'
+        const dosenId = dosen.id;
 
         const mahasiswaBimbingan = await Mahasiswa.findAll({
             where: { dosen_pembimbing_id: dosenId },
@@ -240,6 +251,7 @@ exports.getDashboard = async (req, res) => {
 // Item 31: Melihat Daftar Mahasiswa Bimbingan (List View)
 exports.getMahasiswaBimbinganList = async (req, res) => {
     const dosenUserId = req.user.id;
+    const { search, statusFilter } = req.query; // Ambil parameter search dan statusFilter
 
     try {
         const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
@@ -249,19 +261,50 @@ exports.getMahasiswaBimbinganList = async (req, res) => {
         const namaDosen = dosen.nama;
         const dosenId = dosen.id;
 
-        const mahasiswaIds = await Mahasiswa.findAll({
-            where: { dosen_pembimbing_id: dosenId },
-            attributes: ['id']
-        });
-        const mahasiswaIdsBimbingan = mahasiswaIds.map(mhs => mhs.id);
+        // Awalnya, dapatkan semua ID mahasiswa bimbingan dosen ini
+        let whereMahasiswa = {
+            dosen_pembimbing_id: dosenId
+        };
 
+        // Jika ada search query, tambahkan kondisi ke pencarian nama mahasiswa
+        if (search) {
+            whereMahasiswa.nama = { [Op.like]: `%${search}%` };
+        }
+
+        const mahasiswaList = await Mahasiswa.findAll({
+            where: whereMahasiswa,
+            attributes: ['id', 'nama'] // Ambil id dan nama untuk selanjutnya diproses
+        });
+
+        let mahasiswaIdsBimbingan = mahasiswaList.map(mhs => mhs.id);
+
+        // Jika tidak ada mahasiswa yang cocok dengan pencarian nama, atau tidak ada mahasiswa bimbingan sama sekali
+        if (mahasiswaIdsBimbingan.length === 0) {
+            // Kita set id ke [0] agar query Sequelize berikutnya (IN clause) tidak error jika array kosong
+            // Ini akan menyebabkan Promise.all mengembalikan null untuk setiap ID 0, yang kemudian akan difilter
+            mahasiswaIdsBimbingan = [0];
+        }
+
+
+        // Ambil detail lengkap untuk setiap mahasiswa yang cocok dengan filter nama (atau semua jika tidak ada search)
         const daftarMahasiswaPromises = mahasiswaIdsBimbingan.map(mhsId => getMahasiswaDetail(mhsId));
-        const daftarMahasiswa = (await Promise.all(daftarMahasiswaPromises)).filter(mhs => mhs !== null);
+        let daftarMahasiswa = (await Promise.all(daftarMahasiswaPromises)).filter(mhs => mhs !== null);
+
+        // Filter daftarMahasiswa berdasarkan status pengajuan jika statusFilter diberikan
+        if (statusFilter) {
+            daftarMahasiswa = daftarMahasiswa.filter(mhs => {
+                // 'mhs.statusMagang' sudah dinormalisasi menjadi lowercase tanpa spasi di getMahasiswaDetail
+                return mhs.statusMagang === statusFilter;
+            });
+        }
+
 
         res.render('dospem/daftarMahasiswa', {
             title: 'Mahasiswa Bimbingan',
             mahasiswa: daftarMahasiswa,
-            namaDosen: namaDosen
+            namaDosen: namaDosen,
+            search: search || '', // Kirim kembali nilai search ke template
+            statusFilter: statusFilter || '' // Kirim kembali nilai statusFilter ke template
         });
 
     } catch (error) {
@@ -323,7 +366,10 @@ exports.getDetailMahasiswa = async (req, res) => {
         const pengajuanMagang = await PengajuanMagang.findAll({
             where: { mahasiswa_id: mahasiswaId },
             include: [
-                { model: Lowongan, attributes: ['judul', 'tanggal_dibuka', 'tanggal_ditutup'], include: { model: Perusahaan, attributes: ['nama'] } }
+                {
+                    model: Lowongan,
+                    attributes: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi'],
+                }
             ],
             order: [['tanggal_pengajuan', 'DESC']]
         });
@@ -331,14 +377,14 @@ exports.getDetailMahasiswa = async (req, res) => {
         const formattedPengajuanMagang = pengajuanMagang.map(peng => ({
             id: peng.id,
             mahasiswaId: peng.mahasiswa_id,
-            namaPerusahaan: peng.Lowongan && peng.Lowongan.Perusahaan ? peng.Lowongan.Perusahaan.nama : '-',
-            posisi: peng.Lowongan ? peng.Lowongan.judul : '-',
-            tanggalMulai: peng.Lowongan ? peng.Lowongan.tanggal_dibuka : null,
-            tanggalSelesai: peng.Lowongan ? peng.Lowongan.tanggal_ditutup : null,
-            dokumenPendukung: '', // Perlu di-fetch dari tabel Dokumen
+            namaPerusahaan: peng.Lowongan ? peng.Lowongan.perusahaan : '-',
+            posisi: peng.Lowongan ? peng.Lowongan.deskripsi.substring(0, Math.min(peng.Lowongan.deskripsi.length, 50)) + '...' : '-',
+            tanggalMulai: peng.Lowongan ? new Date(peng.Lowongan.deadlinependaftaran) : null,
+            tanggalSelesai: peng.Lowongan ? new Date(new Date(peng.Lowongan.deadlinependaftaran).setMonth(new Date(peng.Lowongan.deadlinependaftaran).getMonth() + parseInt(peng.Lowongan.durasi))) : null,
+            dokumenPendukung: '',
             statusPengajuan: peng.status,
-            komentarDosen: '', // Perlu di-fetch dari tabel Feedback atau jika ada di PengajuanMagang
-            surat: '', cv: '', proposal: '' // Perlu di-fetch dari tabel Dokumen
+            komentarDosen: '',
+            surat: '', cv: '', proposal: ''
         }));
 
 
@@ -379,8 +425,7 @@ exports.getDetailPengajuanMagangModal = async (req, res) => {
                 },
                 {
                     model: Lowongan,
-                    attributes: ['judul', 'deskripsi', 'tanggal_dibuka', 'tanggal_ditutup'],
-                    include: [{ model: Perusahaan, attributes: ['nama', 'alamat', 'email', 'telepon', 'pic'] }]
+                    attributes: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi'],
                 }
             ]
         });
@@ -389,18 +434,15 @@ exports.getDetailPengajuanMagangModal = async (req, res) => {
             return res.status(404).send('Pengajuan Magang tidak ditemukan.');
         }
 
-        // Verifikasi bahwa mahasiswa dari pengajuan ini adalah bimbingan dosen yang login
         if (pengajuan.Mahasiswa.dosen_pembimbing_id !== dosenId) {
             return res.status(403).send('Anda tidak memiliki akses ke pengajuan ini.');
         }
 
-        // Ambil dokumen pendukung untuk pengajuan ini
         const dokumenRows = await Dokumen.findAll({
             where: { pengajuan_id: pengajuan.id },
             attributes: ['nama_file', 'file_path']
         });
 
-        // Map data ke format yang diharapkan oleh EJS
         const mahasiswaData = {
             nama: pengajuan.Mahasiswa.nama,
             nim: pengajuan.Mahasiswa.npm,
@@ -410,18 +452,18 @@ exports.getDetailPengajuanMagangModal = async (req, res) => {
         };
 
         const magangData = {
-            perusahaan: pengajuan.Lowongan.Perusahaan.nama,
-            alamat: pengajuan.Lowongan.Perusahaan.alamat,
-            posisi: pengajuan.Lowongan.judul,
-            periode: `${new Date(pengajuan.Lowongan.tanggal_dibuka).toLocaleDateString('id-ID')} s/d ${new Date(pengajuan.Lowongan.tanggal_ditutup).toLocaleDateString('id-ID')}`,
+            perusahaan: pengajuan.Lowongan.perusahaan,
+            alamat: pengajuan.Lowongan.lokasi,
+            posisi: pengajuan.Lowongan.deskripsi.substring(0, Math.min(pengajuan.Lowongan.deskripsi.length, 50)) + '...',
+            periode: `${new Date(pengajuan.Lowongan.deadlinependaftaran).toLocaleDateString('id-ID')} s/d ${new Date(new Date(pengajuan.Lowongan.deadlinependaftaran).setMonth(new Date(pengajuan.Lowongan.deadlinependaftaran).getMonth() + parseInt(pengajuan.Lowongan.durasi))).toLocaleDateString('id-ID')}`,
             deskripsi: pengajuan.Lowongan.deskripsi
         };
 
         const pembimbingLapangan = {
-            nama: pengajuan.Lowongan.Perusahaan.pic || 'Belum Ditentukan',
+            nama: 'Tidak Tersedia',
             jabatan: 'PIC Perusahaan',
-            email: pengajuan.Lowongan.Perusahaan.email || '-',
-            telepon: pengajuan.Lowongan.Perusahaan.telepon || '-'
+            email: 'Tidak Tersedia',
+            telepon: 'Tidak Tersedia'
         };
 
         const pengajuanStatusData = {
@@ -429,7 +471,7 @@ exports.getDetailPengajuanMagangModal = async (req, res) => {
             tanggalVerifikasi: new Date(pengajuan.tanggal_pengajuan).toLocaleDateString('id-ID', {
                 year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
             }) + ' WIB',
-            catatanAdmin: null // Tidak ada di skema pengajuan_magang Anda
+            catatanAdmin: null
         };
 
         res.render('dospem/detail_pengajuan', {
@@ -539,19 +581,18 @@ exports.getEvaluasiLogbookFormModal = async (req, res) => {
             include: [
                 {
                     model: Lowongan,
-                    attributes: ['judul'],
-                    include: { model: Perusahaan, attributes: ['nama'] }
+                    attributes: ['perusahaan', 'deskripsi'],
                 }
             ],
             order: [['tanggal_pengajuan', 'DESC']]
         });
-        const companyInfo = pengajuan && pengajuan.Lowongan && pengajuan.Lowongan.Perusahaan ? {
-            namaPerusahaan: pengajuan.Lowongan.Perusahaan.nama,
-            posisi: pengajuan.Lowongan.judul
+
+        const companyInfo = pengajuan && pengajuan.Lowongan ? {
+            namaPerusahaan: pengajuan.Lowongan.perusahaan,
+            posisi: pengajuan.Lowongan.deskripsi.substring(0, Math.min(pengajuan.Lowongan.deskripsi.length, 50)) + '...'
         } : null;
 
 
-        // Ambil komentar dosen terakhir untuk mahasiswa ini dari tabel feedback
         const feedback = await Feedback.findOne({
             where: { mahasiswa_id: mahasiswaData.id, dosen_id: dosenId },
             order: [['tanggal', 'DESC']]
@@ -568,7 +609,7 @@ exports.getEvaluasiLogbookFormModal = async (req, res) => {
                 tanggal: logbook.tanggal,
                 statusEvaluasi: logbook.verifikasi_dosen ? 'sudah dievaluasi' : 'menunggu evaluasi',
                 komentarDosen: komentarDosenTerakhir,
-                fileLampiran: null // Jika ada di tabel logbook, tambahkan di model
+                fileLampiran: null
             },
             mahasiswa: mahasiswaData,
             pengajuan: companyInfo,
@@ -609,23 +650,11 @@ exports.postEvaluasiLogbook = async (req, res) => {
         await logbook.update({ verifikasi_dosen: verifikasiStatus });
 
         if (komentarDosen && komentarDosen.trim() !== '') {
-            // Upsert: mencari feedback yang sudah ada, jika ada update, jika tidak buat baru
             await Feedback.upsert({
                 mahasiswa_id: logbook.mahasiswa_id,
                 dosen_id: dosenId,
                 pesan: komentarDosen,
                 tanggal: new Date()
-            }, {
-                // Tentukan kriteria untuk mencari record yang akan diupdate
-                // Dalam kasus ini, kita bisa mencari feedback dari dosen ini ke mahasiswa ini
-                // dan mengupdate yang terbaru, atau selalu membuat baru.
-                // Untuk kesederhanaan, kita akan selalu membuat baru jika tidak ada primary key
-                // yang cocok untuk upsert. Jika ingin update, perlu id feedback spesifik.
-                // Atau, Anda bisa mendefinisikan unique constraint di model Feedback untuk mahasiswa_id dan dosen_id
-                // Contoh simpel, akan membuat baru jika tidak ada 'id' yang cocok.
-                // Jika ingin update: findByPk, lalu update.
-                // Karena feedback tidak ada unique ID untuk pasangan mhs-dosen untuk update harian,
-                // kita akan selalu INSERT baru, atau Anda perlu menambahkan kolom `logbook_id` ke tabel feedback.
             });
         }
 
@@ -662,7 +691,7 @@ exports.getPenilaianLaporanAkhirList = async (req, res) => {
             },
             include: [
                 { model: Mahasiswa, attributes: ['nama', 'npm'] },
-                { model: Penilaian, attributes: ['nilai_akhir', 'komentar', 'tanggal'], required: false } // LEFT JOIN
+                { model: Penilaian, attributes: ['nilai_akhir', 'komentar', 'tanggal'], required: false }
             ],
             order: [['tanggal_upload', 'DESC']]
         });
@@ -670,12 +699,15 @@ exports.getPenilaianLaporanAkhirList = async (req, res) => {
         const formattedLaporan = await Promise.all(laporanForPenilaian.map(async (lap) => {
             const pengajuan = await PengajuanMagang.findOne({
                 where: { mahasiswa_id: lap.mahasiswa_id, status: 'diterima' },
-                include: [{ model: Lowongan, include: { model: Perusahaan, attributes: ['nama'] } }],
+                include: [{
+                    model: Lowongan,
+                    attributes: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi']
+                }],
                 order: [['tanggal_pengajuan', 'DESC']]
             });
-            const perusahaanMagang = pengajuan && pengajuan.Lowongan && pengajuan.Lowongan.Perusahaan
-                                   ? pengajuan.Lowongan.Perusahaan.nama
-                                   : '-';
+            const perusahaanMagang = pengajuan && pengajuan.Lowongan
+                                     ? pengajuan.Lowongan.perusahaan
+                                     : '-';
             return {
                 id: lap.id,
                 mahasiswaId: lap.mahasiswa_id,
@@ -688,7 +720,7 @@ exports.getPenilaianLaporanAkhirList = async (req, res) => {
                 nilai: lap.Penilaian ? lap.Penilaian.nilai_akhir : null,
                 komentarDosen: lap.Penilaian ? lap.Penilaian.komentar : null,
                 tanggalPenilaian: lap.Penilaian ? lap.Penilaian.tanggal : null,
-                statusPenilaian: lap.status, // Tetap gunakan status dari tabel laporan
+                statusPenilaian: lap.status,
                 perusahaanMagang: perusahaanMagang
             };
         }));
@@ -728,7 +760,7 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
                 {
                     model: Penilaian,
                     attributes: ['nilai_akhir', 'komentar'],
-                    required: false // LEFT JOIN
+                    required: false
                 }
             ]
         });
@@ -752,18 +784,16 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
             include: [
                 {
                     model: Lowongan,
-                    attributes: ['judul'],
-                    include: { model: Perusahaan, attributes: ['nama'] }
+                    attributes: ['perusahaan', 'deskripsi'],
                 }
             ],
             order: [['tanggal_pengajuan', 'DESC']]
         });
-        const companyInfo = pengajuan && pengajuan.Lowongan && pengajuan.Lowongan.Perusahaan ? {
-            namaPerusahaan: pengajuan.Lowongan.Perusahaan.nama,
-            posisi: pengajuan.Lowongan.judul
+        const companyInfo = pengajuan && pengajuan.Lowongan ? {
+            namaPerusahaan: pengajuan.Lowongan.perusahaan,
+            posisi: pengajuan.Lowongan.deskripsi.substring(0, Math.min(pengajuan.Lowongan.deskripsi.length, 50)) + '...'
         } : null;
 
-        // Data penilaian komponen (masih di-parsing dari komentar karena tidak ada kolom terpisah)
         const penilaianKomponen = {
             kinerjaTugas: null,
             feedbackKinerja: '',
@@ -772,7 +802,6 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
             kolaborasiKomunikasi: null,
             feedbackKolaborasi: '',
         };
-        // Coba parsing komentar jika formatnya seperti "Kinerja: feedback | Kedisiplinan: feedback | Kolaborasi: feedback"
         if (laporanAkhir.Penilaian && laporanAkhir.Penilaian.komentar) {
             const parts = laporanAkhir.Penilaian.komentar.split(' | ');
             parts.forEach(part => {
@@ -789,9 +818,9 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
                 id: laporanAkhir.id,
                 judul: laporanAkhir.judul,
                 fileLaporan: laporanAkhir.file_path,
-                nilai: laporanAkhir.Penilaian ? laporanAkhir.Penilaian.nilai_akhir : null, // Nilai akhir dari tabel penilaian
-                komentarDosen: laporanAkhir.Penilaian ? laporanAkhir.Penilaian.komentar : null, // Komentar dari tabel penilaian
-                statusPenilaian: laporanAkhir.status // Status laporan dari tabel laporan
+                nilai: laporanAkhir.Penilaian ? laporanAkhir.Penilaian.nilai_akhir : null,
+                komentarDosen: laporanAkhir.Penilaian ? laporanAkhir.Penilaian.komentar : null,
+                statusPenilaian: laporanAkhir.status
             },
             mahasiswa: mahasiswaData,
             pengajuan: companyInfo,
@@ -836,7 +865,6 @@ exports.postPenilaianLaporan = async (req, res) => {
 
         const combinedKomentar = `Kinerja: ${feedbackKinerjaTugas || '-'} | Kedisiplinan: ${feedbackKedisiplinan || '-'} | Kolaborasi: ${feedbackKolaborasiKomunikasi || '-'}`;
 
-        // Upsert (Insert or Update) penilaian
         await Penilaian.upsert({
             mahasiswa_id: laporanAkhir.mahasiswa_id,
             dosen_id: dosenId,
@@ -845,10 +873,8 @@ exports.postPenilaianLaporan = async (req, res) => {
             tanggal: new Date()
         });
 
-        // Update status laporan di tabel 'laporan' menjadi 'diterima'
         await laporanAkhir.update({ status: 'diterima' });
 
-        // Upsert rekapitulasi
         await Rekapitulasi.upsert({
             mahasiswa_id: laporanAkhir.mahasiswa_id,
             nilai_akhir: parseFloat(nilaiAkhir),
