@@ -1,5 +1,11 @@
+'use strict';
 const express = require('express');
 const router = express.Router();
+
+// 1. Impor controller dan middleware yang dibutuhkan
+const mahasiswaController = require('../controllers/mahasiswaController');
+const upload = require('../../config/multer');
+// const { isLoggedIn } = require('../middleware/auth'); // Aktifkan ini nanti setelah membuat sistem login
 
 // --- Data Contoh (nantinya dari database) ---
 const laporanData = {
@@ -66,50 +72,20 @@ router.get("/pengajuan/:id", detailPengajuanController.getDetailPengajuan);
 
 /**
  * @route   GET /mahasiswa/laporan-akhir
- * @desc    Menampilkan halaman laporan akhir mahasiswa dengan data revisi.
+ * @desc    Menampilkan halaman laporan akhir mahasiswa dengan data dari database.
  */
-router.get('/laporan-akhir', (req, res) => {
-    // Perbaiki penanganan session user
-    let userId;
-    if (req.session && req.session.user && req.session.user.id) {
-        userId = req.session.user.id;
-    } else {
-        userId = 2; // ID mahasiswa default
-    }
-    
-    // Get mahasiswa data
-    const Mahasiswa = require('../../models/mahasiswa');
-    Mahasiswa.findOne({
-        where: { user_id: userId },
-        attributes: ["nama", "npm"]
-    }).then(mahasiswa => {
-        res.render('laporan_akhir', {
-            laporan: laporanData,
-            riwayat: riwayatData,
-            mahasiswa: mahasiswa ? {
-                nama: mahasiswa.nama,
-                npm: mahasiswa.npm
-            } : {
-                nama: "Nama Mahasiswa",
-                npm: "NIM Mahasiswa"
-            }
-        });
-    }).catch(err => {
-        console.error('Error:', err);
-        res.render('laporan_akhir', {
-            laporan: laporanData,
-            riwayat: riwayatData,
-            mahasiswa: {
-                nama: "Nama Mahasiswa",
-                npm: "NIM Mahasiswa"
-            }
-        });
-    });
-});
+// PERBAIKAN: Rute ini sekarang memanggil fungsi dari controller
+router.get('/laporan-akhir', mahasiswaController.getLaporanAkhirPage);
+
+/**
+ * @route   POST /mahasiswa/laporan-akhir/upload
+ * @desc    Menangani proses unggah file laporan.
+ */
+// PERBAIKAN: Rute ini juga memanggil fungsi dari controller
+router.post('/laporan-akhir/upload', upload.single('fileLaporan'), mahasiswaController.uploadLaporan);
 
 /**
  * @route   GET /mahasiswa/logbook
- * @desc    Menampilkan halaman untuk mengisi logbook harian.
  */
 router.get('/logbook', logbookController.getLogbookPage);
 
@@ -145,7 +121,6 @@ router.delete('/logbook/delete/:id', logbookController.deleteLogbook);
 
 /**
  * @route   GET /mahasiswa/pengumuman
- * @desc    Menampilkan halaman pengumuman untuk mahasiswa.
  */
 router.get("/pengumuman", pengumumanController.getPengumumanPage);
 
