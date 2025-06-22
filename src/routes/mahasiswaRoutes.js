@@ -4,7 +4,7 @@ const router = express.Router();
 
 // 1. Impor controller dan middleware yang dibutuhkan
 const mahasiswaController = require('../controllers/mahasiswaController');
-const upload = require('../../config/multerConfig');
+const upload = require('../../config/multer');
 // const { isLoggedIn } = require('../middleware/auth'); // Aktifkan ini nanti setelah membuat sistem login
 
 // const pengajuanList = Object.values(pengajuanDummy);
