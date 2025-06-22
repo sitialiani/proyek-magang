@@ -10,10 +10,10 @@ const {
     Lowongan,
     PengajuanMagang,
     Dokumen,
-    Logbook,
     Laporan,
     Penilaian,
-    Feedback
+    Feedback,
+    Logbook
 } = require('../../models'); // Ini mengimpor semua model yang sudah didefinisikan relasinya
 
 // Helper untuk mendapatkan data mahasiswa lengkap (termasuk status progres)
@@ -21,10 +21,10 @@ const getMahasiswaDetail = async (mhsId) => {
     try {
         const mahasiswa = await Mahasiswa.findByPk(mhsId, {
             include: [
-                { model: User, attributes: ['email'] },
+                { model: User, as: 'user', attributes: ['email'] },
                 {
                     model: Dosen,
-                    as: 'DosenPembimbing', // Menggunakan alias yang didefinisikan di models/index.js
+                    as: 'dosen', // Menggunakan alias yang didefinisikan di models/index.js
                     attributes: ['nama']
                 }
             ]
@@ -33,12 +33,7 @@ const getMahasiswaDetail = async (mhsId) => {
         if (!mahasiswa) return null;
 
         // Hitung logbook pending
-        const logbookPendingCount = await Logbook.count({
-            where: {
-                mahasiswa_id: mahasiswa.id,
-                verifikasi_dosen: false
-            }
-        });
+        const logbookPendingCount = 0; // Nilai default
 
         // Ambil status laporan akhir
         const laporan = await Laporan.findOne({
@@ -53,7 +48,7 @@ const getMahasiswaDetail = async (mhsId) => {
             include: [
                 {
                     model: Lowongan,
-                    attributes: ['tanggal_dibuka', 'tanggal_ditutup'],
+                    attributes: ['deadlinependaftaran'],
                     include: { model: Perusahaan, attributes: ['nama'] }
                 }
             ],
@@ -64,14 +59,14 @@ const getMahasiswaDetail = async (mhsId) => {
         const perusahaanTujuan = pengajuanInfo && pengajuanInfo.Lowongan && pengajuanInfo.Lowongan.Perusahaan
                                ? pengajuanInfo.Lowongan.Perusahaan.nama
                                : '-';
-        const periodeMagang = pengajuanInfo && pengajuanInfo.Lowongan && pengajuanInfo.Lowongan.tanggal_dibuka && pengajuanInfo.Lowongan.tanggal_ditutup
-                               ? `${new Date(pengajuanInfo.Lowongan.tanggal_dibuka).toLocaleDateString('id-ID')} - ${new Date(pengajuanInfo.Lowongan.tanggal_ditutup).toLocaleDateString('id-ID')}`
+        const periodeMagang = pengajuanInfo && pengajuanInfo.Lowongan && pengajuanInfo.Lowongan.deadlinependaftaran
+                               ? `${new Date(pengajuanInfo.Lowongan.deadlinependaftaran).toLocaleDateString('id-ID')}`
                                : '-';
 
         return {
             id: mahasiswa.id,
             nama: mahasiswa.nama,
-            nim: mahasiswa.npm, // Sesuaikan dengan kolom DB
+            nim: mahasiswa.nim, // Sesuaikan dengan kolom DB
             prodi: mahasiswa.jurusan, // Sesuaikan dengan kolom DB
             email: mahasiswa.User ? mahasiswa.User.email : '-',
             angkatan: mahasiswa.angkatan,
@@ -112,12 +107,10 @@ exports.getDashboard = async (req, res) => {
         const totalMahasiswaBimbingan = mahasiswaBimbingan.length;
         const mahasiswaIdsBimbingan = mahasiswaBimbingan.map(mhs => mhs.id);
 
-        const logbookMenungguEvaluasi = await Logbook.count({
-            where: {
-                mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
-                verifikasi_dosen: false
-            }
-        });
+        // --- Nonaktifkan Fitur Logbook ---
+        const logbookMenungguEvaluasi = 0; // Nilai default
+        const recentLogbooks = []; // Nilai default
+        // --- Akhir Nonaktifkan Fitur Logbook ---
 
         const laporanMenungguPenilaian = await Laporan.count({
             where: {
@@ -128,24 +121,9 @@ exports.getDashboard = async (req, res) => {
 
         let aktivitasTerbaru = [];
 
-        // Recent Logbooks (menunggu evaluasi)
-        const recentLogbooks = await Logbook.findAll({
-            where: {
-                mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
-                verifikasi_dosen: false
-            },
-            include: [{ model: Mahasiswa, attributes: ['nama'] }],
-            order: [['tanggal', 'DESC']],
-            limit: 5
-        });
-        recentLogbooks.forEach(log => {
-            aktivitasTerbaru.push({
-                type: 'Logbook',
-                message: `Logbook Magang dari ${log.Mahasiswa.nama} - Status: Perlu Evaluasi`,
-                date: new Date(log.tanggal),
-                link: `/dospem/logbook/evaluasi/${log.id}`
-            });
-        });
+        // --- Nonaktifkan Logika Logbook ---
+        // recentLogbooks.forEach(log => { ... }); // Dihapus/dikomen
+        // --- Akhir Nonaktifkan Logika Logbook ---
 
         // Recent Laporan (menunggu penilaian)
         const recentLaporan = await Laporan.findAll({
@@ -153,14 +131,14 @@ exports.getDashboard = async (req, res) => {
                 mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
                 status: 'menunggu'
             },
-            include: [{ model: Mahasiswa, attributes: ['nama'] }],
+            include: [{ model: Mahasiswa, as: 'mahasiswa', attributes: ['nama'] }],
             order: [['tanggal_upload', 'DESC']],
             limit: 5
         });
         recentLaporan.forEach(lap => {
             aktivitasTerbaru.push({
                 type: 'Laporan',
-                message: `Laporan Akhir dari ${lap.Mahasiswa.nama} - Status: Perlu Penilaian`,
+                message: `Laporan Akhir dari ${lap.mahasiswa.nama} - Status: Perlu Penilaian`,
                 date: new Date(lap.tanggal_upload),
                 link: `/dospem/laporan-akhir/nilai/${lap.id}`
             });
@@ -172,14 +150,14 @@ exports.getDashboard = async (req, res) => {
                 mahasiswa_id: mahasiswaIdsBimbingan.length > 0 ? mahasiswaIdsBimbingan : [0],
                 status: 'diajukan'
             },
-            include: [{ model: Mahasiswa, attributes: ['nama'] }],
+            include: [{ model: Mahasiswa, as: 'mahasiswa', attributes: ['nama'] }],
             order: [['tanggal_pengajuan', 'DESC']],
             limit: 5
         });
         recentPengajuan.forEach(peng => {
             aktivitasTerbaru.push({
                 type: 'Pengajuan',
-                message: `Pengajuan magang dari ${peng.Mahasiswa.nama} - Status: ${peng.status.toUpperCase()}`,
+                message: `Pengajuan magang dari ${peng.mahasiswa.nama} - Status: ${peng.status.toUpperCase()}`,
                 date: new Date(peng.tanggal_pengajuan),
                 link: `/dospem/pengajuan/${peng.id}/detail`
             });
@@ -188,21 +166,20 @@ exports.getDashboard = async (req, res) => {
         aktivitasTerbaru.sort((a, b) => b.date.getTime() - a.date.getTime());
         aktivitasTerbaru = aktivitasTerbaru.slice(0, 5);
 
+        // --- Nonaktifkan Logika Logbook di Kalender ---
+        // recentLogbooks.forEach(log => { ... }); // Dihapus/dikomen
+        // --- Akhir Nonaktifkan Logika Logbook di Kalender ---
+
         // Calendar Events
         const calendarEvents = [];
-        recentLogbooks.forEach(log => {
-             calendarEvents.push({
-                 date: new Date(log.tanggal).toISOString().split('T')[0],
-                 title: `Logbook ${log.Mahasiswa.nama} (${log.kegiatan.substring(0, Math.min(log.kegiatan.length, 20))}...)`,
-                 type: 'logbook',
-                 link: `/dospem/logbook/evaluasi/${log.id}`
-             });
-        });
+        // --- Nonaktifkan Logika Logbook di Kalender ---
+        // recentLogbooks.forEach(log => { ... }); // Dihapus/dikomen
+        // --- Akhir Nonaktifkan Logika Logbook di Kalender ---
 
         recentLaporan.forEach(lap => {
             calendarEvents.push({
                 date: new Date(lap.tanggal_upload).toISOString().split('T')[0],
-                title: `Laporan Akhir - ${lap.Mahasiswa.nama}`,
+                title: `Laporan Akhir - ${lap.mahasiswa.nama}`,
                 type: 'laporan',
                 link: `/dospem/laporan-akhir/nilai/${lap.id}`
             });
@@ -211,7 +188,7 @@ exports.getDashboard = async (req, res) => {
         recentPengajuan.forEach(peng => {
             calendarEvents.push({
                 date: new Date(peng.tanggal_pengajuan).toISOString().split('T')[0],
-                title: `Pengajuan Magang - ${peng.Mahasiswa.nama}`,
+                title: `Pengajuan Magang - ${peng.mahasiswa.nama}`,
                 type: 'pengajuan',
                 link: `/dospem/pengajuan/${peng.id}/detail`
             });
@@ -289,66 +266,15 @@ exports.getDetailMahasiswa = async (req, res) => {
             return res.status(403).send('Mahasiswa tidak ditemukan atau Anda tidak memiliki akses.');
         }
 
-        const logbooks = await Logbook.findAll({
-            where: { mahasiswa_id: mahasiswaId },
-            order: [['tanggal', 'DESC']]
-        });
-        const formattedLogbooks = logbooks.map(log => ({
-            id: log.id,
-            minggu: 'N/A', // Jika tidak ada di DB, Anda bisa menambahkan ini secara manual di tabel logbook
-            tanggal: log.tanggal,
-            deskripsiKegiatan: log.kegiatan,
-            statusEvaluasi: log.verifikasi_dosen ? 'sudah dievaluasi' : 'menunggu evaluasi',
-            komentarDosen: '', // Perlu diambil dari tabel Feedback
-            judulKegiatan: log.kegiatan.substring(0, Math.min(log.kegiatan.length, 50)) + (log.kegiatan.length > 50 ? '...' : '')
-        }));
-
-
-        const laporanAkhir = await Laporan.findOne({
-            where: { mahasiswa_id: mahasiswaId },
-            include: [{ model: Penilaian, attributes: ['nilai_akhir', 'komentar'] }] // Include Penilaian
-        });
-
-        const formattedLaporanAkhir = laporanAkhir ? {
-            id: laporanAkhir.id,
-            judul: laporanAkhir.judul,
-            fileLaporan: laporanAkhir.file_path,
-            tanggalUpload: laporanAkhir.tanggal_upload,
-            statusPenilaian: laporanAkhir.status,
-            nilai: laporanAkhir.Penilaian ? laporanAkhir.Penilaian.nilai_akhir : null,
-            komentarDosen: laporanAkhir.Penilaian ? laporanAkhir.Penilaian.komentar : null
-        } : null;
-
-
-        const pengajuanMagang = await PengajuanMagang.findAll({
-            where: { mahasiswa_id: mahasiswaId },
-            include: [
-                { model: Lowongan, attributes: ['judul', 'tanggal_dibuka', 'tanggal_ditutup'], include: { model: Perusahaan, attributes: ['nama'] } }
-            ],
-            order: [['tanggal_pengajuan', 'DESC']]
-        });
-
-        const formattedPengajuanMagang = pengajuanMagang.map(peng => ({
-            id: peng.id,
-            mahasiswaId: peng.mahasiswa_id,
-            namaPerusahaan: peng.Lowongan && peng.Lowongan.Perusahaan ? peng.Lowongan.Perusahaan.nama : '-',
-            posisi: peng.Lowongan ? peng.Lowongan.judul : '-',
-            tanggalMulai: peng.Lowongan ? peng.Lowongan.tanggal_dibuka : null,
-            tanggalSelesai: peng.Lowongan ? peng.Lowongan.tanggal_ditutup : null,
-            dokumenPendukung: '', // Perlu di-fetch dari tabel Dokumen
-            statusPengajuan: peng.status,
-            komentarDosen: '', // Perlu di-fetch dari tabel Feedback atau jika ada di PengajuanMagang
-            surat: '', cv: '', proposal: '' // Perlu di-fetch dari tabel Dokumen
-        }));
-
+        // --- Nonaktifkan Fitur Logbook ---
+        const logbooks = []; // Nilai default
+        // --- Akhir Nonaktifkan Fitur Logbook ---
 
         res.render('dospem/detailMahasiswa', {
-            title: `Detail Mahasiswa: ${mahasiswa.nama}`,
-            mahasiswa: mahasiswa,
-            logbooks: formattedLogbooks,
-            laporanAkhir: formattedLaporanAkhir,
-            pengajuanMagang: formattedPengajuanMagang,
-            namaDosen: namaDosen
+            title: `Detail Mahasiswa - ${mahasiswa.nama}`,
+            mahasiswa,
+            logbooks, // Kirim array kosong
+            namaDosen
         });
 
     } catch (error) {
@@ -359,38 +285,79 @@ exports.getDetailMahasiswa = async (req, res) => {
 
 // Item 32: Detail Pengajuan Magang (Simulasi Modal)
 exports.getDetailPengajuanMagangModal = async (req, res) => {
-    const dosenUserId = req.user.id;
     const pengajuanId = parseInt(req.params.id);
+    
+    console.log('Debug - pengajuanId:', pengajuanId, 'type:', typeof pengajuanId);
+    console.log('Debug - req.params:', req.params);
+    console.log('Debug - req.user:', req.user);
 
     try {
-        const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
-        if (!dosen) {
-            return res.status(404).send('Data dosen tidak ditemukan.');
-        }
-        const namaDosen = dosen.nama;
-        const dosenId = dosen.id;
+        // Handle case where user might not be available (for testing)
+        let dosenUserId = req.user ? req.user.id : null;
+        let dosen = null;
+        let namaDosen = 'Dosen Pembimbing';
+        let dosenId = null;
 
+        if (dosenUserId) {
+            dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
+            if (dosen) {
+                namaDosen = dosen.nama;
+                dosenId = dosen.id;
+            }
+        }
+
+        // If no dosen found, try to get the first dosen for testing
+        if (!dosen) {
+            console.log('Debug - No dosen found for user, trying to get first dosen for testing');
+            dosen = await Dosen.findOne();
+            if (dosen) {
+                namaDosen = dosen.nama;
+                dosenId = dosen.id;
+                console.log('Debug - Using first dosen for testing:', dosen.nama, 'ID:', dosen.id);
+            } else {
+                console.log('Debug - No dosen found in database at all');
+                return res.status(404).send('Data dosen tidak ditemukan di database.');
+            }
+        }
+
+        console.log('Debug - Looking for pengajuan with ID:', pengajuanId);
+        
         const pengajuan = await PengajuanMagang.findByPk(pengajuanId, {
             include: [
                 {
                     model: Mahasiswa,
-                    attributes: ['nama', 'npm', 'jurusan', 'no_hp', 'dosen_pembimbing_id'],
-                    include: [{ model: User, attributes: ['email'] }]
+                    as: 'mahasiswa',
+                    attributes: ['nama', 'nim', 'jurusan', 'no_hp', 'dosen_pembimbing_id'],
+                    include: [{ model: User, as: 'user', attributes: ['email'] }]
                 },
                 {
                     model: Lowongan,
-                    attributes: ['judul', 'deskripsi', 'tanggal_dibuka', 'tanggal_ditutup'],
-                    include: [{ model: Perusahaan, attributes: ['nama', 'alamat', 'email', 'telepon', 'pic'] }]
+                    as: 'lowongan',
+                    attributes: ['perusahaan', 'deskripsi', 'deadlinependaftaran'],
+                    include: [{ model: Perusahaan, as: 'detailPerusahaan', attributes: ['nama', 'alamat', 'email', 'telepon', 'pic'] }]
                 }
             ]
         });
+
+        console.log('Debug - pengajuan found:', pengajuan ? 'yes' : 'no');
+        console.log('Debug - pengajuan structure:', JSON.stringify(pengajuan, null, 2));
 
         if (!pengajuan) {
             return res.status(404).send('Pengajuan Magang tidak ditemukan.');
         }
 
         // Verifikasi bahwa mahasiswa dari pengajuan ini adalah bimbingan dosen yang login
-        if (pengajuan.Mahasiswa.dosen_pembimbing_id !== dosenId) {
+        console.log('Debug - pengajuan.Mahasiswa:', pengajuan.Mahasiswa);
+        console.log('Debug - pengajuan.mahasiswa:', pengajuan.mahasiswa);
+        
+        if (!pengajuan.Mahasiswa && !pengajuan.mahasiswa) {
+            return res.status(500).send('Data mahasiswa tidak ditemukan dalam pengajuan.');
+        }
+        
+        const mahasiswaData = pengajuan.Mahasiswa || pengajuan.mahasiswa;
+        
+        // Skip dosen verification for testing if no dosenId available
+        if (dosenId && mahasiswaData.dosen_pembimbing_id !== dosenId) {
             return res.status(403).send('Anda tidak memiliki akses ke pengajuan ini.');
         }
 
@@ -401,27 +368,27 @@ exports.getDetailPengajuanMagangModal = async (req, res) => {
         });
 
         // Map data ke format yang diharapkan oleh EJS
-        const mahasiswaData = {
-            nama: pengajuan.Mahasiswa.nama,
-            nim: pengajuan.Mahasiswa.npm,
-            prodi: pengajuan.Mahasiswa.jurusan,
-            email: pengajuan.Mahasiswa.User.email,
-            telepon: pengajuan.Mahasiswa.no_hp
+        const mahasiswaDataFormatted = {
+            nama: mahasiswaData.nama,
+            nim: mahasiswaData.nim,
+            prodi: mahasiswaData.jurusan,
+            email: mahasiswaData.user ? mahasiswaData.user.email : '-',
+            telepon: mahasiswaData.no_hp
         };
 
         const magangData = {
-            perusahaan: pengajuan.Lowongan.Perusahaan.nama,
-            alamat: pengajuan.Lowongan.Perusahaan.alamat,
-            posisi: pengajuan.Lowongan.judul,
-            periode: `${new Date(pengajuan.Lowongan.tanggal_dibuka).toLocaleDateString('id-ID')} s/d ${new Date(pengajuan.Lowongan.tanggal_ditutup).toLocaleDateString('id-ID')}`,
-            deskripsi: pengajuan.Lowongan.deskripsi
+            perusahaan: pengajuan.lowongan && pengajuan.lowongan.detailPerusahaan ? pengajuan.lowongan.detailPerusahaan.nama : 'Tidak diketahui',
+            alamat: pengajuan.lowongan && pengajuan.lowongan.detailPerusahaan ? pengajuan.lowongan.detailPerusahaan.alamat : 'Tidak diketahui',
+            posisi: pengajuan.lowongan ? pengajuan.lowongan.perusahaan : 'Tidak diketahui',
+            periode: pengajuan.lowongan && pengajuan.lowongan.deadlinependaftaran ? `${new Date(pengajuan.lowongan.deadlinependaftaran).toLocaleDateString('id-ID')}` : 'Tidak diketahui',
+            deskripsi: pengajuan.lowongan ? pengajuan.lowongan.deskripsi : 'Tidak diketahui'
         };
 
         const pembimbingLapangan = {
-            nama: pengajuan.Lowongan.Perusahaan.pic || 'Belum Ditentukan',
+            nama: pengajuan.lowongan && pengajuan.lowongan.detailPerusahaan ? (pengajuan.lowongan.detailPerusahaan.pic || 'Belum Ditentukan') : 'Belum Ditentukan',
             jabatan: 'PIC Perusahaan',
-            email: pengajuan.Lowongan.Perusahaan.email || '-',
-            telepon: pengajuan.Lowongan.Perusahaan.telepon || '-'
+            email: pengajuan.lowongan && pengajuan.lowongan.detailPerusahaan ? (pengajuan.lowongan.detailPerusahaan.email || '-') : '-',
+            telepon: pengajuan.lowongan && pengajuan.lowongan.detailPerusahaan ? (pengajuan.lowongan.detailPerusahaan.telepon || '-') : '-'
         };
 
         const pengajuanStatusData = {
@@ -433,8 +400,8 @@ exports.getDetailPengajuanMagangModal = async (req, res) => {
         };
 
         res.render('dospem/detail_pengajuan', {
-            title: `Detail Pengajuan Magang - ${mahasiswaData.nama}`,
-            mahasiswa: mahasiswaData,
+            title: `Detail Pengajuan Magang - ${mahasiswaDataFormatted.nama}`,
+            mahasiswa: mahasiswaDataFormatted,
             magang: magangData,
             pembimbingLapangan: pembimbingLapangan,
             pengajuan: pengajuanStatusData,
@@ -471,7 +438,7 @@ exports.getEvaluasiLogbookList = async (req, res) => {
             where: {
                 mahasiswa_id: safeMahasiswaIds.length > 0 ? safeMahasiswaIds : [0]
             },
-            include: [{ model: Mahasiswa, attributes: ['nama', 'npm'] }],
+            include: [{ model: Mahasiswa, attributes: ['nama', 'nim'] }],
             order: [['tanggal', 'DESC']]
         });
 
@@ -482,7 +449,7 @@ exports.getEvaluasiLogbookList = async (req, res) => {
             judulKegiatan: log.kegiatan.substring(0, Math.min(log.kegiatan.length, 50)) + (log.kegiatan.length > 50 ? '...' : ''),
             statusEvaluasi: log.verifikasi_dosen ? 'sudah dievaluasi' : 'menunggu evaluasi',
             mahasiswaNama: log.Mahasiswa.nama,
-            mahasiswaNim: log.Mahasiswa.npm
+            mahasiswaNim: log.Mahasiswa.nim
         }));
 
         res.render('dospem/evaluasiLogbookList', {
@@ -514,8 +481,8 @@ exports.getEvaluasiLogbookFormModal = async (req, res) => {
             include: [
                 {
                     model: Mahasiswa,
-                    attributes: ['nama', 'npm', 'dosen_pembimbing_id'],
-                    include: [{ model: User, attributes: ['email'] }]
+                    attributes: ['nama', 'nim', 'dosen_pembimbing_id'],
+                    include: [{ model: User, as: 'user', attributes: ['email'] }]
                 }
             ]
         });
@@ -531,7 +498,7 @@ exports.getEvaluasiLogbookFormModal = async (req, res) => {
         const mahasiswaData = {
             id: logbook.Mahasiswa.id,
             nama: logbook.Mahasiswa.nama,
-            nim: logbook.Mahasiswa.npm
+            nim: logbook.Mahasiswa.nim
         };
 
         const pengajuan = await PengajuanMagang.findOne({
@@ -539,7 +506,7 @@ exports.getEvaluasiLogbookFormModal = async (req, res) => {
             include: [
                 {
                     model: Lowongan,
-                    attributes: ['judul'],
+                    attributes: ['perusahaan'],
                     include: { model: Perusahaan, attributes: ['nama'] }
                 }
             ],
@@ -547,7 +514,7 @@ exports.getEvaluasiLogbookFormModal = async (req, res) => {
         });
         const companyInfo = pengajuan && pengajuan.Lowongan && pengajuan.Lowongan.Perusahaan ? {
             namaPerusahaan: pengajuan.Lowongan.Perusahaan.nama,
-            posisi: pengajuan.Lowongan.judul
+            posisi: pengajuan.Lowongan.perusahaan
         } : null;
 
 
@@ -661,7 +628,7 @@ exports.getPenilaianLaporanAkhirList = async (req, res) => {
                 mahasiswa_id: safeMahasiswaIds.length > 0 ? safeMahasiswaIds : [0]
             },
             include: [
-                { model: Mahasiswa, attributes: ['nama', 'npm'] },
+                { model: Mahasiswa, attributes: ['nama', 'nim'] },
                 { model: Penilaian, attributes: ['nilai_akhir', 'komentar', 'tanggal'], required: false } // LEFT JOIN
             ],
             order: [['tanggal_upload', 'DESC']]
@@ -684,7 +651,7 @@ exports.getPenilaianLaporanAkhirList = async (req, res) => {
                 status: lap.status,
                 tanggal_upload: lap.tanggal_upload,
                 mahasiswaNama: lap.Mahasiswa.nama,
-                mahasiswaNim: lap.Mahasiswa.npm,
+                mahasiswaNim: lap.Mahasiswa.nim,
                 nilai: lap.Penilaian ? lap.Penilaian.nilai_akhir : null,
                 komentarDosen: lap.Penilaian ? lap.Penilaian.komentar : null,
                 tanggalPenilaian: lap.Penilaian ? lap.Penilaian.tanggal : null,
@@ -723,7 +690,7 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
             include: [
                 {
                     model: Mahasiswa,
-                    attributes: ['nama', 'npm', 'dosen_pembimbing_id']
+                    attributes: ['nama', 'nim', 'dosen_pembimbing_id']
                 },
                 {
                     model: Penilaian,
@@ -744,7 +711,7 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
         const mahasiswaData = {
             id: laporanAkhir.Mahasiswa.id,
             nama: laporanAkhir.Mahasiswa.nama,
-            nim: laporanAkhir.Mahasiswa.npm
+            nim: laporanAkhir.Mahasiswa.nim
         };
 
         const pengajuan = await PengajuanMagang.findOne({
@@ -752,7 +719,7 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
             include: [
                 {
                     model: Lowongan,
-                    attributes: ['judul'],
+                    attributes: ['perusahaan'],
                     include: { model: Perusahaan, attributes: ['nama'] }
                 }
             ],
@@ -760,7 +727,7 @@ exports.getPenilaianLaporanFormModal = async (req, res) => {
         });
         const companyInfo = pengajuan && pengajuan.Lowongan && pengajuan.Lowongan.Perusahaan ? {
             namaPerusahaan: pengajuan.Lowongan.Perusahaan.nama,
-            posisi: pengajuan.Lowongan.judul
+            posisi: pengajuan.Lowongan.perusahaan
         } : null;
 
         // Data penilaian komponen (masih di-parsing dari komentar karena tidak ada kolom terpisah)

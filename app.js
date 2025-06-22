@@ -1,9 +1,9 @@
 const express = require("express");
 const path = require("path");
 const sequelize = require('./src/config/sequelize'); // Impor instance Sequelize
-
 const app = express(); // Inisialisasi aplikasi Express
-
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 // Konfigurasi View Engine (EJS)
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
@@ -15,12 +15,11 @@ app.use(express.json());
 // Serving file statis (CSS, JS, gambar, dokumen dari folder public)
 app.use(express.static(path.join(__dirname, "public")));
 
--
 app.use((req, res, next) => {
-    // Ini mensimulasikan user yang sudah login sebagai dosen dengan ID 1.
+    // Ini mensimulasikan user yang sudah login sebagai mahasiswa dengan ID 15 (Budi Santoso).
     // Di aplikasi nyata, Anda akan memiliki sistem login/sesi yang sebenarnya.
-    // Penting: Pastikan user_id 1 di tabel `users` adalah user dengan role 'dosen' di database Anda.
-    req.user = { id: 8, role: 'dosen' }; // Dosen dummy dengan user_id 1
+    // Penting: Pastikan user_id 15 di tabel `users` adalah user dengan role 'mahasiswa' di database Anda.
+    req.user = { id: 15, role: 'mahasiswa' }; // Mahasiswa dummy dengan user_id 15 (Budi Santoso)
     next();
 });
 
@@ -36,13 +35,6 @@ app.use('/admin', adminRoutes);
 const dospemRoutes = require('./src/routes/dospemRoutes');
 app.use('/dospem', dospemRoutes);
 
-<<<<<<< HEAD
-
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-=======
 // --- 4. Route Halaman Utama dan Logout ---
 app.get('/', (req, res) => {
     
@@ -56,7 +48,6 @@ app.get('/', (req, res) => {
 app.get('/logout', (req, res) => {
     req.user = null; // Menghapus user dummy
     res.redirect('/');
->>>>>>> cc0cdb57045addbe316ab0aae806fbc6f0694f6e
 });
 
 const PORT = process.env.PORT || 3000;

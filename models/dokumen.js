@@ -1,35 +1,29 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../src/config/sequelize');
-
-const Dokumen = sequelize.define('Dokumen', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    pengajuan_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    nama_file: {
-        type: DataTypes.STRING(150),
-        allowNull: false
-    },
-    jenis: {
-        type: DataTypes.ENUM('CV', 'transkrip', 'surat', 'proposal', 'lainnya'),
-        allowNull: false
-    },
-    file_path: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    tanggal_upload: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Dokumen extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-}, {
+  }
+  Dokumen.init({
+    pengajuan_id: DataTypes.INTEGER,
+    nama_file: DataTypes.STRING,
+    jenis: DataTypes.STRING,
+    file_path: DataTypes.TEXT,
+    tanggal_upload: DataTypes.DATE
+  }, {
+    sequelize,
+    modelName: 'Dokumen',
     tableName: 'dokumen',
     timestamps: false
-});
-
-module.exports = Dokumen;
+  });
+  return Dokumen;
+};

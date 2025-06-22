@@ -21,506 +21,776 @@
       <p class="text-sm">Sistem Informasi</p>
     </div>
 
-<<<<<<< HEAD
     <nav class="mt-6 flex-grow overflow-y-auto pr-2">
       <ul class="space-y-1 pb-4">
         <li>
-          <a href="Dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200">
+          <a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200">
             <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
           </a>
         </li>
         <li>
-          <a href="Manajemen Pengguna" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200">
+          <a href="/admin/manajemen-pengguna" class="flex items-center gap-3 px-4 py-3 rounded-md bg-sidebar-active font-semibold shadow-inner transition-colors duration-200">
             <i data-lucide="users" class="w-5 h-5"></i> Manajemen Pengguna
           </a>
-        </li>
-        <!-- Submenu Proses Magang -->
-        <li>
-          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="proses-magang">
-            <span class="flex items-center gap-3"><i data-lucide="case-sensitive" class="w-5 h-5"></i> Proses Magang</span>
-            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-          </button>
-          <div id="proses-magang" class="hidden pl-8 pt-1 space-y-1">
-            <a href="Pengajuan Magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengajuan Magang</a>
-            <a href="Progress Magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Progress Magang</a>
-            <a href="Dosen Pembimbing" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Dosen Pembimbing</a>
-          </div>
-        </li>
-        <!-- Submenu Kemitraan -->
-        <li>
-          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="kemitraan">
-            <span class="flex items-center gap-3"><i data-lucide="handshake"></i> Kemitraan & Lowongan</span>
-            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-          </button>
-          <div id="kemitraan" class="hidden pl-8 pt-1 space-y-1">
-            <a href="Lowongan Magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Lowongan Magang</a>
-            <a href="Mitra Perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Mitra Perusahaan</a>
-            <a href="Feedback Perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Feedback Perusahaan</a>
-          </div>
-        </li>
-        <!-- Submenu Konten -->
-        <li>
-          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="konten">
-            <span class="flex items-center gap-3"><i data-lucide="message-square" class="w-5 h-5"></i> Konten & Komunikasi</span>
-            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-          </button>
-          <div id="konten" class="pl-8 pt-1 space-y-1">
-            <a href="Pengumuman_admin" id="link-pengumuman" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengumuman</a>
-            <a href="Template Dokumen" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Template Dokumen</a>
-          </div>
-        </li>
-        <li>
-          <a href="Laporan Statistik" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200">
-            <i data-lucide="pie-chart" class="w-5 h-5"></i> Laporan Statistik
-          </a>
-        </li>
-        <!-- Submenu Pengaturan -->
-        <li>
-          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="pengaturan">
-            <span class="flex items-center gap-3"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Sistem</span>
-            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-          </button>
-          <div id="pengaturan" class="hidden pl-8 pt-1 space-y-1">
-            <a href="Konfigurasi Notifikasi" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Konfigurasi Notifikasi</a>
-            <a href="Manajemen Backup" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Manajemen Backup</a>
-          </div>
         </li>
       </ul>
     </nav>
 
-            <!-- Navigation Links Admin -->
-            <nav class="mt-6 flex-grow overflow-y-auto pr-2">
-                <ul class="space-y-1 pb-4">
-                    <li><a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
-                    <li><a href="/admin/manajemen/pengguna" class="flex items-center gap-3 px-4 py-3 rounded-md bg-sidebar-active font-semibold shadow-inner transition-colors duration-200"><i data-lucide="users" class="w-5 h-5"></i> Manajemen Pengguna</a></li>
-                </ul>
-            </nav>
-
     <div class="mt-auto pt-4 border-t border-white/20">
-      <a href="Logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+      <a href="/logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
         <i data-lucide="log-out" class="w-5 h-5"></i> Logout
       </a>
     </div>
   </aside>
 
-        <!-- =============== Main Content =============== -->
-        <main class="ml-72 flex-1 p-8 overflow-y-auto">
-            <header class="flex justify-between items-center mb-8">
-                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">Manajemen Pengguna</h1>
-                    <p class="text-gray-600">Kelola data pengguna, peran, dan hak akses.</p>
+  <!-- =============== Main Content =============== -->
+  <main class="ml-72 flex-1 p-8 overflow-y-auto">
+    <header class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">Manajemen Pengguna</h1>
+        <p class="text-gray-600">Kelola data pengguna, peran, dan hak akses.</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="text-right">
+          <p class="font-semibold text-gray-800">Admin Jurusan</p>
+          <p class="text-sm text-gray-500">Online</p>
+        </div>
+        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
+          <i data-lucide="shield-check" class="text-gray-600"></i>
+        </div>
+      </div>
+    </header>
+    
+    <div class="bg-white p-4 rounded-lg shadow-md mb-8">
+      <form action="/admin/manajemen-pengguna" method="GET" class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-4 flex-wrap">
+          <div class="relative">
+            <select name="role" class="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500" onchange="this.form.submit()">
+              <option value="Semua Peran" <%= currentRole === 'Semua Peran' ? 'selected' : '' %>>Semua Peran</option>
+              <option value="Mahasiswa" <%= currentRole === 'Mahasiswa' ? 'selected' : '' %>>Mahasiswa</option>
+              <option value="Dosen Pembimbing" <%= currentRole === 'Dosen Pembimbing' ? 'selected' : '' %>>Dosen Pembimbing</option>
+              <option value="Admin Jurusan" <%= currentRole === 'Admin Jurusan' ? 'selected' : '' %>>Admin Jurusan</option>
+            </select>
+            <i data-lucide="users-2" class="w-4 h-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"></i>
+          </div>
+          <div class="flex">
+            <div class="relative">
+              <input type="text" name="search" placeholder="Cari nama atau email..." value="<%= currentSearch %>" class="pl-10 pr-4 py-2 border border-r-0 border-gray-300 rounded-l-md text-sm w-64 focus:ring-blue-500 focus:border-blue-500 focus:z-10">
+              <i data-lucide="search" class="w-4 h-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-r-md hover:bg-blue-700 border border-blue-600 -ml-px">Cari</button>
+          </div>
+        </div>
+        <button id="add-user-btn" type="button" class="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors shadow-sm">
+          <i data-lucide="plus" class="w-5 h-5"></i>
+          Tambah Pengguna Baru
+        </button>
+      </form>
+    </div>
+
+    <!-- Tabel Daftar Pengguna -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <table class="w-full text-sm text-left text-gray-600">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+          <tr>
+            <th scope="col" class="py-3 px-6">Nama Lengkap</th>
+            <th scope="col" class="py-3 px-6">Email</th>
+            <th scope="col" class="py-3 px-6">Peran (Role)</th>
+            <th scope="col" class="py-3 px-6">Status</th>
+            <th scope="col" class="py-3 px-6 text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="user-table-body">
+          <% users.forEach(user => { %>
+          <tr class="border-b hover:bg-gray-50" data-user-id="<%= user.id %>">
+            <td class="py-4 px-6 font-semibold"><%= user.username %></td>
+            <td class="py-4 px-6"><%= user.email %></td>
+            <td class="py-4 px-6">
+              <span class="px-2 py-1 text-xs rounded-full 
+              <%= user.role === 'Admin Jurusan' ? 'bg-purple-100 text-purple-800' : 
+              user.role === 'Dosen Pembimbing' ? 'bg-teal-100 text-teal-800' : 
+              'bg-blue-100 text-blue-800' %>">
+                <%= user.role %>
+              </span>
+            </td>
+            <td class="py-4 px-6">
+              <span class="px-2 py-1 text-xs rounded-full 
+                <%= user.status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                <%= user.status %>
+              </span>
+            </td>
+            <td class="py-4 px-6 text-center">
+              <div class="flex items-center justify-center gap-2">
+                <button class="p-2 text-yellow-600 hover:bg-yellow-100 rounded-md action-btn" data-action="edit" data-userid="<%= user.id %>" title="Edit Pengguna">
+                  <i data-lucide="file-pen-line" class="w-4 h-4 pointer-events-none"></i>
+                </button>
+                <button class="p-2 text-indigo-600 hover:bg-indigo-100 rounded-md action-btn" data-action="reset-password" data-userid="<%= user.id %>" title="Reset Password">
+                  <i data-lucide="key-round" class="w-4 h-4 pointer-events-none"></i>
+                </button>
+                <% if (user.status === 'Aktif') { %>
+                  <button class="p-2 text-red-600 hover:bg-red-100 rounded-md action-btn" data-action="deactivate" data-userid="<%= user.id %>" title="Nonaktifkan Akun">
+                    <i data-lucide="user-x" class="w-4 h-4 pointer-events-none"></i>
+                  </button>
+                <% } else { %>
+                  <button class="p-2 text-green-600 hover:bg-green-100 rounded-md action-btn" data-action="activate" data-userid="<%= user.id %>" title="Aktifkan Akun">
+                    <i data-lucide="user-check" class="w-4 h-4 pointer-events-none"></i>
+                  </button>
+                <% } %>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- ================== MODAL TAMBAH PENGGUNA ================== -->
+<div id="add-user-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md m-4">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h3 class="text-xl font-bold text-gray-800">Tambah Pengguna Baru</h3>
+            <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <form id="add-user-form" class="space-y-4">
+                <div>
+                    <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap *</label>
+                    <input type="text" id="nama_lengkap" name="nama_lengkap" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           placeholder="Masukkan nama lengkap">
+                    <p class="mt-1 text-xs text-gray-500">Nama akan digunakan sebagai username login</p>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="text-right">
-                        <p class="font-semibold text-gray-800">Admin Jurusan</p>
-                        <p class="text-sm text-gray-500">Online</p>
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
+                    <input type="email" id="email" name="email" required 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           placeholder="contoh@gmail.com">
+                    <p class="mt-1 text-xs text-gray-500">Email harus unik dan valid</p>
+                </div>
+                
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700">Peran (Role) *</label>
+                    <select id="role" name="role" required 
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="">Pilih Peran...</option>
+                        <option value="Mahasiswa">Mahasiswa</option>
+                        <option value="Dosen Pembimbing">Dosen Pembimbing</option>
+                        <option value="Admin Jurusan">Admin Jurusan</option>
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500">Peran menentukan hak akses pengguna</p>
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password *</label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" required 
+                               class="mt-1 block w-full px-3 py-2 pr-12 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               placeholder="Minimal 5 karakter">
+                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600">
+                            <i data-lucide="eye" class="w-5 h-5"></i>
+                        </button>
                     </div>
-                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
-                        <i data-lucide="shield-check" class="text-gray-600"></i>
+                    <!-- Password Strength Indicator -->
+                    <div class="mt-2">
+                        <div class="flex space-x-1">
+                            <div id="strength-1" class="h-1 flex-1 bg-gray-200 rounded"></div>
+                            <div id="strength-2" class="h-1 flex-1 bg-gray-200 rounded"></div>
+                            <div id="strength-3" class="h-1 flex-1 bg-gray-200 rounded"></div>
+                            <div id="strength-4" class="h-1 flex-1 bg-gray-200 rounded"></div>
+                        </div>
+                        <p id="strength-text" class="mt-1 text-xs text-gray-500">Password strength indicator</p>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Minimal 5 karakter, kombinasi huruf dan angka</p>
+                </div>
+                
+                <div>
+                    <label for="confirm_password" class="block text-sm font-medium text-gray-700">Ulangi Password *</label>
+                    <div class="relative">
+                        <input type="password" id="confirm_password" name="confirm_password" required 
+                               class="mt-1 block w-full px-3 py-2 pr-12 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               placeholder="Ulangi password yang sama">
+                        <button type="button" id="toggle-confirm-password" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600">
+                            <i data-lucide="eye" class="w-5 h-5"></i>
+                        </button>
                     </div>
                 </div>
-            </header>
-            
-            <div class="bg-white p-4 rounded-lg shadow-md mb-8">
-                <div class="flex flex-wrap items-center justify-between gap-4">
-                    <div class="flex items-center gap-4 flex-wrap">
-                        <div class="relative">
-                            <select class="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500">
-                                <option>Semua Peran</option>
-                                <option>Mahasiswa</option>
-                                <option>Dosen Pembimbing</option>
-                                <option>Admin Jurusan</option>
-                            </select>
-                            <i data-lucide="users-2" class="w-4 h-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"></i>
-                        </div>
-                        <div class="flex">
-                            <div class="relative">
-                                <input type="text" placeholder="Cari nama atau NIM/NIDN..." class="pl-10 pr-4 py-2 border border-r-0 border-gray-300 rounded-l-md text-sm w-64 focus:ring-blue-500 focus:border-blue-500 focus:z-10">
-                                <i data-lucide="search" class="w-4 h-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"></i>
-                            </div>
-                            <button class="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-r-md hover:bg-blue-700 border border-blue-600 -ml-px">Cari</button>
-                        </div>
-                    </div>
-                    <button id="add-user-btn" class="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors shadow-sm">
-                        <i data-lucide="plus" class="w-5 h-5"></i>
-                        Tambah Pengguna Baru
+                
+                <!-- Error Messages -->
+                <div id="password-errors" class="space-y-1">
+                    <p id="add-password-format-error" class="text-xs text-red-600 hidden">❌ Password harus minimal 5 karakter dan mengandung huruf & angka</p>
+                    <p id="add-password-match-error" class="text-xs text-red-600 hidden">❌ Password tidak cocok</p>
+                    <p id="add-password-strength-error" class="text-xs text-red-600 hidden">❌ Password terlalu lemah</p>
+                </div>
+                
+                <!-- Success Message -->
+                <div id="password-success" class="hidden">
+                    <p class="text-xs text-green-600">✅ Password valid dan cocok</p>
+                </div>
+                
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" id="cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold">Batal</button>
+                    <button type="submit" id="submit-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span id="submit-text">Tambah Pengguna</span>
+                        <span id="submit-loading" class="hidden">Menambahkan...</span>
                     </button>
                 </div>
-            </div>
-
-            <!-- Tabel Daftar Pengguna -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <table class="w-full text-sm text-left text-gray-600">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                        <tr>
-                            <th scope="col" class="py-3 px-6">Nama Lengkap</th>
-                            <th scope="col" class="py-3 px-6">Email</th>
-                            <th scope="col" class="py-3 px-6">Peran (Role)</th>
-                            <th scope="col" class="py-3 px-6">Status</th>
-                            <th scope="col" class="py-3 px-6 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-table-body">
-                        <!-- Data Pengguna akan dimasukkan di sini oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
-    </div>
-    
-    <!-- ================== MODAL TAMBAH PENGGUNA ================== -->
-    <div id="add-user-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md m-4">
-            <div class="flex justify-between items-center p-4 border-b">
-                <h3 class="text-xl font-bold text-gray-800">Tambah Pengguna Baru</h3>
-                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-            <div class="p-6">
-                <form id="add-user-form" class="space-y-4">
-                    <div>
-                        <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                        <input type="text" id="nama_lengkap" name="nama_lengkap" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="role" class="block text-sm font-medium text-gray-700">Peran (Role)</label>
-                        <select id="role" name="role" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            <option value="">Pilih Peran...</option>
-                            <option value="Mahasiswa">Mahasiswa</option>
-                            <option value="Dosen Pembimbing">Dosen Pembimbing</option>
-                            <option value="Admin Jurusan">Admin Jurusan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        <p class="mt-1 text-xs text-gray-500">Minimal 5 karakter, kombinasi huruf dan angka.</p>
-                    </div>
-                    <div>
-                        <label for="confirm_password" class="block text-sm font-medium text-gray-700">Ulangi Password</label>
-                        <input type="password" id="confirm_password" name="confirm_password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                    </div>
-                    <p id="add-password-format-error" class="text-xs text-red-600 hidden">Password harus minimal 5 karakter dan mengandung huruf & angka.</p>
-                    <p id="add-password-match-error" class="text-xs text-red-600 hidden">Password tidak cocok.</p>
-                    <div class="pt-4 flex justify-end gap-3">
-                        <button type="button" id="cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold">Batal</button>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold">Submit</button>
-                    </div>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
-    
-    <!-- ================== MODAL RESET PASSWORD ================== -->
-    <div id="reset-password-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden justify-center items-center">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md m-4">
-            <div class="flex justify-between items-center p-4 border-b">
-                <h3 class="text-xl font-bold text-gray-800">Reset Password</h3>
-                <button id="close-reset-modal-btn" class="text-gray-400 hover:text-gray-600">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-            <div class="p-6">
-                <form id="reset-password-form" class="space-y-4">
-                    <p>Anda akan mereset password untuk pengguna: <strong id="reset-user-name"></strong></p>
-                    <input type="hidden" id="reset-user-id" name="userId">
-                    <div>
-                        <label for="new_password" class="block text-sm font-medium text-gray-700">Password Baru</label>
-                        <input type="password" id="new_password" name="new_password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        <p class="mt-1 text-xs text-gray-500">Minimal 5 karakter, kombinasi huruf dan angka.</p>
-                    </div>
-                    <div>
-                        <label for="confirm_new_password" class="block text-sm font-medium text-gray-700">Ulangi Password Baru</label>
-                        <input type="password" id="confirm_new_password" name="confirm_new_password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                    </div>
-                    <p id="reset-password-format-error" class="text-xs text-red-600 hidden">Password harus minimal 5 karakter dan mengandung huruf & angka.</p>
-                    <p id="reset-password-match-error" class="text-xs text-red-600 hidden">Password tidak cocok.</p>
-                    <div class="pt-4 flex justify-end gap-3">
-                        <button type="button" id="cancel-reset-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold">Batal</button>
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-semibold">Reset Password</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+</div>
+
+<!-- ================== MODAL RESET PASSWORD ================== -->
+<div id="reset-password-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md m-4">
+    <div class="flex justify-between items-center p-4 border-b">
+      <h3 class="text-xl font-bold text-gray-800">Reset Password</h3>
+      <button id="close-reset-modal-btn" class="text-gray-400 hover:text-gray-600">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
     </div>
-    
-    <!-- ================== MODAL KONFIRMASI (Umum) ================== -->
-    <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm m-4 text-center p-6">
-             <div id="confirmation-icon"></div>
-             <h3 id="confirmation-title" class="text-xl font-bold text-gray-800 mt-4"></h3>
-             <p id="confirmation-message" class="text-gray-600 my-2"></p>
-             <div class="mt-6 flex justify-center gap-3">
-                <button id="confirm-cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold w-24">Batal</button>
-                <button id="confirm-submit-btn" class="px-4 py-2 text-white rounded-md font-semibold w-24"></button>
-             </div>
+    <div class="p-6">
+      <form id="reset-password-form" class="space-y-4">
+        <p>Anda akan mereset password untuk pengguna: <strong id="reset-user-name"></strong></p>
+        <input type="hidden" id="reset-user-id" name="userId">
+        <div>
+          <label for="new_password" class="block text-sm font-medium text-gray-700">Password Baru</label>
+          <input type="password" id="new_password" name="new_password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          <p class="mt-1 text-xs text-gray-500">Minimal 5 karakter, kombinasi huruf dan angka.</p>
         </div>
+        <div>
+          <label for="confirm_new_password" class="block text-sm font-medium text-gray-700">Ulangi Password Baru</label>
+          <input type="password" id="confirm_new_password" name="confirm_new_password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <p id="reset-password-format-error" class="text-xs text-red-600 hidden">Password harus minimal 5 karakter dan mengandung huruf & angka.</p>
+        <p id="reset-password-match-error" class="text-xs text-red-600 hidden">Password tidak cocok.</p>
+        <div class="pt-4 flex justify-end gap-3">
+          <button type="button" id="cancel-reset-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-semibold">Reset Password</button>
+        </div>
+      </form>
     </div>
+  </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.271.0/dist/umd/lucide.min.js"></script>
-    <script>
-      // === DATA & STATE MANAGEMENT ===
-      let users = [
-          { id: 1, nama: 'Siti Aliani', email: 'siti.aliani@email.com', peran: 'Mahasiswa', status: 'Aktif' },
-          { id: 2, nama: 'Dr. Anjali, S.Kom.', email: 'dr.anjali@email.com', peran: 'Dosen Pembimbing', status: 'Aktif' },
-          { id: 3, nama: 'Budi Santoso', email: 'budi.s@email.com', peran: 'Mahasiswa', status: 'Non-Aktif' },
-      ];
-      let currentAction = { type: null, userId: null };
-      
-      // === RENDER FUNCTION ===
-      function renderUserTable() {
-          const tableBody = document.getElementById('user-table-body');
-          tableBody.innerHTML = ''; // Kosongkan tabel sebelum render ulang
-          
-          users.forEach(user => {
-              const row = document.createElement('tr');
-              row.className = 'bg-white border-b hover:bg-gray-50';
-              
-              const statusClass = user.status === 'Aktif' 
-                ? 'text-green-800 bg-green-100' 
-                : 'text-red-800 bg-red-100';
-              
-              const textClass = user.status === 'Aktif' ? '' : 'text-gray-400';
-              
-              const roleClassMap = {
-                  'Mahasiswa': 'text-blue-800 bg-blue-100',
-                  'Dosen Pembimbing': 'text-teal-800 bg-teal-100',
-                  'Admin Jurusan': 'text-purple-800 bg-purple-100'
-              };
-              const roleClass = roleClassMap[user.peran] || 'text-gray-800 bg-gray-100';
+<!-- ================== MODAL KONFIRMASI (Umum) ================== -->
+<div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-sm m-4 text-center p-6">
+    <div id="confirmation-icon"></div>
+    <h3 id="confirmation-title" class="text-xl font-bold text-gray-800 mt-4"></h3>
+    <p id="confirmation-message" class="text-gray-600 my-2"></p>
+    <div class="mt-6 flex justify-center gap-3">
+      <button id="confirm-cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold w-24">Batal</button>
+      <button id="confirm-submit-btn" class="px-4 py-2 text-white rounded-md font-semibold w-24"></button>
+    </div>
+  </div>
+</div>
 
-              const statusButton = user.status === 'Aktif'
-                  ? `<button class="p-2 text-red-600 hover:bg-red-100 rounded-md action-btn" data-action="deactivate" data-userid="${user.id}" title="Nonaktifkan Akun"><i data-lucide="user-x" class="w-4 h-4 pointer-events-none"></i></button>`
-                  : `<button class="p-2 text-green-600 hover:bg-green-100 rounded-md action-btn" data-action="activate" data-userid="${user.id}" title="Aktifkan Akun"><i data-lucide="user-check" class="w-4 h-4 pointer-events-none"></i></button>`;
-
-              row.innerHTML = `
-                  <td class="py-4 px-6 font-semibold ${textClass}">${user.nama}</td>
-                  <td class="py-4 px-6 ${textClass}">${user.email}</td>
-                  <td class="py-4 px-6"><span class="px-2 py-1 text-xs font-bold ${roleClass} rounded-full">${user.peran}</span></td>
-                  <td class="py-4 px-6"><span class="px-2 py-1 text-xs font-bold ${statusClass} rounded-full">${user.status}</span></td>
-                  <td class="py-4 px-6 text-center">
-                      <div class="flex items-center justify-center gap-2">
-                          <button class="p-2 text-yellow-600 hover:bg-yellow-100 rounded-md action-btn" data-action="edit" data-userid="${user.id}" title="Edit Pengguna"><i data-lucide="file-pen-line" class="w-4 h-4 pointer-events-none"></i></button>
-                          <button class="p-2 text-indigo-600 hover:bg-indigo-100 rounded-md action-btn" data-action="reset-password" data-userid="${user.id}" title="Reset Password"><i data-lucide="key-round" class="w-4 h-4 pointer-events-none"></i></button>
-                          ${statusButton}
-                      </div>
-                  </td>
-              `;
-              tableBody.appendChild(row);
-          });
-          lucide.createIcons(); // Re-render ikon setelah memasukkan HTML baru
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.271.0/dist/umd/lucide.min.js"></script>
+<script>
+  // === DATA & STATE MANAGEMENT ===
+  let currentAction = { type: null, userId: null };
+  
+  // === API FUNCTIONS ===
+  async function fetchUsers() {
+      try {
+          const response = await fetch('/admin/manajemen-pengguna');
+          if (response.ok) {
+              const data = await response.text();
+              // Parse HTML response untuk mendapatkan data users
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(data, 'text/html');
+              const userRows = doc.querySelectorAll('#user-table-body tr');
+              
+              const users = Array.from(userRows).map(row => ({
+                  id: parseInt(row.dataset.userId),
+                  username: row.cells[0].textContent.trim(),
+                  email: row.cells[1].textContent.trim(),
+                  role: row.cells[2].querySelector('span').textContent.trim(),
+                  status: row.cells[3].querySelector('span').textContent.trim()
+              }));
+              
+              return users;
+          }
+          throw new Error('Failed to fetch users');
+      } catch (error) {
+          console.error('Error fetching users:', error);
+          return [];
       }
+  }
 
-      document.addEventListener('DOMContentLoaded', function () {
-        // === INITIAL RENDER ===
-        renderUserTable();
-        if (typeof lucide !== 'undefined') {
-          lucide.createIcons();
-        } else {
-          console.error('Lucide tidak tersedia.');
-        }
+  async function addUser(userData) {
+      try {
+          const response = await fetch('/admin/manajemen-pengguna', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(userData)
+          });
+          
+          const result = await response.json();
+          if (response.ok) {
+              showNotification('success', result.message);
+              location.reload(); // Reload halaman untuk menampilkan data terbaru
+          } else {
+              showNotification('error', result.error);
+          }
+      } catch (error) {
+          console.error('Error adding user:', error);
+          showNotification('error', 'Terjadi kesalahan saat menambahkan pengguna');
+      }
+  }
 
-        // === DOM ELEMENTS ===
-        const addUserBtn = document.getElementById('add-user-btn');
-        const addUserModal = document.getElementById('add-user-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-        const cancelBtn = document.getElementById('cancel-btn');
-        const addUserForm = document.getElementById('add-user-form');
-        const addPasswordFormatError = document.getElementById('add-password-format-error');
-        const addPasswordMatchError = document.getElementById('add-password-match-error');
-        
-        const resetPasswordModal = document.getElementById('reset-password-modal');
-        const closeResetModalBtn = document.getElementById('close-reset-modal-btn');
-        const cancelResetBtn = document.getElementById('cancel-reset-btn');
-        const resetPasswordForm = document.getElementById('reset-password-form');
-        const resetPasswordFormatError = document.getElementById('reset-password-format-error');
-        const resetPasswordMatchError = document.getElementById('reset-password-match-error');
-        
-        const confirmationModal = document.getElementById('confirmation-modal');
-        const confirmSubmitBtn = document.getElementById('confirm-submit-btn');
-        const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
-        const confirmationIcon = document.getElementById('confirmation-icon');
-        const confirmationTitle = document.getElementById('confirmation-title');
-        const confirmationMessage = document.getElementById('confirmation-message');
+  async function updateUserStatus(userId, status) {
+      try {
+          const response = await fetch(`/admin/manajemen-pengguna/${userId}/status`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ status })
+          });
+          
+          const result = await response.json();
+          if (response.ok) {
+              showNotification('success', result.message);
+              location.reload(); // Reload halaman untuk menampilkan data terbaru
+          } else {
+              showNotification('error', result.error);
+          }
+      } catch (error) {
+          console.error('Error updating user status:', error);
+          showNotification('error', 'Terjadi kesalahan saat mengubah status pengguna');
+      }
+  }
 
-        // === MODAL FUNCTIONS ===
-        const openModal = (modal) => modal.classList.remove('hidden');
-        const closeModal = (modal) => modal.classList.add('hidden');
-        
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{5,}$/;
-        
-        // --- ADD USER MODAL LOGIC ---
-        addUserBtn.addEventListener('click', () => openModal(addUserModal));
-        closeModalBtn.addEventListener('click', () => { closeModal(addUserModal); addUserForm.reset(); });
-        cancelBtn.addEventListener('click', () => { closeModal(addUserModal); addUserForm.reset(); });
-        
-        addUserForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-            let isValid = true;
+  async function resetUserPassword(userId, newPassword) {
+      try {
+          const response = await fetch(`/admin/manajemen-pengguna/${userId}/reset-password`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ new_password: newPassword })
+          });
+          
+          const result = await response.json();
+          if (response.ok) {
+              showNotification('success', result.message);
+          } else {
+              showNotification('error', result.error);
+          }
+      } catch (error) {
+          console.error('Error resetting password:', error);
+          showNotification('error', 'Terjadi kesalahan saat reset password');
+      }
+  }
 
-            if (!passwordRegex.test(password)) {
-                addPasswordFormatError.classList.remove('hidden');
-                addPasswordMatchError.classList.add('hidden');
-                isValid = false;
+  // === UTILITY FUNCTIONS ===
+  function showNotification(type, message) {
+      // Buat elemen notifikasi
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+          type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+      }`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      // Hapus notifikasi setelah 3 detik
+      setTimeout(() => {
+          notification.remove();
+      }, 3000);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // === INITIAL SETUP ===
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    } else {
+      console.error('Lucide tidak tersedia.');
+    }
+
+    // === DOM ELEMENTS ===
+    const addUserBtn = document.getElementById('add-user-btn');
+    const addUserModal = document.getElementById('add-user-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const addUserForm = document.getElementById('add-user-form');
+    const addPasswordFormatError = document.getElementById('add-password-format-error');
+    const addPasswordMatchError = document.getElementById('add-password-match-error');
+    
+    const resetPasswordModal = document.getElementById('reset-password-modal');
+    const closeResetModalBtn = document.getElementById('close-reset-modal-btn');
+    const cancelResetBtn = document.getElementById('cancel-reset-btn');
+    const resetPasswordForm = document.getElementById('reset-password-form');
+    const resetPasswordFormatError = document.getElementById('reset-password-format-error');
+    const resetPasswordMatchError = document.getElementById('reset-password-match-error');
+    
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const confirmSubmitBtn = document.getElementById('confirm-submit-btn');
+    const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+    const confirmationIcon = document.getElementById('confirmation-icon');
+    const confirmationTitle = document.getElementById('confirmation-title');
+    const confirmationMessage = document.getElementById('confirmation-message');
+
+    // === MODAL FUNCTIONS ===
+    const openModal = (modal) => {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex', 'justify-center', 'items-center');
+    };
+    const closeModal = (modal) => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex', 'justify-center', 'items-center');
+    };
+    
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{5,}$/;
+    
+    // === PASSWORD STRENGTH CHECKER ===
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        const feedback = [];
+        
+        if (password.length >= 5) strength++;
+        if (password.length >= 8) strength++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        
+        // Update strength indicator
+        const strengthBars = ['strength-1', 'strength-2', 'strength-3', 'strength-4'];
+        const strengthText = document.getElementById('strength-text');
+        
+        strengthBars.forEach((barId, index) => {
+            const bar = document.getElementById(barId);
+            if (index < strength) {
+                if (strength <= 2) bar.className = 'h-1 flex-1 bg-red-500 rounded';
+                else if (strength <= 3) bar.className = 'h-1 flex-1 bg-yellow-500 rounded';
+                else bar.className = 'h-1 flex-1 bg-green-500 rounded';
             } else {
-                addPasswordFormatError.classList.add('hidden');
+                bar.className = 'h-1 flex-1 bg-gray-200 rounded';
             }
-
-            if (password !== confirmPassword) {
-                addPasswordMatchError.classList.remove('hidden');
-                if (isValid) addPasswordFormatError.classList.add('hidden');
-                isValid = false;
-            } else if (isValid) {
-                 addPasswordMatchError.classList.add('hidden');
-            }
-            
-            if (!isValid) return;
-
-            currentAction = { type: 'add-user' };
-            showConfirmation({
-                title: 'Konfirmasi Data',
-                message: 'Apakah Anda yakin semua data yang dimasukkan sudah benar?',
-                icon: 'alert-triangle',
-                iconColor: 'text-yellow-500',
-                confirmText: 'Ya, Simpan',
-                confirmColor: 'bg-blue-600 hover:bg-blue-700'
-            });
         });
-
-        // --- RESET PASSWORD MODAL LOGIC ---
-        closeResetModalBtn.addEventListener('click', () => { closeModal(resetPasswordModal); resetPasswordForm.reset(); });
-        cancelResetBtn.addEventListener('click', () => { closeModal(resetPasswordModal); resetPasswordForm.reset(); });
         
-        resetPasswordForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const password = document.getElementById('new_password').value;
-            const confirmPassword = document.getElementById('confirm_new_password').value;
-            let isValid = true;
-            
-            if (!passwordRegex.test(password)) {
-                resetPasswordFormatError.classList.remove('hidden');
-                resetPasswordMatchError.classList.add('hidden');
-                isValid = false;
-            } else {
-                resetPasswordFormatError.classList.add('hidden');
-            }
-
-            if (password !== confirmPassword) {
-                resetPasswordMatchError.classList.remove('hidden');
-                if(isValid) resetPasswordFormatError.classList.add('hidden');
-                isValid = false;
-            } else if (isValid) {
-                 resetPasswordMatchError.classList.add('hidden');
-            }
-            
-            if (!isValid) return;
-
-            currentAction.type = 'confirm-reset-password';
-            showConfirmation({
-                title: 'Konfirmasi Reset Password',
-                message: `Anda akan mereset password untuk pengguna ini. Lanjutkan?`,
-                icon: 'key-round',
-                iconColor: 'text-indigo-500',
-                confirmText: 'Ya, Reset',
-                confirmColor: 'bg-indigo-600 hover:bg-indigo-700'
-            });
-        });
-
-        // --- CONFIRMATION MODAL LOGIC ---
-        function showConfirmation(config) {
-            confirmationTitle.textContent = config.title;
-            confirmationMessage.textContent = config.message;
-            confirmationIcon.innerHTML = `<i data-lucide="${config.icon}" class="w-16 h-16 mx-auto ${config.iconColor}"></i>`;
-            confirmSubmitBtn.textContent = config.confirmText;
-            confirmSubmitBtn.className = `px-4 py-2 text-white rounded-md font-semibold w-24 ${config.confirmColor}`;
+        if (strength <= 2) strengthText.textContent = 'Password lemah';
+        else if (strength <= 3) strengthText.textContent = 'Password sedang';
+        else strengthText.textContent = 'Password kuat';
+        
+        return strength;
+    }
+    
+    // === PASSWORD TOGGLE VISIBILITY ===
+    function setupPasswordToggles() {
+        const togglePassword = document.getElementById('toggle-password');
+        const toggleConfirmPassword = document.getElementById('toggle-confirm-password');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePassword.innerHTML = type === 'password' ? 
+                '<i data-lucide="eye" class="w-5 h-5"></i>' : 
+                '<i data-lucide="eye-off" class="w-5 h-5"></i>';
             lucide.createIcons();
-            openModal(confirmationModal);
-        }
-        confirmCancelBtn.addEventListener('click', () => closeModal(confirmationModal));
+        });
         
-        confirmSubmitBtn.addEventListener('click', () => {
-            const { type, userId } = currentAction;
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+            confirmPasswordInput.type = type;
+            toggleConfirmPassword.innerHTML = type === 'password' ? 
+                '<i data-lucide="eye" class="w-5 h-5"></i>' : 
+                '<i data-lucide="eye-off" class="w-5 h-5"></i>';
+            lucide.createIcons();
+        });
+    }
+    
+    // === REAL-TIME VALIDATION ===
+    function setupRealTimeValidation() {
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        const passwordErrors = document.getElementById('password-errors');
+        const passwordSuccess = document.getElementById('password-success');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        function validatePasswords() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            let isValid = true;
             
-            if (type === 'add-user') {
-                console.log('Menambahkan pengguna baru...');
-                // Logika untuk submit form tambah pengguna
-                closeModal(addUserModal);
-                addUserForm.reset();
-            } else if (type === 'confirm-reset-password') {
-                console.log(`Mereset password untuk user ID: ${userId}`);
-                // Logika untuk submit form reset password
-                closeModal(resetPasswordModal);
-                resetPasswordForm.reset();
-            } else if (type === 'activate' || type === 'deactivate') {
-                 const userIndex = users.findIndex(u => u.id === userId);
-                 if (userIndex > -1) {
-                     users[userIndex].status = type === 'activate' ? 'Aktif' : 'Non-Aktif';
-                     renderUserTable(); // Render ulang tabel untuk update status
-                 }
-                 console.log(`Mengubah status untuk user ID: ${userId} menjadi ${type}`);
+            // Hide all error messages
+            document.querySelectorAll('#password-errors p').forEach(p => p.classList.add('hidden'));
+            passwordSuccess.classList.add('hidden');
+            
+            // Check password format
+            if (password && !passwordRegex.test(password)) {
+                document.getElementById('add-password-format-error').classList.remove('hidden');
+                isValid = false;
             }
             
-            closeModal(confirmationModal);
-        });
-
-        // --- ACTION BUTTONS EVENT LISTENER (EVENT DELEGATION) ---
-        document.getElementById('user-table-body').addEventListener('click', (e) => {
-            const button = e.target.closest('.action-btn');
-            if (!button) return;
-            
-            const action = button.dataset.action;
-            const userId = parseInt(button.dataset.userid, 10);
-            const user = users.find(u => u.id === userId);
-            if (!user) return;
-            
-            currentAction = { type: action, userId: userId };
-
-            if (action === 'reset-password') {
-                document.getElementById('reset-user-name').textContent = user.nama;
-                document.getElementById('reset-user-id').value = userId;
-                openModal(resetPasswordModal);
-            } else if (action === 'deactivate') {
-                showConfirmation({
-                    title: 'Nonaktifkan Pengguna?',
-                    message: `Anda yakin ingin menonaktifkan akun untuk ${user.nama}?`,
-                    icon: 'user-x',
-                    iconColor: 'text-red-500',
-                    confirmText: 'Ya',
-                    confirmColor: 'bg-red-600 hover:bg-red-700'
-                });
-            } else if (action === 'activate') {
-                showConfirmation({
-                    title: 'Aktifkan Pengguna?',
-                    message: `Anda yakin ingin mengaktifkan kembali akun untuk ${user.nama}?`,
-                    icon: 'user-check',
-                    iconColor: 'text-green-500',
-                    confirmText: 'Ya',
-                    confirmColor: 'bg-green-600 hover:bg-green-700'
-                });
-            } else if (action === 'edit') {
-                // Logika untuk edit akan mirip dengan 'add-user' tapi dengan data yang sudah terisi
-                console.log(`Mengedit pengguna dengan ID: ${userId}`);
+            // Check password strength
+            if (password && checkPasswordStrength(password) < 3) {
+                document.getElementById('add-password-strength-error').classList.remove('hidden');
+                isValid = false;
             }
+            
+            // Check password match
+            if (password && confirmPassword && password !== confirmPassword) {
+                document.getElementById('add-password-match-error').classList.remove('hidden');
+                isValid = false;
+            }
+            
+            // Show success if all valid
+            if (password && confirmPassword && passwordRegex.test(password) && 
+                checkPasswordStrength(password) >= 3 && password === confirmPassword) {
+                passwordSuccess.classList.remove('hidden');
+            }
+            
+            // Enable/disable submit button
+            submitBtn.disabled = !isValid;
+            
+            return isValid;
+        }
+        
+        passwordInput.addEventListener('input', validatePasswords);
+        confirmPasswordInput.addEventListener('input', validatePasswords);
+    }
+    
+    // --- ADD USER MODAL LOGIC ---
+    addUserBtn.addEventListener('click', () => {
+        openModal(addUserModal);
+        setupPasswordToggles();
+        setupRealTimeValidation();
+    });
+    
+    closeModalBtn.addEventListener('click', () => { 
+        closeModal(addUserModal); 
+        addUserForm.reset();
+        // Reset strength indicator
+        ['strength-1', 'strength-2', 'strength-3', 'strength-4'].forEach(id => {
+            document.getElementById(id).className = 'h-1 flex-1 bg-gray-200 rounded';
         });
+        document.getElementById('strength-text').textContent = 'Password strength indicator';
+    });
+    
+    cancelBtn.addEventListener('click', () => { 
+        closeModal(addUserModal); 
+        addUserForm.reset();
+        // Reset strength indicator
+        ['strength-1', 'strength-2', 'strength-3', 'strength-4'].forEach(id => {
+            document.getElementById(id).className = 'h-1 flex-1 bg-gray-200 rounded';
+        });
+        document.getElementById('strength-text').textContent = 'Password strength indicator';
+    });
+    
+    addUserForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = document.getElementById('submit-btn');
+        const submitText = document.getElementById('submit-text');
+        const submitLoading = document.getElementById('submit-loading');
+        
+        submitBtn.disabled = true;
+        submitText.classList.add('hidden');
+        submitLoading.classList.remove('hidden');
+        
+        const formData = new FormData(addUserForm);
+        const userData = {
+            username: formData.get('nama_lengkap'),
+            email: formData.get('email'),
+            role: formData.get('role'),
+            password: formData.get('password')
+        };
+        
+        const password = userData.password;
+        const confirmPassword = formData.get('confirm_password');
+        let isValid = true;
 
-        // --- SIDEBAR DROPDOWN ---
-        document.querySelectorAll('button[data-menu]').forEach(button => {
-            button.addEventListener('click', () => {
-                const menuId = button.dataset.menu;
-                const submenu = document.getElementById(menuId);
-                const icon = button.querySelector('[data-lucide="chevron-down"]');
-                submenu?.classList.toggle('hidden');
-                icon?.classList.toggle('rotate-180');
+        if (!passwordRegex.test(password)) {
+            document.getElementById('add-password-format-error').classList.remove('hidden');
+            document.getElementById('add-password-match-error').classList.add('hidden');
+            isValid = false;
+        } else {
+            document.getElementById('add-password-format-error').classList.add('hidden');
+        }
+
+        if (password !== confirmPassword) {
+            document.getElementById('add-password-match-error').classList.remove('hidden');
+            if (isValid) document.getElementById('add-password-format-error').classList.add('hidden');
+            isValid = false;
+        } else if (isValid) {
+             document.getElementById('add-password-match-error').classList.add('hidden');
+        }
+        
+        if (!isValid) {
+            // Reset loading state
+            submitBtn.disabled = false;
+            submitText.classList.remove('hidden');
+            submitLoading.classList.add('hidden');
+            return;
+        }
+
+        currentAction = { type: 'add-user' };
+        showConfirmation({
+            title: 'Konfirmasi Data',
+            message: 'Apakah Anda yakin semua data yang dimasukkan sudah benar?',
+            icon: 'alert-triangle',
+            iconColor: 'text-yellow-500',
+            confirmText: 'Ya, Simpan',
+            confirmColor: 'bg-blue-600 hover:bg-blue-700'
+        });
+    });
+
+    // --- RESET PASSWORD MODAL LOGIC ---
+    closeResetModalBtn.addEventListener('click', () => { closeModal(resetPasswordModal); resetPasswordForm.reset(); });
+    cancelResetBtn.addEventListener('click', () => { closeModal(resetPasswordModal); resetPasswordForm.reset(); });
+    
+    resetPasswordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(resetPasswordForm);
+        const password = formData.get('new_password');
+        const confirmPassword = formData.get('confirm_new_password');
+        let isValid = true;
+        
+        if (!passwordRegex.test(password)) {
+            resetPasswordFormatError.classList.remove('hidden');
+            resetPasswordMatchError.classList.add('hidden');
+            isValid = false;
+        } else {
+            resetPasswordFormatError.classList.add('hidden');
+        }
+
+        if (password !== confirmPassword) {
+            resetPasswordMatchError.classList.remove('hidden');
+            if(isValid) resetPasswordFormatError.classList.add('hidden');
+            isValid = false;
+        } else if (isValid) {
+             resetPasswordMatchError.classList.add('hidden');
+        }
+        
+        if (!isValid) return;
+
+        currentAction.type = 'confirm-reset-password';
+        showConfirmation({
+            title: 'Konfirmasi Reset Password',
+            message: `Anda akan mereset password untuk pengguna ini. Lanjutkan?`,
+            icon: 'key-round',
+            iconColor: 'text-indigo-500',
+            confirmText: 'Ya, Reset',
+            confirmColor: 'bg-indigo-600 hover:bg-indigo-700'
+        });
+    });
+
+    // --- CONFIRMATION MODAL LOGIC ---
+    function showConfirmation(config) {
+        confirmationTitle.textContent = config.title;
+        confirmationMessage.textContent = config.message;
+        confirmationIcon.innerHTML = `<i data-lucide="${config.icon}" class="w-16 h-16 mx-auto ${config.iconColor}"></i>`;
+        confirmSubmitBtn.textContent = config.confirmText;
+        confirmSubmitBtn.className = `px-4 py-2 text-white rounded-md font-semibold w-24 ${config.confirmColor}`;
+        lucide.createIcons();
+        openModal(confirmationModal);
+    }
+    confirmCancelBtn.addEventListener('click', () => closeModal(confirmationModal));
+    
+    confirmSubmitBtn.addEventListener('click', async () => {
+        const { type, userId } = currentAction;
+        
+        if (type === 'add-user') {
+            const formData = new FormData(addUserForm);
+            const userData = {
+                username: formData.get('nama_lengkap'),
+                email: formData.get('email'),
+                role: formData.get('role'),
+                password: formData.get('password')
+            };
+            
+            await addUser(userData);
+            closeModal(addUserModal);
+            addUserForm.reset();
+            
+            // Reset loading state
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            const submitLoading = document.getElementById('submit-loading');
+            
+            submitBtn.disabled = false;
+            submitText.classList.remove('hidden');
+            submitLoading.classList.add('hidden');
+            
+            // Reset strength indicator
+            ['strength-1', 'strength-2', 'strength-3', 'strength-4'].forEach(id => {
+                document.getElementById(id).className = 'h-1 flex-1 bg-gray-200 rounded';
             });
-        });
-      });
-    </script>
+            document.getElementById('strength-text').textContent = 'Password strength indicator';
+            
+            // Hide all error/success messages
+            document.querySelectorAll('#password-errors p').forEach(p => p.classList.add('hidden'));
+            document.getElementById('password-success').classList.add('hidden');
+            
+        } else if (type === 'confirm-reset-password') {
+            const formData = new FormData(resetPasswordForm);
+            const newPassword = formData.get('new_password');
+            
+            await resetUserPassword(userId, newPassword);
+            closeModal(resetPasswordModal);
+            resetPasswordForm.reset();
+        } else if (type === 'activate') {
+            await updateUserStatus(userId, 'Aktif');
+        } else if (type === 'deactivate') {
+            await updateUserStatus(userId, 'Non-Aktif');
+        }
+        
+        closeModal(confirmationModal);
+    });
+
+    // --- ACTION BUTTONS EVENT LISTENER (EVENT DELEGATION) ---
+    document.getElementById('user-table-body').addEventListener('click', (e) => {
+        const button = e.target.closest('.action-btn');
+        if (!button) return;
+        
+        const action = button.dataset.action;
+        const userId = parseInt(button.dataset.userid, 10);
+        const userRow = button.closest('tr');
+        const userName = userRow.cells[0].textContent.trim();
+        
+        currentAction = { type: action, userId: userId };
+
+        if (action === 'reset-password') {
+            document.getElementById('reset-user-name').textContent = userName;
+            document.getElementById('reset-user-id').value = userId;
+            openModal(resetPasswordModal);
+        } else if (action === 'deactivate') {
+            showConfirmation({
+                title: 'Nonaktifkan Pengguna?',
+                message: `Anda yakin ingin menonaktifkan akun untuk ${userName}?`,
+                icon: 'user-x',
+                iconColor: 'text-red-500',
+                confirmText: 'Ya',
+                confirmColor: 'bg-red-600 hover:bg-red-700'
+            });
+        } else if (action === 'activate') {
+            showConfirmation({
+                title: 'Aktifkan Pengguna?',
+                message: `Anda yakin ingin mengaktifkan kembali akun untuk ${userName}?`,
+                icon: 'user-check',
+                iconColor: 'text-green-500',
+                confirmText: 'Ya',
+                confirmColor: 'bg-green-600 hover:bg-green-700'
+            });
+        } else if (action === 'edit') {
+            // Logika untuk edit akan mirip dengan 'add-user' tapi dengan data yang sudah terisi
+            console.log(`Mengedit pengguna dengan ID: ${userId}`);
+            showNotification('info', 'Fitur edit pengguna akan segera tersedia');
+        }
+    });
+  });
+</script>
 </body>
 </html>

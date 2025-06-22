@@ -1,11 +1,15 @@
 // src/config/sequelize.js
 const { Sequelize } = require('sequelize');
+const config = require('../../config/config.js');
 
-const sequelize = new Sequelize('sistem_magang', 'root', '', {
-    host: 'localhost',
-    dialect: 'mysql',
-    logging: false, // Set to true to see SQL queries in console
-    pool: {
+const env = process.env.NODE_ENV || 'development';
+const dbConfig = config[env];
+
+const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
+    host: dbConfig.host,
+    dialect: dbConfig.dialect,
+    logging: dbConfig.logging || false,
+    pool: dbConfig.pool || {
         max: 5,
         min: 0,
         acquire: 30000,

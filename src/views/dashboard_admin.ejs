@@ -21,66 +21,60 @@
       <p class="text-sm">Sistem Informasi</p>
     </div>
 
-            <!-- Navigation Links Admin -->
-            <nav class="mt-6 flex-grow overflow-y-auto pr-2">
-                <ul class="space-y-1 pb-4">
-                    <!-- Menu aktif -->
-                    <li><a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md bg-sidebar-active font-semibold shadow-inner transition-colors duration-200"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
-                    <li><a href="/admin/manajemen-pengguna" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200"><i data-lucide="users" class="w-5 h-5"></i> Manajemen Pengguna</a></li>
-                    
-                    <li>
-                        <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="proses-magang">
-                            <span class="flex items-center gap-3"><i data-lucide="case-sensitive" class="w-5 h-5"></i> Proses Magang</span>
-                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-                        </button>
-                        <div id="proses-magang" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
-                           <a href="/admin/pengajuan-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengajuan Magang</a>
-                            <a href="/admin/progress-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Progress Magang</a>
-                            <a href="/admin/dosen-pembimbing" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Dosen Pembimbing</a>
-                        </div>
-                    </li>
-                    <li>
-                        <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="kemitraan">
-                            <span class="flex items-center gap-3"><i data-lucide="handshake"></i> Kemitraan & Lowongan</span>
-                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-                        </button>
-                        <div id="kemitraan" class="hidden pl-8 pt-1 space-y-1">
-                             <a href="/admin/lowongan-magang" class="flex px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm items-center gap-2">Lowongan Magang</a>
-                            <a href="/admin/mitra-perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Mitra Perusahaan</a>
-                             <a href="/admin/feedback-perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Feedback Perusahaan</a>
-                        </div>
-                    </li>
-                     <li>
-                        <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="konten">
-                            <span class="flex items-center gap-3"><i data-lucide="message-square" class="w-5 h-5"></i> Konten & Komunikasi</span>
-                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-                        </button>
-<<<<<<< HEAD
-                        <div id="konten" class="hidden pl-8 pt-1 space-y-1">
-                            <a href="/admin/pengumuman" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengumuman</a>
-=======
-                        <div id="konten" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
-                            <a href="#" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengumuman</a>
->>>>>>> f282ec1557b45cb0e91cee2dd3edbe69dcc04e4c
-                            <a href="/admin/template-dokumen" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Template Dokumen</a>
-                        </div>
-                    </li>
-                    <li><a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200"><i data-lucide="pie-chart" class="w-5 h-5"></i> Laporan Statistik</a></li>
-                    <li>
-                        <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="pengaturan">
-                            <span class="flex items-center gap-3"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Sistem</span>
-                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-                        </button>
-                        <div id="pengaturan" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
-                            <a href="#" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Konfigurasi Notifikasi</a>
-                            <a href="/admin/manajemen-backup" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Manajemen Backup</a>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
+    <nav class="mt-6 flex-grow overflow-y-auto pr-2">
+      <ul class="space-y-1 pb-4">
+        <!-- Menu aktif -->
+        <li><a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md bg-sidebar-active font-semibold shadow-inner transition-colors duration-200"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
+        <li><a href="/admin/manajemen-pengguna" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200"><i data-lucide="users" class="w-5 h-5"></i> Manajemen Pengguna</a></li>
+        
+        <li>
+          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="proses-magang">
+            <span class="flex items-center gap-3"><i data-lucide="case-sensitive" class="w-5 h-5"></i> Proses Magang</span>
+            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+          </button>
+          <div id="proses-magang" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
+             <a href="/admin/pengajuan-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengajuan Magang</a>
+            <a href="/admin/progress-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Progress Magang</a>
+            <a href="/admin/dosen-pembimbing" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Dosen Pembimbing</a>
+          </div>
+        </li>
+        <li>
+          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="kemitraan">
+            <span class="flex items-center gap-3"><i data-lucide="handshake"></i> Kemitraan & Lowongan</span>
+            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+          </button>
+          <div id="kemitraan" class="hidden pl-8 pt-1 space-y-1">
+             <a href="/admin/lowongan-magang" class="flex px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm items-center gap-2">Lowongan Magang</a>
+            <a href="/admin/mitra-perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Mitra Perusahaan</a>
+             <a href="/admin/feedback-perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Feedback Perusahaan</a>
+          </div>
+        </li>
+         <li>
+          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="konten">
+            <span class="flex items-center gap-3"><i data-lucide="message-square" class="w-5 h-5"></i> Konten & Komunikasi</span>
+            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+          </button>
+          <div id="konten" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
+            <a href="/admin/pengumuman" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengumuman</a>
+            <a href="/admin/template-dokumen" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Template Dokumen</a>
+          </div>
+        </li>
+        <li><a href="/admin/laporan-statistik" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200"><i data-lucide="pie-chart" class="w-5 h-5"></i> Laporan Statistik</a></li>
+        <li>
+          <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="pengaturan">
+            <span class="flex items-center gap-3"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Sistem</span>
+            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+          </button>
+          <div id="pengaturan" class="hidden pl-8 pt-1 space-y-1 sidebar-submenu">
+            <a href="/admin/konfigurasi-notifikasi" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Konfigurasi Notifikasi</a>
+            <a href="/admin/manajemen-backup" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Manajemen Backup</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
 
     <div class="mt-auto pt-4 border-t border-white/20">
-      <a href="Logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+      <a href="/logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
         <i data-lucide="log-out" class="w-5 h-5"></i> Logout
       </a>
     </div>

@@ -1,31 +1,41 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../src/config/sequelize');
-
-const Rekapitulasi = sequelize.define('Rekapitulasi', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Rekapitulasi extends Model {
+    static associate(models) {
+      // Rekapitulasi untuk mahasiswa
+      this.belongsTo(models.Mahasiswa, {
+        foreignKey: 'mahasiswa_id',
+        as: 'mahasiswa'
+      });
+    }
+  }
+  
+  Rekapitulasi.init({
     mahasiswa_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true // One-to-One
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     nilai_akhir: {
-        type: DataTypes.FLOAT
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false
     },
     status_laporan: {
-        type: DataTypes.ENUM('selesai', 'revisi', 'belum'),
-        allowNull: false
+      type: DataTypes.ENUM('selesai', 'belum selesai'),
+      allowNull: false,
+      defaultValue: 'belum selesai'
     },
     tanggal_rekap: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+      type: DataTypes.DATE,
+      allowNull: false
     }
-}, {
+  }, {
+    sequelize,
+    modelName: 'Rekapitulasi',
     tableName: 'rekapitulasi',
-    timestamps: false
-});
-
-module.exports = Rekapitulasi;
+    timestamps: true
+  });
+  return Rekapitulasi;
+}; 
