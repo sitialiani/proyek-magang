@@ -131,35 +131,25 @@ module.exports = {
 
     // 5. Data untuk tabel 'lowongan'
     await queryInterface.bulkInsert('lowongan', [{
-      perusahaan_id: ptTeknologiMajuId,
-      judul: 'Frontend Developer',
+      perusahaan: 'PT. Teknologi Maju',
       lokasi: 'Jakarta',
       durasi: '3 Bulan',
       deadlinependaftaran: '2025-10-31',
       deskripsi: 'Membangun antarmuka pengguna aplikasi web menggunakan ReactJS.',
-      kualifikasi: 'Menguasai ReactJS dan CSS',
-      tanggal_dibuka: '2025-09-01',
-      tanggal_ditutup: '2025-10-31',
-      link_berkas: null
     }, {
-      perusahaan_id: cvSolusiDigitalId,
-      judul: 'Backend Developer',
+      perusahaan: 'CV. Solusi Digital',
       lokasi: 'Bandung',
       durasi: '6 Bulan',
       deadlinependaftaran: '2025-11-15',
       deskripsi: 'Mengembangkan dan memelihara API RESTful menggunakan Node.js dan Express.',
-      kualifikasi: 'Menguasai Node.js dan Express',
-      tanggal_dibuka: '2025-10-01',
-      tanggal_ditutup: '2025-11-15',
-      link_berkas: null
     }], {
-      updateOnDuplicate: ['perusahaan_id', 'judul', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi', 'kualifikasi', 'tanggal_dibuka', 'tanggal_ditutup', 'link_berkas']
+      updateOnDuplicate: ['perusahaan', 'lokasi', 'durasi', 'deadlinependaftaran', 'deskripsi']
     });
 
     // Dapatkan ID lowongan yang baru saja dibuat secara dinamis
-    const [lowongan] = await queryInterface.sequelize.query("SELECT id, perusahaan_id, deskripsi FROM lowongan;");
-    const frontendLowonganId = lowongan.find(l => l.perusahaan_id === ptTeknologiMajuId && l.deskripsi.includes('ReactJS')).id;
-    const backendLowonganId = lowongan.find(l => l.perusahaan_id === cvSolusiDigitalId && l.deskripsi.includes('Node.js')).id;
+    const [lowongan] = await queryInterface.sequelize.query("SELECT id, perusahaan, deskripsi FROM lowongan;");
+    const frontendLowonganId = lowongan.find(l => l.perusahaan === 'PT. Teknologi Maju' && l.deskripsi.includes('ReactJS')).id;
+    const backendLowonganId = lowongan.find(l => l.perusahaan === 'CV. Solusi Digital' && l.deskripsi.includes('Node.js')).id;
 
 
     // 6. Data untuk tabel 'pengajuan_magang'
@@ -168,74 +158,38 @@ module.exports = {
       mahasiswa_id: budiMhsId,
       lowongan_id: frontendLowonganId,
       tanggal_pengajuan: '2025-06-10', // Ini pengajuan yang diterima
-      status: 'diterima',
-      cv: '/files/cv/budi_cv.pdf',
-      transkrip: '/files/transkrip/budi_transkrip.pdf',
-      krs: '/files/krs/budi_krs.pdf',
-      dokumen_pendukung: '/files/dokumen/budi_sertifikat.pdf',
-      verifikasi: 'diverifikasi',
-      keterangan: 'Pengajuan diterima'
+      status: 'diterima'
     }, {
       // Aminah: Magang Diterima (Pengajuan terbaru Aminah)
       mahasiswa_id: AminahMhsId,
       lowongan_id: backendLowonganId,
       tanggal_pengajuan: '2025-06-20', // Tanggal lebih baru dari yang sebelumnya 'diajukan'
-      status: 'diterima',
-      cv: '/files/cv/aminah_cv.pdf',
-      transkrip: '/files/transkrip/aminah_transkrip.pdf',
-      krs: '/files/krs/aminah_krs.pdf',
-      dokumen_pendukung: null,
-      verifikasi: 'diverifikasi',
-      keterangan: 'Pengajuan diterima'
+      status: 'diterima'
     }, {
       // Pengajuan lama Budi (ditolak) - pastikan tanggal lebih lama dari yang diterima
       mahasiswa_id: budiMhsId,
       lowongan_id: backendLowonganId,
       tanggal_pengajuan: '2025-05-01',
-      status: 'ditolak',
-      cv: '/files/cv/budi_cv_old.pdf',
-      transkrip: '/files/transkrip/budi_transkrip_old.pdf',
-      krs: '/files/krs/budi_krs_old.pdf',
-      dokumen_pendukung: null,
-      verifikasi: 'ditolak',
-      keterangan: 'Kuota sudah penuh'
+      status: 'ditolak'
     }, {
       // Pengajuan lama Aminah (diajukan) - pastikan tanggal lebih lama dari yang diterima
       mahasiswa_id: AminahMhsId,
       lowongan_id: frontendLowonganId,
       tanggal_pengajuan: '2025-06-12',
-      status: 'diajukan',
-      cv: '/files/cv/aminah_cv_old.pdf',
-      transkrip: '/files/transkrip/aminah_transkrip_old.pdf',
-      krs: '/files/krs/aminah_krs_old.pdf',
-      dokumen_pendukung: null,
-      verifikasi: 'menunggu',
-      keterangan: 'Sedang dalam proses review'
+      status: 'diajukan'
     }, {
       // Dina: Magang Ditolak (Pengajuan terbaru Dina)
       mahasiswa_id: DinaMhsId,
       lowongan_id: frontendLowonganId,
       tanggal_pengajuan: '2025-07-01',
-      status: 'ditolak',
-      cv: '/files/cv/dina_cv.pdf',
-      transkrip: '/files/transkrip/dina_transkrip.pdf',
-      krs: '/files/krs/dina_krs.pdf',
-      dokumen_pendukung: null,
-      verifikasi: 'ditolak',
-      keterangan: 'Tidak memenuhi kualifikasi'
+      status: 'ditolak'
     }, {
       // Fajar: Magang Diajukan (Pengajuan terbaru Fajar)
       mahasiswa_id: FajarMhsId,
       lowongan_id: backendLowonganId,
       tanggal_pengajuan: '2025-07-05',
-      status: 'diajukan',
-      cv: '/files/cv/fajar_cv.pdf',
-      transkrip: '/files/transkrip/fajar_transkrip.pdf',
-      krs: '/files/krs/fajar_krs.pdf',
-      dokumen_pendukung: '/files/dokumen/fajar_portfolio.pdf',
-      verifikasi: 'menunggu',
-      keterangan: 'Sedang dalam proses review'
-    }], { updateOnDuplicate: ['mahasiswa_id', 'lowongan_id', 'tanggal_pengajuan', 'status', 'cv', 'transkrip', 'krs', 'dokumen_pendukung', 'verifikasi', 'keterangan'] });
+      status: 'diajukan'
+    }], { updateOnDuplicate: ['mahasiswa_id', 'lowongan_id', 'tanggal_pengajuan', 'status'] });
 
     // Dapatkan ID pengajuan_magang yang baru saja dibuat secara dinamis
     // Perlu mendapatkan ID pengajuan yang spesifik jika akan digunakan untuk dokumen
@@ -251,30 +205,40 @@ module.exports = {
     await queryInterface.bulkInsert('dokumen', [{
       // Dokumen Budi (Pengajuan Diterima)
       pengajuan_id: pengajuanBudiDiterimaId,
-      nama_file: 'Surat Penerimaan Budi Santoso.pdf',
+      nama_file: 'Surat Penerimaan Budi.pdf',
       jenis: 'surat',
-      file_path: '/docs/surat_budi_pm.pdf',
+      file_path: '/docs/surat_budi.pdf',
       tanggal_upload: '2025-06-11 09:00:00'
     }, {
-      // Dokumen Budi (Pengajuan Diterima)
       pengajuan_id: pengajuanBudiDiterimaId,
-      nama_file: 'CV Budi Santoso.pdf',
+      nama_file: 'CV Budi.pdf',
       jenis: 'CV',
       file_path: '/docs/cv_budi.pdf',
-      tanggal_upload: '2025-06-09 14:30:00'
+      tanggal_upload: '2025-06-11 09:00:00'
+    }, {
+      pengajuan_id:  pengajuanBudiDiterimaId,
+      nama_file: 'Proposal Magang Budi.pdf',
+      jenis: 'proposal',
+      file_path: '/docs/proposal_budi.pdf',
+      tanggal_upload: '2025-06-11 09:00:00'
     }, {
       // Dokumen Aminah (Pengajuan Diterima)
       pengajuan_id: pengajuanAminahDiterimaId,
-      nama_file: 'Surat Penerimaan Siti Aminah.pdf',
+      nama_file: 'Surat Penerimaan Aminah.pdf',
       jenis: 'surat',
-      file_path: '/docs/surat_siti_pm.pdf',
+      file_path: '/docs/surat_Aminah.pdf',
       tanggal_upload: '2025-06-21 10:00:00'
     }, {
-      // Dokumen Fajar (Pengajuan Diajukan)
-      pengajuan_id: pengajuanFajarDiajukanId,
-      nama_file: 'Proposal Magang Fajar.pdf',
+      pengajuan_id: pengajuanAminahDiterimaId,
+      nama_file: 'CV Aminah.pdf',
+      jenis: 'CV',
+      file_path: '/docs/cv_Aminah.pdf',
+      tanggal_upload: '2025-06-09 14:30:00'
+    }, {
+      pengajuan_id:  pengajuanAminahDiterimaId,
+      nama_file: 'Proposal Magang Aminah.pdf',
       jenis: 'proposal',
-      file_path: '/docs/proposal_fajar.pdf',
+      file_path: '/docs/proposal_Aminah.pdf',
       tanggal_upload: '2025-07-06 11:00:00'
     }], { updateOnDuplicate: ['pengajuan_id', 'nama_file', 'jenis', 'file_path', 'tanggal_upload'] });
 
@@ -373,6 +337,7 @@ module.exports = {
       status_laporan: 'selesai',
       tanggal_rekap: new Date('2025-10-10')
     }], { updateOnDuplicate: ['mahasiswa_id', 'nilai_akhir', 'status_laporan', 'tanggal_rekap'] });
+
 
   },
 
