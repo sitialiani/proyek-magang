@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Logbook</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .status-pending { background-color: #FEF3C7; color: #92400E; }
+    .status-approved { background-color: #D1FAE5; color: #065F46; }
+    .status-rejected { background-color: #FEE2E2; color: #991B1B; }
+  </style>
+</head>
+<body class="bg-[#f0f5f7] min-h-screen flex flex-col">
+
+  <!-- Header Bar -->
+  <header class="bg-[#8aa6b7] py-4 shadow-md">
+    <div class="container mx-auto px-4">
+      <h1 class="text-xl font-bold text-white">Sistem Logbook Magang</h1>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 container mx-auto py-8 px-4">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <!-- Card Header -->
+      <div class="bg-[#8aa6b7] px-6 py-4">
+        <h2 class="text-xl font-bold text-white">Riwayat Logbook</h2>
+      </div>
+
+      <!-- Table Container -->
+      <div class="p-6">
+        <!-- Tabel -->
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-[#eaf1f3] text-gray-700">
+                <th class="px-4 py-3 text-left w-12">No.</th>
+                <th class="px-4 py-3 text-left">Tanggal</th>
+                <th class="px-4 py-3 text-left">Aktivitas</th>
+                <th class="px-4 py-3 text-left">Deskripsi</th>
+                <th class="px-4 py-3 text-left w-32">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <!-- Contoh Data -->
+              <tr class="hover:bg-gray-50 transition">
+                <td class="px-4 py-3">1</td>
+                <td class="px-4 py-3">12/07/2023</td>
+                <td class="px-4 py-3">Pembuatan Modul</td>
+                <td class="px-4 py-3">Membuat modul autentikasi pengguna</td>
+                <td class="px-4 py-3">
+                  <span class="status-approved px-3 py-1 rounded-full text-xs font-semibold">
+                    Disetujui
+                  </span>
+                </td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition">
+                <td class="px-4 py-3">2</td>
+                <td class="px-4 py-3">13/07/2023</td>
+                <td class="px-4 py-3">Bug Fixing</td>
+                <td class="px-4 py-3">Memperbaiki error pada form input</td>
+                <td class="px-4 py-3">
+                  <span class="status-pending px-3 py-1 rounded-full text-xs font-semibold">
+                    Pending
+                  </span>
+                </td>
+              </tr>
+              <tr class="hover:bg-gray-50 transition">
+                <td class="px-4 py-3">3</td>
+                <td class="px-4 py-3">14/07/2023</td>
+                <td class="px-4 py-3">Testing</td>
+                <td class="px-4 py-3">Melakukan pengujian sistem</td>
+                <td class="px-4 py-3">
+                  <span class="status-rejected px-3 py-1 rounded-full text-xs font-semibold">
+                    Ditolak
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="/logbook" class="bg-[#7a98a7] hover:bg-[#6a8b9a] text-white px-4 py-2 rounded-md transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Kembali ke Dashboard
+          </a>
+          <button class="bg-[#7a98a7] hover:bg-[#6a8b9a] text-white px-4 py-2 rounded-md transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 20H5v-2h14v2zm-3-9h-4V4h-2v7H8l4 4 4-4z"/>
+            </svg>
+            Ekspor PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

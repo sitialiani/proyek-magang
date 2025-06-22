@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="flex bg-[#E7EEF0]">
+    <%- include('../layout/sidebardospem', { activeMenu: 'evaluasi-logbook', namaDosen: namaDosen }) %>
+
+    <main class="flex-1 p-8 ml-64">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Evaluasi Logbook</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-4 md:space-y-0 md:space-x-4">
+                <input type="text" placeholder="Cari berdasarkan nama mahasiswa...." class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <div class="relative">
+                    <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <option>Semua status</option>
+                        <option>Menunggu Evaluasi</option>
+                        <option>Sudah Dievaluasi</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+                <button class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Filter
+                </button>
+            </div>
+
+            <% if (logbooks.length > 0) { %>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No.</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mahasiswa</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Logbook</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul Kegiatan</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verifikasi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <% logbooks.forEach((log, index) => { %>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= index + 1 %>.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= log.mahasiswaNama %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= log.mahasiswaNim %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= new Date(log.tanggal).toLocaleDateString('id-ID') %></td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs overflow-hidden text-ellipsis"><%= log.judulKegiatan || log.deskripsiKegiatan.substring(0, 50) + '...' %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                            <%= log.statusEvaluasi === 'menunggu evaluasi' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' %>">
+                                            <%= log.statusEvaluasi.replace(/_/g, ' ').toUpperCase() %>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="/dospem/logbook/evaluasi/<%= log.id %>" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Detail</a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="text-gray-600 text-center py-4">Tidak ada logbook yang perlu dievaluasi.</p>
+            <% } %>
+        </div>
+    </main>
+</body>
+</html>

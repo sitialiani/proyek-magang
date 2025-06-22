@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Bimbingan</title>
+    
+    <link href="/css/style.css" rel="stylesheet">
+    
+</head>
+<body class="bg-content-bg">
+
+    <div class="flex min-h-screen">
+        <!-- =============== Sidebar Admin =============== -->
+        <aside class="w-72 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg">
+            <!-- Profile Photo & Info Admin -->
+            <div class="text-center py-4 border-b border-white/20">
+                <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" alt="Foto Profil Admin" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
+                <h3 class="font-bold text-lg">Admin Jurusan</h3>
+                <p class="text-sm">Sistem Informasi</p>
+            </div>
+
+            <!-- Navigation Links Admin -->
+            <nav class="mt-6 flex-grow overflow-y-auto pr-2">
+                <ul class="space-y-1 pb-4">
+                    <li><a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
+                                        
+                    <!-- Menu Dropdown: Proses Magang (Aktif & Terbuka) -->
+                    <li>
+                        <button class="w-full flex justify-between items-center px-4 py-3 hover:bg-sidebar-hover rounded-md" data-menu="proses-magang">
+              <span class="flex items-center gap-3"><i data-lucide="case-sensitive"></i> Proses Magang</span>
+              <i data-lucide="chevron-down" class="w-5 h-5 rotate-180"></i>
+            </button>
+                        <div id="proses-magang" class="pl-8 pt-1 space-y-1">
+                            <a href="/admin/pengajuan-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengajuan Magang</a>
+                            <a href="/admin/progress-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Progress Magang</a>
+                            <a href="/admin/dosen-pembimbing" class="block px-4 py-2.5 rounded-md bg-sidebar-hover text-sm font-bold">Dosen Pembimbing</a>
+                        </div>
+                    </li>
+
+                    
+                </ul>
+            </nav>
+
+            <div class="mt-auto pt-4 border-t border-white/20">
+                <a href="#" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- =============== Main Content =============== -->
+        <main class="ml-72 flex-1 p-8 overflow-y-auto">
+            <header class="flex justify-between items-center mb-8">
+                 <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Manajemen Pembimbingan Magang</h1>
+                    <p class="text-gray-600">Kelola alokasi dosen pembimbing dan mahasiswa bimbingan.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="font-semibold text-gray-800">Admin Jurusan</p>
+                        <p class="text-sm text-gray-500">Online</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
+                        <i data-lucide="shield-check" class="text-gray-600"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Kartu Ringkasan Statistik -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center"><i data-lucide="user-cog" class="w-6 h-6 text-teal-600"></i></div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Dosen Aktif</p>
+                        <p class="text-2xl font-bold text-gray-800">12</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center"><i data-lucide="user-check" class="w-6 h-6 text-blue-600"></i></div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Mhs. dgn Pembimbing</p>
+                        <p class="text-2xl font-bold text-gray-800">58</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center"><i data-lucide="user-x" class="w-6 h-6 text-red-600"></i></div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Mhs. Tanpa Pembimbing</p>
+                        <p class="text-2xl font-bold text-gray-800">3</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center"><i data-lucide="bar-chart-2" class="w-6 h-6 text-indigo-600"></i></div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Rata-rata Bimbingan</p>
+                        <p class="text-2xl font-bold text-gray-800">4.8</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filter & Aksi -->
+            <div class="bg-white p-4 rounded-lg shadow-md mb-8">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Cari Dosen atau Mahasiswa..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm w-80 focus:ring-blue-500 focus:border-blue-500">
+                        <i data-lucide="search" class="w-4 h-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <!-- PERUBAHAN: Tombol Ekspor dihilangkan -->
+                    <button id="alokasi-btn" class="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors shadow-sm">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                        Alokasikan Pembimbing
+                    </button>
+                </div>
+            </div>
+
+            <!-- Daftar Dosen Pembimbing (Expandable) -->
+            <div class="space-y-4">
+                <!-- Contoh Dosen 1 -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full flex items-center justify-between p-5 text-left" data-target="dosen-1-details">
+                        <div class="flex items-center gap-4">
+                            <img src="https://placehold.co/48x48/E7EEF0/5c7a89?text=DA" class="w-12 h-12 rounded-full" alt="Foto Dosen">
+                            <div>
+                                <p class="font-bold text-gray-800">Dr. Anjali, S.Kom., M.Kom.</p>
+                                <p class="text-sm text-gray-500">NIDN: 0123456789</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="text-right">
+                                <p class="font-bold text-lg text-blue-600">8</p>
+                                <p class="text-xs text-gray-500">Mahasiswa</p>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-6 h-6 text-gray-400 transition-transform duration-300"></i>
+                        </div>
+                    </button>
+                    <div id="dosen-1-details" class="hidden px-5 pb-5">
+                        <div class="border-t pt-4 overflow-x-auto">
+                            <h4 class="font-semibold mb-2">Daftar Mahasiswa Bimbingan</h4>
+                            <table class="w-full text-sm">
+                                <thead class="text-xs text-gray-500">
+                                    <tr>
+                                        <th class="py-2 px-3 text-left">NIM</th>
+                                        <th class="py-2 px-3 text-left">Nama Mahasiswa</th>
+                                        <th class="py-2 px-3 text-left">Perusahaan</th>
+                                        <th class="py-2 px-3 text-left">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="py-2 px-3">2311522006</td>
+                                        <td class="py-2 px-3"><a href="#" class="text-blue-600 hover:underline">Siti Aliani</a></td>
+                                        <td class="py-2 px-3">PT. Teknologi Nusantara</td>
+                                        <td class="py-2 px-3"><span class="px-2 py-1 text-xs font-bold text-green-800 bg-green-100 rounded-full">Aktif</span></td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-2 px-3">2311522001</td>
+                                        <td class="py-2 px-3"><a href="#" class="text-blue-600 hover:underline">Budi Santoso</a></td>
+                                        <td class="py-2 px-3">CV. Cipta Karya</td>
+                                        <td class="py-2 px-3"><span class="px-2 py-1 text-xs font-bold text-blue-800 bg-blue-100 rounded-full">Selesai</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contoh Dosen 2 -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full flex items-center justify-between p-5 text-left" data-target="dosen-2-details">
+                        <div class="flex items-center gap-4">
+                            <img src="https://placehold.co/48x48/E7EEF0/5c7a89?text=RH" class="w-12 h-12 rounded-full" alt="Foto Dosen">
+                            <div>
+                                <p class="font-bold text-gray-800">Rahmat Hidayat, M.T.</p>
+                                <p class="text-sm text-gray-500">NIDN: 9876543210</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="text-right">
+                                <p class="font-bold text-lg text-blue-600">5</p>
+                                <p class="text-xs text-gray-500">Mahasiswa</p>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-6 h-6 text-gray-400 transition-transform duration-300"></i>
+                        </div>
+                    </button>
+                    <div id="dosen-2-details" class="hidden px-5 pb-5">
+                         <div class="border-t pt-4">
+                            <p class="text-center text-gray-500">Belum ada data mahasiswa bimbingan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================== MODAL ALOKASI PEMBIMBING ================== -->
+    <div id="alokasi-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md m-4">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-xl font-bold text-gray-800">Alokasikan Pembimbing</h3>
+                <button id="close-alokasi-modal-btn" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6">
+                <form id="alokasi-form" class="space-y-4">
+                    <div>
+                        <label for="mahasiswa-select" class="block text-sm font-medium text-gray-700">Pilih Mahasiswa (Tanpa Pembimbing)</label>
+                        <select id="mahasiswa-select" name="mahasiswa" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="">Pilih Mahasiswa...</option>
+                            <!-- Contoh data -->
+                            <option value="4">Ahmad Zulkarnain (2311522015)</option>
+                            <option value="5">Linda Wati (2311522020)</option>
+                            <option value="6">Joko Susilo (2311522021)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="dosen-select" class="block text-sm font-medium text-gray-700">Pilih Dosen Pembimbing</label>
+                        <select id="dosen-select" name="dosen" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="">Pilih Dosen...</option>
+                            <!-- Contoh data -->
+                            <option value="1">Dr. Anjali, S.Kom., M.Kom.</option>
+                            <option value="2">Rahmat Hidayat, M.T.</option>
+                        </select>
+                    </div>
+                    <!-- Modal Footer -->
+                    <div class="pt-4 flex justify-end gap-3">
+                        <button type="button" id="cancel-alokasi-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold">Batal</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold">Simpan Alokasi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.271.0/dist/umd/lucide.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Render Ikon
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        } else {
+          console.error('Lucide tidak tersedia.');
+        }
+
+        // --- Alokasi Modal Logic ---
+        const alokasiBtn = document.getElementById('alokasi-btn');
+        const alokasiModal = document.getElementById('alokasi-modal');
+        const closeAlokasiBtn = document.getElementById('close-alokasi-modal-btn');
+        const cancelAlokasiBtn = document.getElementById('cancel-alokasi-btn');
+        const alokasiForm = document.getElementById('alokasi-form');
+
+        alokasiBtn.addEventListener('click', () => alokasiModal.classList.remove('hidden'));
+        closeAlokasiBtn.addEventListener('click', () => alokasiModal.classList.add('hidden'));
+        cancelAlokasiBtn.addEventListener('click', () => alokasiModal.classList.add('hidden'));
+        alokasiForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Alokasi disimpan!');
+            alokasiModal.classList.add('hidden');
+        });
+
+        // Logika Accordion Daftar Dosen
+        const expandableButtons = document.querySelectorAll('button[data-target]');
+        expandableButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.target;
+                const targetPanel = document.getElementById(targetId);
+                const icon = button.querySelector('[data-lucide="chevron-down"]');
+
+                if (targetPanel) {
+                    targetPanel.classList.toggle('hidden');
+                }
+                if (icon) {
+                    icon.classList.toggle('rotate-180');
+                }
+            });
+        });
+
+        // Logika Dropdown Sidebar
+        const menuButtons = document.querySelectorAll('button[data-menu]');
+        menuButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const menuId = button.dataset.menu;
+                const submenu = document.getElementById(menuId);
+                const icon = button.querySelector('[data-lucide="chevron-down"]');
+                
+                if (submenu) {
+                    const isOpening = submenu.classList.contains('hidden');
+                     document.querySelectorAll('[id^="proses-magang"], [id^="kemitraan"], [id^="konten"], [id^="pengaturan"]').forEach(otherSubmenu => {
+                         if (otherSubmenu.id !== menuId) {
+                            otherSubmenu.classList.add('hidden');
+                            const otherButton = document.querySelector(`button[data-menu="${otherSubmenu.id}"]`);
+                            otherButton?.querySelector('[data-lucide="chevron-down"]')?.classList.remove('rotate-180');
+                         }
+                     });
+                    
+                    if (isOpening) {
+                        submenu.classList.remove('hidden');
+                        icon?.classList.add('rotate-180');
+                    } else {
+                        submenu.classList.add('hidden');
+                        icon?.classList.remove('rotate-180');
+                    }
+                }
+            });
+        });
+
+      });
+    </script>
+</body>
+</html>

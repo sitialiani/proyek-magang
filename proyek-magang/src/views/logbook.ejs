@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logbook - Portal Mahasiswa</title>
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-content-bg">
+
+  <div class="flex min-h-screen">
+    <!-- =============== Sidebar =============== -->
+    <aside class="w-64 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg">
+      <!-- Profile -->
+      <div class="text-center py-4 border-b border-white/20">
+        <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Foto" alt="Foto Profil Mahasiswa" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
+        <h3 class="font-bold text-lg">Siti Aliani</h3>
+        <p class="text-sm">2311522006</p>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="mt-6 flex-grow">
+        <ul class="space-y-2">
+           <li><a href="Dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Dashboard</a></li>
+                    <li><a href="Daftar Lowongan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Daftar Lowongan</a></li>
+                    <li><a href="Formulir Pengajuan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Formulir Pengajuan</a></li>
+                    <li><a href="Status & Verifikasi" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Status & Verifikasi</a></li>
+                    <li><a href="Logbook" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Logbook</a></li>
+                    <li><a href="Laporan Akhir" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Laporan Akhir</a></li>
+                    <li><a href="Penilaian" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Penilaian</a></li>
+                    <li><a href="Pengumuman" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Pengumuman</a></li>
+        </ul>
+      </nav>
+
+      <!-- Logout -->
+      <div class="mt-auto">
+        <a href="Logout" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition">
+          <i data-lucide="log-out" class="w-5 h-5"></i>
+          Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- =============== Main Content =============== -->
+    <main class="ml-64 flex-1 p-8 bg-gray-50 min-h-screen">
+      <!-- Header -->
+      <header class="flex justify-end items-center mb-8">
+        <div class="flex items-center gap-4">
+          <div class="text-right">
+            <p class="font-semibold text-gray-800">Siti Aliani</p>
+            <p class="text-sm text-gray-500">Mahasiswa Aktif</p>
+          </div>
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+          </div>
+        </div>
+      </header>
+
+<!-- Judul + Tombol Riwayat Logbook -->
+<div id="logbook-content">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-[#5C7988]">Pengisian Logbook</h1>
+    <a href="/riwayatlogbook">
+      <button class="bg-[#8EAAB8] text-white px-4 py-2 rounded hover:bg-[#7A99A7] shadow-md transition">
+        Riwayat Logbook
+      </button>
+    </a>
+  </div>
+
+        <form class="space-y-4">
+          <div>
+            <label for="tanggal" class="block font-medium text-[#5C7988]">Tanggal</label>
+            <input type="date" id="tanggal" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]" />
+          </div>
+          <div>
+            <label for="aktivitas" class="block font-medium text-[#5C7988]">Aktivitas</label>
+            <input type="text" id="aktivitas" placeholder="Masukkan aktivitas" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]" />
+          </div>
+          <div>
+            <label for="deskripsi" class="block font-medium text-[#5C7988]">Deskripsi</label>
+            <textarea id="deskripsi" rows="4" placeholder="Masukkan deskripsi aktivitas" class="w-full p-2 border rounded-md focus:ring-[#8EAAB8] focus:border-[#8EAAB8] border-[#8EAAB8]"></textarea>
+          </div>
+          <button type="submit" class="bg-[#8EAAB8] text-white px-4 py-2 rounded-md hover:bg-[#7A99A7] transition">Save</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- Highlight Menu Aktif -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentPath = window.location.pathname;
+      const menuLinks = document.querySelectorAll('nav ul li a');
+
+      menuLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('bg-[#7A99A7]');
+          link.classList.remove('hover:bg-[#7A99A7]');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

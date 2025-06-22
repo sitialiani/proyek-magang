@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="flex bg-[#E7EEF0]">
+    <%- include('../layout/sidebardospem', { activeMenu: 'mahasiswa', namaDosen: namaDosen }) %>
+
+    <main class="flex-1 p-8 ml-64">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Detail Mahasiswa: <%= mahasiswa.nama %></h1>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Informasi Pribadi</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
+                <div><strong>NIM:</strong> <%= mahasiswa.nim %></div>
+                <div><strong>Nama:</strong> <%= mahasiswa.nama %></div>
+                <div><strong>Prodi:</strong> <%= mahasiswa.prodi %></div>
+                <div><strong>Email:</strong> <%= mahasiswa.email %></div>
+                <div><strong>Angkatan:</strong> <%= mahasiswa.angkatan %></div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Pengajuan Magang</h2>
+            <% if (pengajuanMagang && pengajuanMagang.length > 0) { %>
+                <div class="space-y-4">
+                    <% pengajuanMagang.forEach(pengajuan => { %>
+                        <div class="border-b border-gray-200 pb-4 last:border-b-0">
+                            <p><strong>Perusahaan:</strong> <%= pengajuan.namaPerusahaan %></p>
+                            <p><strong>Posisi:</strong> <%= pengajuan.posisi %></p>
+                            <p><strong>Periode:</strong> <%= new Date(pengajuan.tanggalMulai).toLocaleDateString('id-ID') %> - <%= new Date(pengajuan.tanggalSelesai).toLocaleDateString('id-ID') %></p>
+                            <p><strong>Status:</strong> <span class="font-bold <%= pengajuan.statusPengajuan === 'disetujui' ? 'text-green-600' : (pengajuan.statusPengajuan === 'ditolak' ? 'text-red-600' : 'text-yellow-600') %>"><%= pengajuan.statusPengajuan.toUpperCase() %></span></p>
+                            <% if (pengajuan.komentarDosen) { %>
+                                <p><strong>Komentar Dosen:</strong> <%= pengajuan.komentarDosen %></p>
+                            <% } %>
+                            <div class="mt-2">
+                                <a href="/dospem/pengajuan/<%= pengajuan.id %>/detail" class="inline-block px-3 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600">Lihat Detail Pengajuan</a>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p class="text-gray-600">Belum ada pengajuan magang dari mahasiswa ini.</p>
+            <% } %>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Logbook</h2>
+            <% if (logbooks && logbooks.length > 0) { %>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Minggu</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi Kegiatan</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Evaluasi</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <% logbooks.forEach(log => { %>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= log.minggu %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= new Date(log.tanggal).toLocaleDateString('id-ID') %></td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs overflow-hidden text-ellipsis"><%= log.deskripsiKegiatan %></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                            <%= log.statusEvaluasi === 'menunggu evaluasi' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' %>">
+                                            <%= log.statusEvaluasi.replace(/_/g, ' ').toUpperCase() %>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="/dospem/logbook/evaluasi/<%= log.id %>" class="text-blue-600 hover:text-blue-800">Evaluasi</a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 text-right">
+                    <a href="/dospem/evaluasi-logbook" class="text-blue-600 hover:underline text-sm">Lihat Semua Logbook untuk Evaluasi</a>
+                </div>
+            <% } else { %>
+                <p class="text-gray-600">Belum ada logbook dari mahasiswa ini.</p>
+            <% } %>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Laporan Akhir</h2>
+            <% if (laporanAkhir) { %>
+                <div class="space-y-2 text-gray-800">
+                    <p><strong>Judul:</strong> <%= laporanAkhir.judul %></p>
+                    <p><strong>Tanggal Upload:</strong> <%= new Date(laporanAkhir.tanggalUpload).toLocaleDateString('id-ID') %></p>
+                    <p><strong>Status Penilaian:</strong>
+                        <span class="font-bold <%= laporanAkhir.statusPenilaian === 'menunggu penilaian' ? 'text-yellow-600' : 'text-green-600' %>">
+                            <%= laporanAkhir.statusPenilaian.replace(/_/g, ' ').toUpperCase() %>
+                        </span>
+                    </p>
+                    <% if (laporanAkhir.nilai) { %>
+                        <p><strong>Nilai:</strong> <span class="font-bold text-blue-700 text-lg"><%= laporanAkhir.nilai %></span></p>
+                    <% } %>
+                    <% if (laporanAkhir.komentarDosen) { %>
+                        <p><strong>Komentar Dosen:</strong> <%= laporanAkhir.komentarDosen %></p>
+                    <% } %>
+                    <% if (laporanAkhir.fileLaporan) { %>
+                        <p><a href="<%= laporanAkhir.fileLaporan %>" target="_blank" class="text-blue-600 hover:underline">Unduh Laporan</a></p>
+                    <% } %>
+                    <div class="mt-4">
+                        <a href="/dospem/laporan-akhir/nilai/<%= laporanAkhir.id %>" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Beri/Ubah Penilaian</a>
+                    </div>
+                </div>
+            <% } else { %>
+                <p class="text-gray-600">Mahasiswa ini belum mengunggah laporan akhir.</p>
+            <% } %>
+        </div>
+        <div class="mt-6">
+            <a href="/dospem/mahasiswa" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                &larr; Kembali ke Daftar Mahasiswa
+            </a>
+        </div>
+    </main>
+</body>
+</html>

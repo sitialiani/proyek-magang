@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portal Admin</title>
+    
+    <link href="/css/style.css" rel="stylesheet">
+    <!-- Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+</head>
+<body class="bg-content-bg">
+
+    <div class="flex min-h-screen">
+        <!-- =============== Sidebar Admin =============== -->
+        <aside class="w-72 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg">
+            <!-- Profile Photo & Info Admin -->
+            <div class="text-center py-4 border-b border-white/20">
+                <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Admin" alt="Foto Profil Admin" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
+                <h3 class="font-bold text-lg">Admin Jurusan</h3>
+                <p class="text-sm">Sistem Informasi</p>
+            </div>
+
+            <!-- Navigation Links Admin -->
+            <nav class="mt-6 flex-grow overflow-y-auto pr-2">
+                <ul class="space-y-1 pb-4">
+                    <!-- Menu aktif -->
+                    <li><a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md bg-sidebar-active font-semibold shadow-inner transition-colors duration-200"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a></li>
+                    <li><a href="/admin/manajemen-pengguna" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200"><i data-lucide="users" class="w-5 h-5"></i> Manajemen Pengguna</a></li>
+                    
+                    <li>
+                        <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="proses-magang">
+                            <span class="flex items-center gap-3"><i data-lucide="case-sensitive" class="w-5 h-5"></i> Proses Magang</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div id="proses-magang" class="hidden pl-8 pt-1 space-y-1">
+                           <a href="/admin/pengajuan-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengajuan Magang</a>
+                            <a href="/admin/progress-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Progress Magang</a>
+                            <a href="/admin/dosen-pembimbing" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Dosen Pembimbing</a>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="kemitraan">
+                            <span class="flex items-center gap-3"><i data-lucide="handshake"></i> Kemitraan & Lowongan</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div id="kemitraan" class="hidden pl-8 pt-1 space-y-1">
+                             <a href="/admin/lowongan-magang" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm flex items-center gap-2">
+                                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                                    Lowongan Magang
+                            </a>
+                            <a href="/admin/mitra-perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Mitra Perusahaan</a>
+                             <a href="/admin/feedback-perusahaan" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Feedback Perusahaan</a>
+                        </div>
+                    </li>
+                     <li>
+                        <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="konten">
+                            <span class="flex items-center gap-3"><i data-lucide="message-square" class="w-5 h-5"></i> Konten & Komunikasi</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div id="konten" class="hidden pl-8 pt-1 space-y-1">
+                            <a href="#" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Pengumuman</a>
+                            <a href="/admin/template-dokumen" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Template Dokumen</a>
+                        </div>
+                    </li>
+                    <li><a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200"><i data-lucide="pie-chart" class="w-5 h-5"></i> Laporan Statistik</a></li>
+                    <li>
+                        <button class="w-full flex justify-between items-center gap-3 px-4 py-3 rounded-md hover:bg-sidebar-hover transition-colors duration-200" data-menu="pengaturan">
+                            <span class="flex items-center gap-3"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Sistem</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div id="pengaturan" class="hidden pl-8 pt-1 space-y-1">
+                            <a href="#" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Konfigurasi Notifikasi</a>
+                            <a href="/admin/manajemen-backup" class="block px-4 py-2.5 rounded-md hover:bg-sidebar-hover text-sm">Manajemen Backup</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="mt-auto pt-4 border-t border-white/20">
+                <a href="#" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- =============== Main Content =============== -->
+        <main class="ml-72 flex-1 p-8 overflow-y-auto">
+            <header class="flex justify-between items-center mb-8">
+                 <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Dashboard Manajemen Magang</h1>
+                    <p class="text-gray-600">Selamat Datang, Admin Jurusan! <span id="current-date" class="font-semibold"></span></p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="font-semibold text-gray-800">Admin Jurusan</p>
+                        <p class="text-sm text-gray-500">Online</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
+                        <i data-lucide="shield-check" class="text-gray-600"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Kartu Statistik Utama -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+                <a href="#" class="bg-white p-5 rounded-lg shadow-md flex items-center gap-4 hover:shadow-lg hover:scale-105 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center"><i data-lucide="file-stack" class="w-6 h-6 text-blue-600"></i></div>
+                    <div><p class="text-gray-500 text-sm">Pengajuan Baru</p><p class="text-2xl font-bold text-gray-800">8</p></div>
+                </a>
+                <a href="#" class="bg-white p-5 rounded-lg shadow-md flex items-center gap-4 hover:shadow-lg hover:scale-105 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center"><i data-lucide="user-round-check" class="w-6 h-6 text-green-600"></i></div>
+                    <div><p class="text-gray-500 text-sm">Mahasiswa Aktif</p><p class="text-2xl font-bold text-gray-800">125</p></div>
+                </a>
+                <a href="#" class="bg-white p-5 rounded-lg shadow-md flex items-center gap-4 hover:shadow-lg hover:scale-105 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center"><i data-lucide="building-2" class="w-6 h-6 text-indigo-600"></i></div>
+                    <div><p class="text-gray-500 text-sm">Perusahaan Mitra</p><p class="text-2xl font-bold text-gray-800">48</p></div>
+                </a>
+                <a href="#" class="bg-white p-5 rounded-lg shadow-md flex items-center gap-4 hover:shadow-lg hover:scale-105 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center"><i data-lucide="user-cog" class="w-6 h-6 text-teal-600"></i></div>
+                    <div><p class="text-gray-500 text-sm">Dosen Pembimbing</p><p class="text-2xl font-bold text-gray-800">20</p></div>
+                </a>
+                <a href="#" class="bg-white p-5 rounded-lg shadow-md flex items-center gap-4 border-2 border-transparent hover:border-red-500 hover:shadow-lg hover:scale-105 transition-all">
+                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center"><i data-lucide="user-x" class="w-6 h-6 text-red-600"></i></div>
+                    <div><p class="text-gray-500 text-sm">Tanpa Pembimbing</p><p class="text-2xl font-bold text-red-600">3</p></div>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Kolom Kiri: Tugas & Link Cepat -->
+                <div class="lg:col-span-1 space-y-8">
+                    <!-- Tugas & Tindakan Segera -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Perlu Perhatian Anda</h2>
+                        <ul class="space-y-3">
+                            <li class="flex items-center gap-3"><a href="#" class="flex-1 text-blue-600 hover:underline">Verifikasi 8 pengajuan magang baru</a><span class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Baru</span></li>
+                            <li class="flex items-center gap-3"><a href="#" class="flex-1 text-red-600 hover:underline">Alokasikan pembimbing untuk 3 mahasiswa</a><span class="text-xs font-bold bg-red-100 text-red-800 px-2 py-1 rounded-full">Penting</span></li>
+                            <li class="flex items-center gap-3"><a href="#" class="flex-1 text-gray-700 hover:underline">Lihat 2 feedback baru dari perusahaan</a></li>
+                        </ul>
+                    </div>
+                    <!-- Akses Cepat -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Akses Cepat</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <a href="#" class="flex flex-col items-center justify-center text-center p-4 bg-gray-50 hover:bg-blue-100 rounded-lg transition-colors">
+                                <i data-lucide="user-plus" class="w-8 h-8 text-blue-600 mb-2"></i>
+                                <span class="text-sm font-semibold text-gray-700">Tambah Pengguna</span>
+                            </a>
+                            <a href="#" class="flex flex-col items-center justify-center text-center p-4 bg-gray-50 hover:bg-green-100 rounded-lg transition-colors">
+                                <i data-lucide="megaphone" class="w-8 h-8 text-green-600 mb-2"></i>
+                                <span class="text-sm font-semibold text-gray-700">Buat Pengumuman</span>
+                            </a>
+                             <a href="#" class="flex flex-col items-center justify-center text-center p-4 bg-gray-50 hover:bg-indigo-100 rounded-lg transition-colors">
+                                <i data-lucide="briefcase" class="w-8 h-8 text-indigo-600 mb-2"></i>
+                                <span class="text-sm font-semibold text-gray-700">Manajemen Lowongan</span>
+                            </a>
+                             <a href="#" class="flex flex-col items-center justify-center text-center p-4 bg-gray-50 hover:bg-teal-100 rounded-lg transition-colors">
+                                <i data-lucide="area-chart" class="w-8 h-8 text-teal-600 mb-2"></i>
+                                <span class="text-sm font-semibold text-gray-700">Lihat Laporan</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Kolom Kanan: Grafik & Aktivitas -->
+                <div class="lg:col-span-2 space-y-8">
+                     <!-- Grafik Visualisasi -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                         <h2 class="text-xl font-bold text-gray-800 mb-4">Tren Pengajuan Magang (6 Bulan)</h2>
+                         <!-- PERBAIKAN: Bungkus canvas dengan div yang memiliki tinggi tetap -->
+                         <div class="relative h-80">
+                            <canvas id="pengajuanChart"></canvas>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                 <!-- Aktivitas Terbaru -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Aktivitas Terbaru</h2>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center"><i data-lucide="file-plus-2" class="w-5 h-5 text-blue-600"></i></div>
+                            <div>
+                                <p class="text-sm text-gray-800"><strong>Budi Santoso</strong> mengajukan magang ke <strong>PT. Maju Jaya</strong>.</p>
+                                <p class="text-xs text-gray-500">15 menit lalu</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex-shrink-0 flex items-center justify-center"><i data-lucide="award" class="w-5 h-5 text-green-600"></i></div>
+                            <div>
+                                <p class="text-sm text-gray-800"><strong>Dr. Anggun</strong> memberikan nilai akhir untuk mahasiswa <strong>Siti Lestari</strong>.</p>
+                                <p class="text-xs text-gray-500">1 jam lalu</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-indigo-100 flex-shrink-0 flex items-center justify-center"><i data-lucide="building" class="w-5 h-5 text-indigo-600"></i></div>
+                            <div>
+                                <p class="text-sm text-gray-800">Anda berhasil menambahkan <strong>PT. Cipta Karya</strong> sebagai mitra baru.</p>
+                                <p class="text-xs text-gray-500">3 jam lalu</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Grafik Sebaran Mahasiswa -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Sebaran Status Mahasiswa</h2>
+                    <div class="max-w-xs mx-auto">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.271.0/dist/umd/lucide.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Render Ikon
+        if (typeof lucide !== 'undefined') {
+          lucide.createIcons();
+        } else {
+          console.error('Lucide tidak tersedia.');
+        }
+
+        // Tampilkan Tanggal Hari Ini
+        const dateElement = document.getElementById('current-date');
+        if(dateElement) {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            dateElement.textContent = `| ${today.toLocaleDateString('id-ID', options)}`;
+        }
+
+        // --- Inisialisasi Grafik ---
+        // Grafik Batang: Tren Pengajuan
+        const pengajuanCtx = document.getElementById('pengajuanChart');
+        if (pengajuanCtx) {
+            new Chart(pengajuanCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                    datasets: [{
+                        label: 'Jumlah Pengajuan',
+                        data: [12, 19, 15, 25, 22, 30],
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+        
+        // Grafik Donat: Sebaran Status
+        const statusCtx = document.getElementById('statusChart');
+        if (statusCtx) {
+             new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Proses Pengajuan', 'Aktif Magang', 'Selesai', 'Bermasalah'],
+                    datasets: [{
+                        label: 'Jumlah Mahasiswa',
+                        data: [15, 70, 10, 5],
+                        backgroundColor: [
+                            'rgba(251, 191, 36, 0.8)', // amber-400
+                            'rgba(34, 197, 94, 0.8)', // green-500
+                            'rgba(59, 130, 246, 0.8)', // blue-500
+                            'rgba(239, 68, 68, 0.8)' // red-500
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                 options: {
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+        }
+
+
+        // Logika Dropdown Sidebar
+        const menuButtons = document.querySelectorAll('button[data-menu]');
+        menuButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const menuId = button.dataset.menu;
+                const submenu = document.getElementById(menuId);
+                const icon = button.querySelector('[data-lucide="chevron-down"]');
+                
+                if (submenu) {
+                    const isOpening = submenu.classList.contains('hidden');
+                     document.querySelectorAll('[id^="proses-magang"], [id^="kemitraan"], [id^="konten"], [id^="pengaturan"]').forEach(otherSubmenu => {
+                         if (otherSubmenu.id !== menuId) {
+                            otherSubmenu.classList.add('hidden');
+                            const otherButton = document.querySelector(`button[data-menu="${otherSubmenu.id}"]`);
+                            otherButton?.querySelector('[data-lucide="chevron-down"]')?.classList.remove('rotate-180');
+                         }
+                     });
+                    
+                    if (isOpening) {
+                        submenu.classList.remove('hidden');
+                        icon?.classList.add('rotate-180');
+                    } else {
+                        submenu.classList.add('hidden');
+                        icon?.classList.remove('rotate-180');
+                    }
+                }
+            });
+        });
+
+      });
+    </script>
+</body>
+</html>
+

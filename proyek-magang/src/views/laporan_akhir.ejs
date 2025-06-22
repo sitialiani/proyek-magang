@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Akhir - Portal Mahasiswa</title>
+    
+    <link href="/css/style.css" rel="stylesheet">
+    
+</head>
+<body class="bg-content-bg">
+
+    <div class="flex min-h-screen">
+        <!-- =============== Sidebar =============== -->
+        <aside class="w-64 bg-sidebar-bg text-white flex flex-col p-4 fixed h-full shadow-lg">
+            <!-- Profile Photo & Info -->
+            <div class="text-center py-4 border-b border-white/20">
+                <img src="https://placehold.co/100x100/E7EEF0/5c7a89?text=Foto" alt="Foto Profil Mahasiswa" class="rounded-lg w-24 h-24 mx-auto mb-3 border-4 border-white/30">
+                <h3 class="font-bold text-lg">Siti Aliani</h3>
+                <p class="text-sm">2311522006</p>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="mt-6 flex-grow">
+                <ul class="space-y-2">
+                    <li><a href="Dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Dashboard</a></li>
+                    <li><a href="Daftar Lowongan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Daftar Lowongan</a></li>
+                    <li><a href="Formulir Pengajuan" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Formulir Pengajuan</a></li>
+                    <li><a href="Status & Verifikasi" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Status & Verifikasi</a></li>
+                    <li><a href="Logbook" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Logbook</a></li>
+                    <li><a href="Laporan Akhir" class="flex items-center gap-3 px-4 py-2.5 rounded-md bg-sidebar-active font-semibold shadow-inner transition-colors duration-200">Laporan Akhir</a></li>
+                    <li><a href="Penilaian" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Penilaian</a></li>
+                    <li><a href="Pengumuman" class="flex items-center gap-3 px-4 py-2.5 rounded-md hover:bg-sidebar-hover transition-colors duration-200">Pengumuman</a></li>
+                </ul>
+            </nav>
+
+            <!-- Logout Button -->
+            <div class="mt-auto">
+                <a href="#" class="flex items-center gap-3 w-fit mx-auto px-6 py-2.5 rounded-md bg-red-600/80 hover:bg-red-700/80 transition-colors duration-200">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- =============== Main Content =============== -->
+        <main class="ml-64 flex-1 p-8 overflow-y-auto">
+            <!-- Header -->
+            <header class="flex justify-end items-center mb-8">
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="font-semibold text-gray-800">Siti Aliani</p>
+                        <p class="text-sm text-gray-500">Mahasiswa Aktif</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        </svg>
+
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTOH: Data ini seharusnya datang dari server/database Anda -->
+            <% const laporan = { status: 'Perlu Revisi', dosen: 'Dr. Ir. Anjali, S.Kom., M.Kom.', catatan: 'Tidak Ada Catatan', tanggalCatatan: '17 Juni 2025' }; %>
+            <% const riwayat = [
+                { id: 1, versi: 'v.1', namaFile: '2311522006_SitiAliani_LaporanAkhir.pdf', tanggal: '15 Juni 2025, 14:30', status: 'Final' },
+
+                { id: 2, versi: 'Draft Awal', namaFile: 'LaporanMagang_Siti_Draft.pdf', tanggal: '10 Juni 2025, 09:15', status: 'Direvisi' }
+            ]; %>
+
+
+            <!-- Page Title -->
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Pengumpulan Laporan Akhir Magang</h1>
+            <p class="text-gray-600 mb-6">Unggah dan kelola laporan akhir magang Anda di sini.</p>
+
+            <div class="space-y-8">
+                <!-- Informasi & Instruksi -->
+                <div class="bg-sky-100/70 border-l-4 border-sky-500 text-sky-800 p-5 rounded-r-lg shadow-sm">
+                    <h4 class="font-bold text-lg mb-2 flex items-center gap-2"><i data-lucide="info" class="w-5 h-5"></i>Panduan Pengumpulan Laporan</h4>
+                    <ul class="list-disc list-inside space-y-1.5 text-sm">
+                        <li>Mohon unggah laporan Anda dalam format <strong>PDF</strong>.</li>
+                        <li>Ukuran file maksimal yang diizinkan adalah <strong>10 MB</strong>.</li>
+                        <li>Disarankan menamai file sesuai format: <code>NIM_NamaLengkap_LaporanAkhir.pdf</code>.</li>
+                        <li>Pastikan laporan telah sesuai dengan template resmi. <a href="#" class="font-semibold underline hover:text-sky-600">Unduh template di sini</a>.</li>
+                    </ul>
+                </div>
+                
+               <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Kolom Kiri: Status & Feedback -->
+                    <div class="md:col-span-1 space-y-8">
+                         <!-- Status Laporan Saat Ini -->
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Status Laporan</h2>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">Dosen Pembimbing:</span>
+                                    <span class="font-semibold text-gray-800"><%= laporan.dosen %></span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-500">Status Saat Ini:</span>
+                                    <!-- LOGIKA DINAMIS: Warna dan teks status berubah sesuai data -->
+                                    <% if (laporan.status === 'Belum Mengunggah') { %>
+                                        <span class="px-3 py-1 text-xs font-bold text-gray-800 bg-gray-200 rounded-full">Belum Mengunggah</span>
+                                    <% } else if (laporan.status === 'Menunggu Review') { %>
+                                        <span class="px-3 py-1 text-xs font-bold text-blue-800 bg-blue-200 rounded-full">Menunggu Review</span>
+                                    <% } else if (laporan.status === 'Perlu Revisi') { %>
+                                        <span class="px-3 py-1 text-xs font-bold text-orange-800 bg-orange-200 rounded-full">Perlu Revisi</span>
+                                    <% } else if (laporan.status === 'Disetujui') { %>
+                                        <span class="px-3 py-1 text-xs font-bold text-green-800 bg-green-200 rounded-full">Disetujui</span>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LOGIKA DINAMIS: Catatan revisi hanya muncul jika statusnya 'Perlu Revisi' -->
+                        <% if (laporan.status === 'Perlu Revisi' && laporan.catatan) { %>
+                        <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg shadow-md">
+                             <h2 class="text-xl font-bold text-amber-900 mb-3 flex items-center gap-2"><i data-lucide="message-square-quote" class="w-5 h-5"></i>Catatan Revisi</h2>
+                            <div>
+                                <p class="text-sm text-gray-500 mb-2"><strong>Tanggal:</strong> <%= laporan.tanggalCatatan %></p>
+                                <p class="text-gray-700 italic">"<%= laporan.catatan %>"</p>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Kolom Kanan: Area Upload -->
+                    <!-- PERUBAHAN: Ditambahkan 'flex flex-col' agar item di dalamnya bisa meregang -->
+                    <div class="md:col-span-2 flex flex-col">
+                        <!-- Area Unggah Laporan -->
+                        <!-- PERUBAHAN: Ditambahkan 'flex-1' agar kotak ini meregang mengisi ruang vertikal -->
+                        <div class="bg-white p-6 rounded-lg shadow-md flex-1 flex flex-col">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Unggah Laporan Anda di Sini</h2>
+                            
+                            <div id="upload-area" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 bg-gray-50 transition-colors flex-grow flex flex-col justify-center items-center">
+                                <i data-lucide="cloud-upload" class="w-16 h-16 mx-auto text-gray-400"></i>
+                                <p class="mt-4 text-gray-600">Seret dan lepas file PDF Anda di sini</p>
+                                <p class="text-sm text-gray-500">atau</p>
+                                <label for="file-upload" class="mt-2 inline-block bg-blue-600 text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-700 cursor-pointer">
+                                    Pilih File Laporan
+                                </label>
+                                <input id="file-upload" type="file" class="hidden" accept=".pdf">
+                            </div>
+
+                            <div id="file-info" class="hidden border border-gray-200 p-4 rounded-lg flex-grow flex flex-col justify-center">
+                                <p class="text-sm text-gray-500 mb-2">File yang akan diunggah:</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3 overflow-hidden">
+                                        <i data-lucide="file-text" class="w-6 h-6 text-blue-500 flex-shrink-0"></i>
+                                        <span id="file-name" class="font-semibold text-gray-800 truncate"></span>
+                                    </div>
+                                    <button id="remove-file" class="text-red-600 hover:text-red-800 p-1 rounded-full w-7 h-7 flex items-center justify-center hover:bg-red-100 flex-shrink-0 ml-4">
+                                        <i data-lucide="x" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button id="submit-button" class="w-full mt-6 bg-blue-600 text-white py-3 rounded-md font-bold hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                                Kirim Laporan
+                            </button>
+                        </div>
+                    </div>
+                </div> <!-- PENUTUP GRID -->
+
+              <!-- PERUBAHAN: Riwayat Unggahan dipindahkan ke dalam grid dan diberi `col-span-3` -->
+                    <div class="md:col-span-3 bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Riwayat Unggahan Anda</h2>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-600">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100 rounded-t-lg">
+                                    <tr>
+                                        <th scope="col" class="py-3 px-6">Versi</th>
+                                        <th scope="col" class="py-3 px-6">Nama File</th>
+                                        <th scope="col" class="py-3 px-6">Tanggal Unggah</th>
+                                        <th scope="col" class="py-3 px-6">Status Saat Itu</th>
+                                        <th scope="col" class="py-3 px-6 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (riwayat && riwayat.length > 0) { %>
+                                        <% riwayat.forEach(item => { %>
+                                        <tr class="bg-white border-b hover:bg-gray-50">
+                                            <td class="py-4 px-6 font-medium"><%= item.versi %></td>
+                                            <td class="py-4 px-6"><%= item.namaFile %></td>
+                                            <td class="py-4 px-6"><%= item.tanggal %></td>
+                                            <td class="py-4 px-6">
+                                                <span class="px-2 py-1 text-xs font-semibold text-orange-800 bg-orange-100 rounded-full"><%= item.status %></span>
+                                            </td>
+                                            <td class="py-4 px-6 text-center">
+                                                <a href="/unduh/<%= item.id %>" class="font-medium text-blue-600 hover:underline">Unduh</a>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <tr class="bg-white border-b">
+                                            <td colspan="5" class="text-center py-4 text-gray-500">Belum ada riwayat unggahan.</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> <!-- PENUTUP GRID -->
+
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPT BARU ADA DI SINI -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.271.0/dist/umd/lucide.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
+            const fileUpload = document.getElementById('file-upload');
+            const uploadArea = document.getElementById('upload-area');
+            const fileInfo = document.getElementById('file-info');
+            const fileNameSpan = document.getElementById('file-name');
+            const removeFileBtn = document.getElementById('remove-file');
+            const submitButton = document.getElementById('submit-button');
+
+            if (fileUpload) {
+                fileUpload.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        fileNameSpan.textContent = file.name;
+                        uploadArea.classList.add('hidden');
+                        fileInfo.classList.remove('hidden');
+                        submitButton.disabled = false;
+                    }
+                });
+            }
+            
+          if (removeFileBtn) {
+                removeFileBtn.addEventListener('click', () => {
+                    // Reset input file
+                    fileUpload.value = ''; 
+                    
+                    // Sembunyikan info file dan tampilkan kembali area upload
+                    fileInfo.classList.add('hidden');
+                    uploadArea.classList.remove('hidden');
+
+                    // Nonaktifkan tombol submit
+                    submitButton.disabled = true;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
