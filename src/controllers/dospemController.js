@@ -1,8 +1,7 @@
-// src/controllers/dospemController.js
-
 // Impor semua model dari index.js
 const db = require('../config/sequelize'); // Ini adalah instance Sequelize
 const { Op } = require('sequelize'); // Impor Op untuk operator Sequelize seperti LIKE
+const PDFDocument = require('pdfkit'); // TAMBAHKAN INI: Impor PDFDocument
 const {
     User,
     Mahasiswa,
@@ -950,4 +949,208 @@ exports.postPenilaianLaporan = async (req, res) => {
         console.error('Error in postPenilaianLaporan:', error);
         res.status(500).send('Terjadi kesalahan saat menyimpan penilaian laporan.');
     }
+};
+
+// Item BARU: Fungsi untuk menghasilkan Rekapitulasi PDF
+exports.exportRekapitulasiPdf = async (req, res) => {
+    const dosenUserId = req.user.id;
+
+    try {
+        const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
+        if (!dosen) {
+            return res.status(404).send('Data dosen tidak ditemukan.');
+        }
+        const namaDosen = dosen.nama;
+        const dosenId = dosen.id;
+
+        // 1. Ambil semua mahasiswa bimbingan dosen ini
+        const mahasiswaBimbingan = await Mahasiswa.findAll({
+            where: { dosen_pembimbing_id: dosenId },
+            attributes: ['id', 'nama', 'npm'], // Ambil nama dan npm
+            include: [
+                {
+                    model: Laporan,
+                    as: 'Laporan',
+                    attributes: ['status'],
+                    required: false
+                },
+                {
+                    model: Rekapitulasi,
+                    as: 'Rekapitulasi',
+                    attributes: ['nilai_akhir'],
+                    required: false
+                }
+            ]
+        });
+
+        const reportData = [];
+        for (const mhs of mahasiswaBimbingan) {
+            // Ambil status logbook terbaru (cari yang belum diverifikasi)
+            const logbookCount = await Logbook.count({
+                where: { mahasiswa_id: mhs.id, verifikasi_dosen: false }
+            });
+            const logbookStatusText = logbookCount > 0 ? `Menunggu Evaluasi (${logbookCount} entri)` : 'Sudah Dievaluasi Semua';
+
+            reportData.push({
+                nama: mhs.nama,
+                nim: mhs.npm,
+                logbookStatus: logbookStatusText,
+                laporanStatus: mhs.Laporan ? mhs.Laporan.status.replace(/_/g, ' ').toUpperCase() : 'BELUM UNGGAH',
+                nilaiAkhir: mhs.Rekapitulasi ? mhs.Rekapitulasi.nilai_akhir : 'BELUM DINILAI'
+            });
+        }
+
+        // 2. Buat Dokumen PDF
+        const doc = new PDFDocument();
+        const filename = `Rekapitulasi_Magang_${namaDosen.replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+        doc.pipe(res);
+
+        // Styling dan Konten PDF
+        doc.fontSize(16).text('Rekapitulasi Progres dan Penilaian Mahasiswa Bimbingan', { align: 'center' });
+        doc.fontSize(12).text(`Dosen Pembimbing: ${namaDosen}`, { align: 'center' });
+        doc.moveDown();
+
+        // Tabel Header
+        const tableHeaders = ['No.', 'Nama Mahasiswa', 'NIM', 'Status Logbook', 'Status Laporan Akhir', 'Nilai Akhir'];
+        const colWidths = [30, 120, 80, 120, 100, 80];
+        let startY = doc.y;
+        let startX = 50;
+
+        doc.font('Helvetica-Bold');
+        tableHeaders.forEach((header, i) => {
+            doc.text(header, startX + colWidths.slice(0, i).reduce((a, b) => a + b, 0), startY, { width: colWidths[i], align: 'left' });
+        });
+        doc.moveDown();
+        doc.font('Helvetica');
+
+        // Tabel Data
+        reportData.forEach((data, index) => {
+            startY = doc.y; // Update Y for new row
+            doc.text(`${index + 1}.`, startX + colWidths[0] * 0, startY, { width: colWidths[0], align: 'left' });
+            doc.text(data.nama, startX + colWidths[0], startY, { width: colWidths[1], align: 'left' });
+            doc.text(data.nim, startX + colWidths[0] + colWidths[1], startY, { width: colWidths[2], align: 'left' });
+            doc.text(data.logbookStatus, startX + colWidths[0] + colWidths[1] + colWidths[2], startY, { width: colWidths[3], align: 'left' });
+            doc.text(data.laporanStatus, startX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3], startY, { width: colWidths[4], align: 'left' });
+            doc.text(String(data.nilaiAkhir), startX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3] + colWidths[4], startY, { width: colWidths[5], align: 'left' });
+            doc.moveDown(); // Pindah ke baris berikutnya
+        });
+
+        doc.end();
+
+    } catch (error) {
+        console.error('Error in exportRekapitulasiPdf:', error);
+        res.status(500).send('Terjadi kesalahan saat membuat laporan PDF. Mohon coba lagi nanti.');
+    }
+};
+
+// Item BARU: Fungsi untuk menghasilkan PDF Detail Laporan Akhir (untuk satu mahasiswa)
+exports.exportLaporanDetailPdf = async (req, res) => {
+    const dosenUserId = req.user.id;
+    const laporanId = parseInt(req.params.laporanId);
+
+    try {
+        const dosen = await Dosen.findOne({ where: { user_id: dosenUserId } });
+        if (!dosen) {
+            return res.status(404).send('Data dosen tidak ditemukan.');
+        }
+        const dosenId = dosen.id;
+
+        const laporanAkhir = await Laporan.findByPk(laporanId, {
+            include: [
+                {
+                    model: Mahasiswa,
+                    as: 'Mahasiswa',
+                    attributes: ['id', 'nama', 'npm', 'jurusan', 'no_hp', 'dosen_pembimbing_id'],
+                    include: [{ model: User, as: 'User', attributes: ['email'] }]
+                },
+                {
+                    model: Penilaian,
+                    as: 'Penilaian',
+                    attributes: ['nilai_akhir', 'komentar'],
+                    required: false
+                }
+            ]
+        });
+
+        if (!laporanAkhir) {
+            return res.status(404).send('Laporan akhir tidak ditemukan.');
+        }
+
+        // Pastikan dosen memiliki akses ke laporan mahasiswa ini
+        if (laporanAkhir.Mahasiswa.dosen_pembimbing_id !== dosenId) {
+            return res.status(403).send('Anda tidak memiliki akses untuk melihat laporan ini.');
+        }
+
+        // Ambil info pengajuan magang untuk nama perusahaan
+        const pengajuan = await PengajuanMagang.findOne({
+            where: { mahasiswa_id: laporanAkhir.mahasiswa_id, status: 'diterima' },
+            include: [
+                {
+                    model: Lowongan,
+                    as: 'Lowongan',
+                    attributes: ['perusahaan'],
+                }
+            ],
+            order: [['tanggal_pengajuan', 'DESC']]
+        });
+        const namaPerusahaan = pengajuan && pengajuan.Lowongan ? pengajuan.Lowongan.perusahaan : '-';
+
+        // Persiapan data untuk PDF
+        const doc = new PDFDocument();
+        const filename = `Laporan_Penilaian_${laporanAkhir.Mahasiswa.nama.replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+        doc.pipe(res);
+
+        // --- Konten PDF ---
+        doc.fontSize(18).text('Detail Penilaian Laporan Akhir', { align: 'center' });
+        doc.moveDown();
+
+        doc.fontSize(14).text('Informasi Mahasiswa');
+        doc.fontSize(12)
+           .text(`Nama: ${laporanAkhir.Mahasiswa.nama}`)
+           .text(`NIM: ${laporanAkhir.Mahasiswa.npm}`)
+           .text(`Prodi: ${laporanAkhir.Mahasiswa.jurusan}`)
+           .text(`Email: ${laporanAkhir.Mahasiswa.User.email}`)
+           .text(`Telepon: ${laporanAkhir.Mahasiswa.no_hp}`);
+        doc.moveDown();
+
+        doc.fontSize(14).text('Informasi Laporan');
+        doc.fontSize(12)
+           .text(`Judul Laporan: ${laporanAkhir.judul}`)
+           .text(`Diunggah Pada: ${new Date(laporanAkhir.tanggal_upload).toLocaleDateString('id-ID')}`)
+           .text(`Status Laporan: ${laporanAkhir.status.replace(/_/g, ' ').toUpperCase()}`)
+           .text(`Perusahaan Magang: ${namaPerusahaan}`);
+        doc.moveDown();
+
+        doc.fontSize(14).text('Hasil Penilaian');
+        doc.fontSize(12)
+           .text(`Nilai Akhir: ${laporanAkhir.Penilaian ? laporanAkhir.Penilaian.nilai_akhir : 'Belum Dinilai'}`)
+           .text(`Komentar Dosen: ${laporanAkhir.Penilaian ? laporanAkhir.Penilaian.komentar : 'Belum ada komentar.'}`);
+        doc.moveDown();
+
+        // Anda bisa menambahkan detail penilaian komponen (Kinerja, Kedisiplinan, Kolaborasi)
+        // jika Anda ingin mem-parsing komentar kembali atau menyimpannya sebagai kolom terpisah di DB
+        if (laporanAkhir.Penilaian && laporanAkhir.Penilaian.komentar) {
+            doc.fontSize(14).text('Detail Penilaian Komponen');
+            const parts = laporanAkhir.Penilaian.komentar.split(' | ');
+            parts.forEach(part => {
+                doc.fontSize(12).text(part);
+            });
+            doc.moveDown();
+        }
+
+        doc.end();
+
+    } catch (error) {
+        console.error('Error in exportLaporanDetailPdf:', error);
+        res.status(500).send('Terjadi kesalahan saat membuat PDF detail laporan akhir.');
+    }
+
 };

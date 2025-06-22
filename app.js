@@ -3,8 +3,9 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require("path");
 const sequelize = require('./src/config/sequelize'); // Impor instance Sequelize
-
 const app = express(); // Inisialisasi aplikasi Express
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 const authRoutes = require('./src/routes/authRoutes');
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.set('view engine', 'ejs');

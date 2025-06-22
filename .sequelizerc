@@ -1,13 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  // Path ke file konfigurasi database yang dibuat oleh CLI (config/config.json)
-  'config': path.resolve(__dirname, 'config', 'config.json'),
-  // Path ke folder model Sequelize Anda yang sudah ada
-  // Model-model Anda (user.js, mahasiswa.js, dll.) ada di D:\tugas\pweb\tb\proyek-magang\models
-  'models-path': path.resolve(__dirname, 'models'),
-  // Path ke folder migrasi (akan dibuat atau sudah ada oleh CLI)
-  'migrations-path': path.resolve(__dirname, 'migrations'),
-  // Path ke folder seeders (akan dibuat atau sudah ada oleh CLI)
-  'seeders-path': path.resolve(__dirname, 'seeders')
+  // PERHATIKAN: Path untuk config diubah menjadi config.js sesuai kasus Anda
+  'config': path.resolve('config', 'config.js'),
+  'models-path': path.resolve('models'),
+  'seeders-path': path.resolve('seeders'),
+  'migrations-path': path.resolve('migrations')
 };
