@@ -1,12 +1,24 @@
 const express = require("express");
+const session = require('express-session');
+const bodyParser = require('body-parser');
 const path = require("path");
 const sequelize = require('./src/config/sequelize'); // Impor instance Sequelize
 
 const app = express(); // Inisialisasi aplikasi Express
-
+const authRoutes = require('./src/routes/authRoutes');
+app.set('views', path.join(__dirname, 'src', 'views'));
+app.set('view engine', 'ejs');
 // Konfigurasi View Engine (EJS)
 app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+  secret: 'rahasia-sesi-login',
+  resave: false,
+  saveUninitialized: true
+}));
 app.set("views", path.join(__dirname, "src/views"));
+
+app.use('/', authRoutes);
 
 // Middleware untuk parsing body dari form HTML (urlencoded) dan JSON
 app.use(express.urlencoded({ extended: true }));
