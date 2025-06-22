@@ -20,6 +20,57 @@ const riwayatData = [
 ];
 
 
+// const pengajuanList = Object.values(pengajuanDummy);
+
+// =======================
+// ROUTES MAHASISWA
+// =======================
+
+const lowonganController = require('../controllers/mahasiswa/lowonganController');
+
+router.get("/", (req, res) => {
+  res.render("index");
+});
+
+router.get("/dashboard", (req, res) => {
+  res.render("dashboard-mahasiswa");
+});
+
+router.get('/lowongan', lowonganController.getDaftarLowongan);
+
+router.get("/lowongan/:id", lowonganController.getDetailLowongan);
+
+const pengajuanController = require("../controllers/mahasiswa/pengajuanController");
+
+router.get("/formulir/:lowonganId", pengajuanController.getFormPengajuan);
+router.get("/formulir/:lowonganId", (req, res) => {
+  const lowonganId = req.params.lowonganId;
+  res.render("formPengajuan", { lowonganId });
+});
+
+const upload = require("../config/multer");
+
+// POST formulir pengajuan
+router.post(
+  "/formulir/:lowonganId",
+  upload.fields([
+    { name: "cv", maxCount: 1 },
+    { name: "transkrip", maxCount: 1 },
+    { name: "dokumen_pendukung", maxCount: 1 },
+    { name: "krs", maxCount: 1 }
+  ]),
+  pengajuanController.postFormPengajuan
+);
+
+const statusController = require("../controllers/mahasiswa/statusController");
+
+router.get("/status-pengajuan", statusController.getStatusPengajuan);
+
+const detailPengajuanController = require("../controllers/mahasiswa/detailPengajuanController");
+
+router.get("/pengajuan/:id", detailPengajuanController.getDetailPengajuan);
+
+
 // --- Definisi Rute (Routes) ---
 
 /**
