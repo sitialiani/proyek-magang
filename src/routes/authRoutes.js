@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const { ensureAuthenticated, ensureLoggedIn } = require('../../middleware/authMiddleware');
 
 router.get('/', (req, res) => {
   if (req.session.user) {
@@ -12,8 +13,6 @@ router.get('/', (req, res) => {
 
 router.get('/login', authController.showLoginPage);
 router.post('/login', authController.handleLogin);
-
-const { ensureLoggedIn } = require('../middleware/authMiddleware');
 
 router.get('/dashboard', ensureLoggedIn, (req, res) => {
   res.render('dashboard-mahasiswa', { user: req.session.user });
